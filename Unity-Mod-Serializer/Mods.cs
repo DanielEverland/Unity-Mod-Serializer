@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.IO;
 using UMS;
+using UMS.Zip;
 
 /// <summary>
 /// Front-end for calling UMS functions
@@ -39,7 +40,7 @@ public static class Mods
     /// <param name="fullPath">Full path with filename and extension</param>
     public static void Save<T>(T obj, string fullPath)
     {
-        Serialize(obj, typeof(T), fullPath);
+        Create(obj, typeof(T), fullPath);
     }
 
     /// <summary>
@@ -60,17 +61,35 @@ public static class Mods
     /// <param name="type">Targeted storage type</param>
     public static void Save(object obj, System.Type type, string fullPath)
     {
-        Serialize(obj, type, fullPath);
+        Create(obj, type, fullPath);
+    }
+
+    /// <summary>
+    /// Serializes an object to a string
+    /// </summary>
+    /// <param name="obj">Object to serialize</param>
+    /// <returns>Json string</returns>
+    public static string Serialize(object obj)
+    {
+        _serializer.TrySerialize(obj.GetType(), obj, out Data data);
+
+        return JsonPrinter.PrettyJson(data);
     }
 
 #if DEBUG
-    internal static void Serialize(object obj, System.Type type, string fullPath)
+    internal static void Create(object obj, string fullPath)
+    {
+        ZipSerializer.Create(obj, fullPath);
+
+        Debug.Log("Serialized " + obj + " to " + fullPath);
+    }
+    internal static void Create(object obj, System.Type type, string fullPath)
     {
         _serializer.TrySerialize(type, obj, out Data data).AssertSuccessWithoutWarnings();
 
         string json = JsonPrinter.PrettyJson(data);
 
-        File.WriteAllText(fullPath, json);
+        ZipSerializer.Create(json, fullPath, obj.ToString());
 
         Debug.Log("Serialized " + type + " to " + fullPath);
     }
