@@ -2,13 +2,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UMS.Converters {
+namespace UMS.Converters
+{
     partial class fsConverterRegistrar
     {
         public static Rect_DirectConverter Register_Rect_DirectConverter;
     }
-    public class Rect_DirectConverter : fsDirectConverter<Rect> {
-        protected override fsResult DoSerialize(Rect model, Dictionary<string, fsData> serialized) {
+    public class Rect_DirectConverter : fsDirectConverter<Rect>
+    {
+        protected override fsResult DoSerialize(Rect model, Dictionary<string, fsData> serialized)
+        {
             var result = fsResult.Success;
 
             result += SerializeMember(serialized, null, "xMin", model.xMin);
@@ -19,7 +22,8 @@ namespace UMS.Converters {
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref Rect model) {
+        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref Rect model)
+        {
             var result = fsResult.Success;
 
             var t0 = model.xMin;
@@ -41,7 +45,8 @@ namespace UMS.Converters {
             return result;
         }
 
-        public override object CreateInstance(fsData data, Type storageType) {
+        public override object CreateInstance(fsData data, Type storageType)
+        {
             return new Rect();
         }
     }

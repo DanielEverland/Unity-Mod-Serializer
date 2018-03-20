@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UMS {
+namespace UMS
+{
     /// <summary>
     /// The result of some sort of operation. A result is either successful or
     /// not, but if it is successful then there may be a set of warnings/messages
     /// associated with it. These warnings describe the performed error recovery
     /// operations.
     /// </summary>
-    public struct fsResult {
+    public struct fsResult
+    {
         // We cache the empty string array so we can unify some collections
         // processing code.
         private static readonly string[] EmptyStringArray = { };
@@ -33,8 +35,10 @@ namespace UMS {
         /// Adds a new message to this result.
         /// </summary>
         /// <param name="message"></param>
-        public void AddMessage(string message) {
-            if (_messages == null) {
+        public void AddMessage(string message)
+        {
+            if (_messages == null)
+            {
                 _messages = new List<string>();
             }
 
@@ -45,12 +49,15 @@ namespace UMS {
         /// Adds only the messages from the other result into this result,
         /// ignoring the success/failure status of the other result.
         /// </summary>
-        public void AddMessages(fsResult result) {
-            if (result._messages == null) {
+        public void AddMessages(fsResult result)
+        {
+            if (result._messages == null)
+            {
                 return;
             }
 
-            if (_messages == null) {
+            if (_messages == null)
+            {
                 _messages = new List<string>();
             }
 
@@ -65,12 +72,14 @@ namespace UMS {
         /// Note that you can use += instead of this method so that you don't
         /// bury the actual method call that is generating the other fsResult.
         /// </remarks>
-        public fsResult Merge(fsResult other) {
+        public fsResult Merge(fsResult other)
+        {
             // Copy success over
             _success = _success && other._success;
 
             // Copy messages over
-            if (other._messages != null) {
+            if (other._messages != null)
+            {
                 if (_messages == null) _messages = new List<string>(other._messages);
                 else _messages.AddRange(other._messages);
             }
@@ -81,7 +90,8 @@ namespace UMS {
         /// <summary>
         /// A successful result.
         /// </summary>
-        public static fsResult Success = new fsResult {
+        public static fsResult Success = new fsResult
+        {
             _success = true
         };
 
@@ -89,8 +99,10 @@ namespace UMS {
         /// Create a result that is successful but contains the given warning
         /// message.
         /// </summary>
-        public static fsResult Warn(string warning) {
-            return new fsResult {
+        public static fsResult Warn(string warning)
+        {
+            return new fsResult
+            {
                 _success = true,
                 _messages = new List<string> { warning }
             };
@@ -99,8 +111,10 @@ namespace UMS {
         /// <summary>
         /// Create a result that failed.
         /// </summary>
-        public static fsResult Fail(string warning) {
-            return new fsResult {
+        public static fsResult Fail(string warning)
+        {
+            return new fsResult
+            {
                 _success = false,
                 _messages = new List<string> { warning }
             };
@@ -111,7 +125,8 @@ namespace UMS {
         /// <summary>
         /// Only use this as +=!
         /// </summary>
-        public static fsResult operator +(fsResult a, fsResult b) {
+        public static fsResult operator +(fsResult a, fsResult b)
+        {
             return a.Merge(b);
         }
 
@@ -119,8 +134,10 @@ namespace UMS {
         /// Did this result fail? If so, you can see the reasons why in
         /// `RawMessages`.
         /// </summary>
-        public bool Failed {
-            get {
+        public bool Failed
+        {
+            get
+            {
                 return _success == false;
             }
         }
@@ -129,8 +146,10 @@ namespace UMS {
         /// Was the result a success? Note that even successful operations may
         /// have warning messages (`RawMessages`) associated with them.
         /// </summary>
-        public bool Succeeded {
-            get {
+        public bool Succeeded
+        {
+            get
+            {
                 return _success;
             }
         }
@@ -140,8 +159,10 @@ namespace UMS {
         /// failed or succeeded, just if it has warning messages associated with
         /// it.
         /// </summary>
-        public bool HasWarnings {
-            get {
+        public bool HasWarnings
+        {
+            get
+            {
                 return _messages != null && _messages.Any();
             }
         }
@@ -150,7 +171,8 @@ namespace UMS {
         /// A simply utility method that will assert that this result is
         /// successful. If it is not, then an exception is thrown.
         /// </summary>
-        public fsResult AssertSuccess() {
+        public fsResult AssertSuccess()
+        {
             if (Failed) throw AsException;
             return this;
         }
@@ -160,7 +182,8 @@ namespace UMS {
         /// successful and that there are no warning messages. This throws an
         /// exception if either of those asserts are false.
         /// </summary>
-        public fsResult AssertSuccessWithoutWarnings() {
+        public fsResult AssertSuccessWithoutWarnings()
+        {
             if (Failed || RawMessages.Any()) throw AsException;
             return this;
         }
@@ -169,24 +192,31 @@ namespace UMS {
         /// Utility method to convert the result to an exception. This method is
         /// only defined is `Failed` returns true.
         /// </summary>
-        public Exception AsException {
-            get {
+        public Exception AsException
+        {
+            get
+            {
                 if (!Failed && !RawMessages.Any()) throw new Exception("Only a failed result can be converted to an exception");
                 return new Exception(FormattedMessages);
             }
         }
 
-        public IEnumerable<string> RawMessages {
-            get {
-                if (_messages != null) {
+        public IEnumerable<string> RawMessages
+        {
+            get
+            {
+                if (_messages != null)
+                {
                     return _messages;
                 }
                 return EmptyStringArray;
             }
         }
 
-        public string FormattedMessages {
-            get {
+        public string FormattedMessages
+        {
+            get
+            {
                 return string.Join(",\n", RawMessages.ToArray());
             }
         }

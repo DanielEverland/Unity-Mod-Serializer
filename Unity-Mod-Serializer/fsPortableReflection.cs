@@ -7,8 +7,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Linq;
+using System.Reflection;
 
 #if USE_TYPEINFO
 namespace System {
@@ -39,12 +39,14 @@ namespace System {
 }
 #endif
 
-namespace UMS.Converters {
+namespace UMS.Converters
+{
     /// <summary>
     /// This wraps reflection types so that it is portable across different Unity
     /// runtimes.
     /// </summary>
-    public static class fsPortableReflection {
+    public static class fsPortableReflection
+    {
         public static Type[] EmptyTypes = { };
 
         #region Attribute Queries
@@ -66,28 +68,32 @@ namespace UMS.Converters {
         /// <summary>
         /// Returns true if the given attribute is defined on the given element.
         /// </summary>
-        public static bool HasAttribute<TAttribute>(MemberInfo element) {
+        public static bool HasAttribute<TAttribute>(MemberInfo element)
+        {
             return HasAttribute(element, typeof(TAttribute));
         }
 
         /// <summary>
         /// Returns true if the given attribute is defined on the given element.
         /// </summary>
-        public static bool HasAttribute<TAttribute>(MemberInfo element, bool shouldCache) {
+        public static bool HasAttribute<TAttribute>(MemberInfo element, bool shouldCache)
+        {
             return HasAttribute(element, typeof(TAttribute), shouldCache);
         }
 
         /// <summary>
         /// Returns true if the given attribute is defined on the given element.
         /// </summary>
-        public static bool HasAttribute(MemberInfo element, Type attributeType) {
+        public static bool HasAttribute(MemberInfo element, Type attributeType)
+        {
             return HasAttribute(element, attributeType, true);
         }
 
         /// <summary>
         /// Returns true if the given attribute is defined on the given element.
         /// </summary>
-        public static bool HasAttribute(MemberInfo element, Type attributeType, bool shouldCache) {
+        public static bool HasAttribute(MemberInfo element, Type attributeType, bool shouldCache)
+        {
             return element.IsDefined(attributeType, true);
         }
 
@@ -101,14 +107,17 @@ namespace UMS.Converters {
         /// </param>
         /// <param name="attributeType">The type of attribute to fetch.</param>
         /// <returns>The attribute or null.</returns>
-        public static Attribute GetAttribute(MemberInfo element, Type attributeType, bool shouldCache) {
-            var query = new AttributeQuery {
+        public static Attribute GetAttribute(MemberInfo element, Type attributeType, bool shouldCache)
+        {
+            var query = new AttributeQuery
+            {
                 MemberInfo = element,
                 AttributeType = attributeType
             };
 
             Attribute attribute;
-            if (_cachedAttributeQueries.TryGetValue(query, out attribute) == false) {
+            if (_cachedAttributeQueries.TryGetValue(query, out attribute) == false)
+            {
                 var attributes = element.GetCustomAttributes(attributeType, /*inherit:*/ true);
                 if (attributes.Any())
                     attribute = (Attribute)attributes.First();
@@ -134,27 +143,33 @@ namespace UMS.Converters {
         /// </param>
         /// <returns>The attribute or null.</returns>
         public static TAttribute GetAttribute<TAttribute>(MemberInfo element, bool shouldCache)
-            where TAttribute : Attribute {
+            where TAttribute : Attribute
+        {
             return (TAttribute)GetAttribute(element, typeof(TAttribute), shouldCache);
         }
         public static TAttribute GetAttribute<TAttribute>(MemberInfo element)
-            where TAttribute : Attribute {
+            where TAttribute : Attribute
+        {
             return GetAttribute<TAttribute>(element, /*shouldCache:*/true);
         }
-        private struct AttributeQuery {
+        private struct AttributeQuery
+        {
             public MemberInfo MemberInfo;
             public Type AttributeType;
         }
         private static IDictionary<AttributeQuery, Attribute> _cachedAttributeQueries =
             new Dictionary<AttributeQuery, Attribute>(new AttributeQueryComparator());
-        private class AttributeQueryComparator : IEqualityComparer<AttributeQuery> {
-            public bool Equals(AttributeQuery x, AttributeQuery y) {
+        private class AttributeQueryComparator : IEqualityComparer<AttributeQuery>
+        {
+            public bool Equals(AttributeQuery x, AttributeQuery y)
+            {
                 return
                     x.MemberInfo == y.MemberInfo &&
                     x.AttributeType == y.AttributeType;
             }
 
-            public int GetHashCode(AttributeQuery obj) {
+            public int GetHashCode(AttributeQuery obj)
+            {
                 return
                     obj.MemberInfo.GetHashCode() +
                     (17 * obj.AttributeType.GetHashCode());
@@ -171,11 +186,14 @@ namespace UMS.Converters {
             BindingFlags.DeclaredOnly;
 #endif
 
-        public static PropertyInfo GetDeclaredProperty(this Type type, string propertyName) {
+        public static PropertyInfo GetDeclaredProperty(this Type type, string propertyName)
+        {
             var props = GetDeclaredProperties(type);
 
-            for (int i = 0; i < props.Length; ++i) {
-                if (props[i].Name == propertyName) {
+            for (int i = 0; i < props.Length; ++i)
+            {
+                if (props[i].Name == propertyName)
+                {
                     return props[i];
                 }
             }
@@ -183,11 +201,14 @@ namespace UMS.Converters {
             return null;
         }
 
-        public static MethodInfo GetDeclaredMethod(this Type type, string methodName) {
+        public static MethodInfo GetDeclaredMethod(this Type type, string methodName)
+        {
             var methods = GetDeclaredMethods(type);
 
-            for (int i = 0; i < methods.Length; ++i) {
-                if (methods[i].Name == methodName) {
+            for (int i = 0; i < methods.Length; ++i)
+            {
+                if (methods[i].Name == methodName)
+                {
                     return methods[i];
                 }
             }
@@ -195,10 +216,12 @@ namespace UMS.Converters {
             return null;
         }
 
-        public static ConstructorInfo GetDeclaredConstructor(this Type type, Type[] parameters) {
+        public static ConstructorInfo GetDeclaredConstructor(this Type type, Type[] parameters)
+        {
             var ctors = GetDeclaredConstructors(type);
 
-            for (int i = 0; i < ctors.Length; ++i) {
+            for (int i = 0; i < ctors.Length; ++i)
+            {
                 var ctor = ctors[i];
 
                 if (ctor.IsStatic) continue; // Ignore static constructors.
@@ -207,7 +230,8 @@ namespace UMS.Converters {
 
                 if (parameters.Length != ctorParams.Length) continue;
 
-                for (int j = 0; j < ctorParams.Length; ++j) {
+                for (int j = 0; j < ctorParams.Length; ++j)
+                {
                     // require an exact match
                     if (ctorParams[j].ParameterType != parameters[j]) continue;
                 }
@@ -218,7 +242,8 @@ namespace UMS.Converters {
             return null;
         }
 
-        public static ConstructorInfo[] GetDeclaredConstructors(this Type type) {
+        public static ConstructorInfo[] GetDeclaredConstructors(this Type type)
+        {
 #if USE_TYPEINFO
             return type.GetTypeInfo().DeclaredConstructors.ToArray();
 #else
@@ -226,14 +251,18 @@ namespace UMS.Converters {
 #endif
         }
 
-        public static MemberInfo[] GetFlattenedMember(this Type type, string memberName) {
+        public static MemberInfo[] GetFlattenedMember(this Type type, string memberName)
+        {
             var result = new List<MemberInfo>();
 
-            while (type != null) {
+            while (type != null)
+            {
                 var members = GetDeclaredMembers(type);
 
-                for (int i = 0; i < members.Length; ++i) {
-                    if (members[i].Name == memberName) {
+                for (int i = 0; i < members.Length; ++i)
+                {
+                    if (members[i].Name == memberName)
+                    {
                         result.Add(members[i]);
                     }
                 }
@@ -244,12 +273,16 @@ namespace UMS.Converters {
             return result.ToArray();
         }
 
-        public static MethodInfo GetFlattenedMethod(this Type type, string methodName) {
-            while (type != null) {
+        public static MethodInfo GetFlattenedMethod(this Type type, string methodName)
+        {
+            while (type != null)
+            {
                 var methods = GetDeclaredMethods(type);
 
-                for (int i = 0; i < methods.Length; ++i) {
-                    if (methods[i].Name == methodName) {
+                for (int i = 0; i < methods.Length; ++i)
+                {
+                    if (methods[i].Name == methodName)
+                    {
                         return methods[i];
                     }
                 }
@@ -260,12 +293,16 @@ namespace UMS.Converters {
             return null;
         }
 
-        public static IEnumerable<MethodInfo> GetFlattenedMethods(this Type type, string methodName) {
-            while (type != null) {
+        public static IEnumerable<MethodInfo> GetFlattenedMethods(this Type type, string methodName)
+        {
+            while (type != null)
+            {
                 var methods = GetDeclaredMethods(type);
 
-                for (int i = 0; i < methods.Length; ++i) {
-                    if (methods[i].Name == methodName) {
+                for (int i = 0; i < methods.Length; ++i)
+                {
+                    if (methods[i].Name == methodName)
+                    {
                         yield return methods[i];
                     }
                 }
@@ -274,12 +311,16 @@ namespace UMS.Converters {
             }
         }
 
-        public static PropertyInfo GetFlattenedProperty(this Type type, string propertyName) {
-            while (type != null) {
+        public static PropertyInfo GetFlattenedProperty(this Type type, string propertyName)
+        {
+            while (type != null)
+            {
                 var properties = GetDeclaredProperties(type);
 
-                for (int i = 0; i < properties.Length; ++i) {
-                    if (properties[i].Name == propertyName) {
+                for (int i = 0; i < properties.Length; ++i)
+                {
+                    if (properties[i].Name == propertyName)
+                    {
                         return properties[i];
                     }
                 }
@@ -290,11 +331,14 @@ namespace UMS.Converters {
             return null;
         }
 
-        public static MemberInfo GetDeclaredMember(this Type type, string memberName) {
+        public static MemberInfo GetDeclaredMember(this Type type, string memberName)
+        {
             var members = GetDeclaredMembers(type);
 
-            for (int i = 0; i < members.Length; ++i) {
-                if (members[i].Name == memberName) {
+            for (int i = 0; i < members.Length; ++i)
+            {
+                if (members[i].Name == memberName)
+                {
                     return members[i];
                 }
             }
@@ -302,7 +346,8 @@ namespace UMS.Converters {
             return null;
         }
 
-        public static MethodInfo[] GetDeclaredMethods(this Type type) {
+        public static MethodInfo[] GetDeclaredMethods(this Type type)
+        {
 #if USE_TYPEINFO
             return type.GetTypeInfo().DeclaredMethods.ToArray();
 #else
@@ -310,7 +355,8 @@ namespace UMS.Converters {
 #endif
         }
 
-        public static PropertyInfo[] GetDeclaredProperties(this Type type) {
+        public static PropertyInfo[] GetDeclaredProperties(this Type type)
+        {
 #if USE_TYPEINFO
             return type.GetTypeInfo().DeclaredProperties.ToArray();
 #else
@@ -318,7 +364,8 @@ namespace UMS.Converters {
 #endif
         }
 
-        public static FieldInfo[] GetDeclaredFields(this Type type) {
+        public static FieldInfo[] GetDeclaredFields(this Type type)
+        {
 #if USE_TYPEINFO
             return type.GetTypeInfo().DeclaredFields.ToArray();
 #else
@@ -326,7 +373,8 @@ namespace UMS.Converters {
 #endif
         }
 
-        public static MemberInfo[] GetDeclaredMembers(this Type type) {
+        public static MemberInfo[] GetDeclaredMembers(this Type type)
+        {
 #if USE_TYPEINFO
             return type.GetTypeInfo().DeclaredMembers.ToArray();
 #else
@@ -334,7 +382,8 @@ namespace UMS.Converters {
 #endif
         }
 
-        public static MemberInfo AsMemberInfo(Type type) {
+        public static MemberInfo AsMemberInfo(Type type)
+        {
 #if USE_TYPEINFO
             return type.GetTypeInfo();
 #else
@@ -342,7 +391,8 @@ namespace UMS.Converters {
 #endif
         }
 
-        public static bool IsType(MemberInfo member) {
+        public static bool IsType(MemberInfo member)
+        {
 #if USE_TYPEINFO
             return member is TypeInfo;
 #else
@@ -350,7 +400,8 @@ namespace UMS.Converters {
 #endif
         }
 
-        public static Type AsType(MemberInfo member) {
+        public static Type AsType(MemberInfo member)
+        {
 #if USE_TYPEINFO
             return ((TypeInfo)member).AsType();
 #else
@@ -363,7 +414,8 @@ namespace UMS.Converters {
             return type.GetTypeInfo();
         }
 #else
-        public static Type Resolve(this Type type) {
+        public static Type Resolve(this Type type)
+        {
             return type;
         }
 #endif

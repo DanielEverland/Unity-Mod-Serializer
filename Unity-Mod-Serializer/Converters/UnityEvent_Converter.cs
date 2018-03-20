@@ -2,8 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace UMS.Converters {
-    partial class fsConverterRegistrar {
+namespace UMS.Converters
+{
+    partial class fsConverterRegistrar
+    {
         // Disable the converter for the time being. Unity's JsonUtility API
         // cannot be called from within a C# ISerializationCallbackReceiver
         // callback.
@@ -17,16 +19,20 @@ namespace UMS.Converters {
     //
     // We have to support legacy serialization formats so importing works as
     // expected.
-    public class UnityEvent_Converter : fsConverter {
-        public override bool CanProcess(Type type) {
+    public class UnityEvent_Converter : fsConverter
+    {
+        public override bool CanProcess(Type type)
+        {
             return typeof(UnityEvent).Resolve().IsAssignableFrom(type.Resolve()) && type.IsGenericType() == false;
         }
 
-        public override bool RequestCycleSupport(Type storageType) {
+        public override bool RequestCycleSupport(Type storageType)
+        {
             return false;
         }
 
-        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType) {
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
             Type objectType = (Type)instance;
 
             fsResult result = fsResult.Success;
@@ -34,7 +40,8 @@ namespace UMS.Converters {
             return result;
         }
 
-        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType) {
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
             fsResult result = fsResult.Success;
             serialized = fsJsonParser.Parse(JsonUtility.ToJson(instance));
             return result;

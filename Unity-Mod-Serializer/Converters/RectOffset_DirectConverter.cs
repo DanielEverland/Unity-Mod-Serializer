@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UMS.Converters {
-    partial class fsConverterRegistrar {
+namespace UMS.Converters
+{
+    partial class fsConverterRegistrar
+    {
         public static RectOffset_DirectConverter Register_RectOffset_DirectConverter;
     }
-    public class RectOffset_DirectConverter : fsDirectConverter<RectOffset> {
-        protected override fsResult DoSerialize(RectOffset model, Dictionary<string, fsData> serialized) {
+    public class RectOffset_DirectConverter : fsDirectConverter<RectOffset>
+    {
+        protected override fsResult DoSerialize(RectOffset model, Dictionary<string, fsData> serialized)
+        {
             var result = fsResult.Success;
 
             result += SerializeMember(serialized, null, "bottom", model.bottom);
@@ -18,7 +22,8 @@ namespace UMS.Converters {
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref RectOffset model) {
+        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref RectOffset model)
+        {
             var result = fsResult.Success;
 
             var t0 = model.bottom;
@@ -40,7 +45,8 @@ namespace UMS.Converters {
             return result;
         }
 
-        public override object CreateInstance(fsData data, Type storageType) {
+        public override object CreateInstance(fsData data, Type storageType)
+        {
             return new RectOffset();
         }
     }

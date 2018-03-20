@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UMS.Converters {
-    partial class fsConverterRegistrar {
+namespace UMS.Converters
+{
+    partial class fsConverterRegistrar
+    {
         public static GUIStyleState_DirectConverter Register_GUIStyleState_DirectConverter;
     }
-    public class GUIStyleState_DirectConverter : fsDirectConverter<GUIStyleState> {
-        protected override fsResult DoSerialize(GUIStyleState model, Dictionary<string, fsData> serialized) {
+    public class GUIStyleState_DirectConverter : fsDirectConverter<GUIStyleState>
+    {
+        protected override fsResult DoSerialize(GUIStyleState model, Dictionary<string, fsData> serialized)
+        {
             var result = fsResult.Success;
 
             result += SerializeMember(serialized, null, "background", model.background);
@@ -16,7 +20,8 @@ namespace UMS.Converters {
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref GUIStyleState model) {
+        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref GUIStyleState model)
+        {
             var result = fsResult.Success;
 
             var t0 = model.background;
@@ -30,7 +35,8 @@ namespace UMS.Converters {
             return result;
         }
 
-        public override object CreateInstance(fsData data, Type storageType) {
+        public override object CreateInstance(fsData data, Type storageType)
+        {
             return new GUIStyleState();
         }
     }

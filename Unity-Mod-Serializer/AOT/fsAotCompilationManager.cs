@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 using UMS.Reflection;
 
-namespace UMS.AOT {
+namespace UMS.AOT
+{
     /// <summary>
     /// The AOT compilation manager
     /// </summary>
-    public class fsAotCompilationManager {
-        private static bool HasMember(fsAotVersionInfo versionInfo, fsAotVersionInfo.Member member) {
-            foreach (fsAotVersionInfo.Member foundMember in versionInfo.Members) {
+    public class fsAotCompilationManager
+    {
+        private static bool HasMember(fsAotVersionInfo versionInfo, fsAotVersionInfo.Member member)
+        {
+            foreach (fsAotVersionInfo.Member foundMember in versionInfo.Members)
+            {
                 if (foundMember == member)
                     return true;
             }
@@ -21,15 +25,18 @@ namespace UMS.AOT {
         /// Returns true if the given aotModel can be used. Returns false if it needs to
         /// be recompiled.
         /// </summary>
-        public static bool IsAotModelUpToDate(fsMetaType currentModel, fsIAotConverter aotModel) {
+        public static bool IsAotModelUpToDate(fsMetaType currentModel, fsIAotConverter aotModel)
+        {
             if (currentModel.IsDefaultConstructorPublic != aotModel.VersionInfo.IsConstructorPublic)
                 return false;
 
             if (currentModel.Properties.Length != aotModel.VersionInfo.Members.Length)
                 return false;
 
-            foreach (fsMetaProperty property in currentModel.Properties) {
-                if (HasMember(aotModel.VersionInfo, new fsAotVersionInfo.Member(property)) == false) {
+            foreach (fsMetaProperty property in currentModel.Properties)
+            {
+                if (HasMember(aotModel.VersionInfo, new fsAotVersionInfo.Member(property)) == false)
+                {
                     return false;
                 }
             }
@@ -47,7 +54,8 @@ namespace UMS.AOT {
         /// to do anything. Simply add the file to your project and it'll get
         /// used instead of the reflection based one.
         /// </summary>
-        public static string RunAotCompilationForType(fsConfig config, Type type) {
+        public static string RunAotCompilationForType(fsConfig config, Type type)
+        {
             fsMetaType metatype = fsMetaType.Get(config, type);
             metatype.EmitAotData(/*throwException:*/ true);
             return GenerateDirectConverterForTypeInCSharp(type, metatype.Properties, metatype.IsDefaultConstructorPublic);
@@ -59,13 +67,15 @@ namespace UMS.AOT {
         /// </summary>
         public static HashSet<Type> AotCandidateTypes = new HashSet<Type>();
 
-        private static string EmitVersionInfo(string prefix, Type type, fsMetaProperty[] members, bool isConstructorPublic) {
+        private static string EmitVersionInfo(string prefix, Type type, fsMetaProperty[] members, bool isConstructorPublic)
+        {
             var sb = new StringBuilder();
 
             sb.AppendLine("new fsAotVersionInfo {");
             sb.AppendLine(prefix + "    IsConstructorPublic = " + (isConstructorPublic ? "true" : "false") + ",");
             sb.AppendLine(prefix + "    Members = new fsAotVersionInfo.Member[] {");
-            foreach (fsMetaProperty member in members) {
+            foreach (fsMetaProperty member in members)
+            {
                 sb.AppendLine(prefix + "        new fsAotVersionInfo.Member {");
                 sb.AppendLine(prefix + "            MemberName = \"" + member.MemberName + "\",");
                 sb.AppendLine(prefix + "            JsonName = \"" + member.JsonName + "\",");
@@ -80,7 +90,8 @@ namespace UMS.AOT {
             return sb.ToString();
         }
 
-        private static string GetConverterString(fsMetaProperty member) {
+        private static string GetConverterString(fsMetaProperty member)
+        {
             if (member.OverrideConverterType == null)
                 return "null";
 
@@ -88,14 +99,16 @@ namespace UMS.AOT {
                                  member.OverrideConverterType.CSharpName(/*includeNamespace:*/ true));
         }
 
-        public static string GetQualifiedConverterNameForType(Type type) {
+        public static string GetQualifiedConverterNameForType(Type type)
+        {
             return "UMS.Speedup." + type.CSharpName(true, true) + "_DirectConverter";
         }
 
         /// <summary>
         /// AOT compiles the object (in C#).
         /// </summary>
-        private static string GenerateDirectConverterForTypeInCSharp(Type type, fsMetaProperty[] members, bool isConstructorPublic) {
+        private static string GenerateDirectConverterForTypeInCSharp(Type type, fsMetaProperty[] members, bool isConstructorPublic)
+        {
             var sb = new StringBuilder();
             string typeName = type.CSharpName(/*includeNamespace:*/ true);
             string typeNameSafeDecl = type.CSharpName(true, true);
@@ -117,7 +130,8 @@ namespace UMS.AOT {
             sb.AppendLine("        protected override fsResult DoSerialize(" + typeName + " model, Dictionary<string, fsData> serialized) {");
             sb.AppendLine("            var result = fsResult.Success;");
             sb.AppendLine();
-            foreach (var member in members) {
+            foreach (var member in members)
+            {
                 sb.AppendLine("            result += SerializeMember(serialized, " + GetConverterString(member) + ", \"" + member.JsonName + "\", model." + member.MemberName + ");");
             }
             sb.AppendLine();
@@ -127,7 +141,8 @@ namespace UMS.AOT {
             sb.AppendLine("        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref " + typeName + " model) {");
             sb.AppendLine("            var result = fsResult.Success;");
             sb.AppendLine();
-            for (int i = 0; i < members.Length; ++i) {
+            for (int i = 0; i < members.Length; ++i)
+            {
                 var member = members[i];
                 sb.AppendLine("            var t" + i + " = model." + member.MemberName + ";");
                 sb.AppendLine("            result += DeserializeMember(data, " + GetConverterString(member) + ", \"" + member.JsonName + "\", out t" + i + ");");
@@ -138,10 +153,12 @@ namespace UMS.AOT {
             sb.AppendLine("        }");
             sb.AppendLine();
             sb.AppendLine("        public override object CreateInstance(fsData data, Type storageType) {");
-            if (isConstructorPublic) {
+            if (isConstructorPublic)
+            {
                 sb.AppendLine("            return new " + typeName + "();");
             }
-            else {
+            else
+            {
                 sb.AppendLine("            return Activator.CreateInstance(typeof(" + typeName + "), /*nonPublic:*/true);");
             }
             sb.AppendLine("        }");
