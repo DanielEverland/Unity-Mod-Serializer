@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace UMS.Converters
 {
-    partial class fsConverterRegistrar
+    partial class ConverterRegistrar
     {
         public static Gradient_DirectConverter Register_Gradient_DirectConverter;
     }
-    public class Gradient_DirectConverter : fsDirectConverter<Gradient>
+    public class Gradient_DirectConverter : DirectConverter<Gradient>
     {
-        protected override fsResult DoSerialize(Gradient model, Dictionary<string, fsData> serialized)
+        protected override Result DoSerialize(Gradient model, Dictionary<string, Data> serialized)
         {
-            var result = fsResult.Success;
+            var result = Result.Success;
 
             result += SerializeMember(serialized, null, "alphaKeys", model.alphaKeys);
             result += SerializeMember(serialized, null, "colorKeys", model.colorKeys);
@@ -20,9 +20,9 @@ namespace UMS.Converters
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref Gradient model)
+        protected override Result DoDeserialize(Dictionary<string, Data> data, ref Gradient model)
         {
-            var result = fsResult.Success;
+            var result = Result.Success;
 
             var t0 = model.alphaKeys;
             result += DeserializeMember(data, null, "alphaKeys", out t0);
@@ -35,7 +35,7 @@ namespace UMS.Converters
             return result;
         }
 
-        public override object CreateInstance(fsData data, Type storageType)
+        public override object CreateInstance(Data data, Type storageType)
         {
             return new Gradient();
         }

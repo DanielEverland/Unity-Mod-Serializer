@@ -4,24 +4,24 @@ using UnityEngine;
 
 namespace UMS.Converters
 {
-    partial class fsConverterRegistrar
+    partial class ConverterRegistrar
     {
         public static LayerMask_DirectConverter Register_LayerMask_DirectConverter;
     }
-    public class LayerMask_DirectConverter : fsDirectConverter<LayerMask>
+    public class LayerMask_DirectConverter : DirectConverter<LayerMask>
     {
-        protected override fsResult DoSerialize(LayerMask model, Dictionary<string, fsData> serialized)
+        protected override Result DoSerialize(LayerMask model, Dictionary<string, Data> serialized)
         {
-            var result = fsResult.Success;
+            var result = Result.Success;
 
             result += SerializeMember(serialized, null, "value", model.value);
 
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref LayerMask model)
+        protected override Result DoDeserialize(Dictionary<string, Data> data, ref LayerMask model)
         {
-            var result = fsResult.Success;
+            var result = Result.Success;
 
             var t0 = model.value;
             result += DeserializeMember(data, null, "value", out t0);
@@ -30,7 +30,7 @@ namespace UMS.Converters
             return result;
         }
 
-        public override object CreateInstance(fsData data, Type storageType)
+        public override object CreateInstance(Data data, Type storageType)
         {
             return new LayerMask();
         }

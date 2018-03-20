@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace UMS.Converters
 {
-    partial class fsConverterRegistrar
+    partial class ConverterRegistrar
     {
         public static Keyframe_DirectConverter Register_Keyframe_DirectConverter;
     }
-    public class Keyframe_DirectConverter : fsDirectConverter<Keyframe>
+    public class Keyframe_DirectConverter : DirectConverter<Keyframe>
     {
-        protected override fsResult DoSerialize(Keyframe model, Dictionary<string, fsData> serialized)
+        protected override Result DoSerialize(Keyframe model, Dictionary<string, Data> serialized)
         {
-            var result = fsResult.Success;
+            var result = Result.Success;
 
             result += SerializeMember(serialized, null, "time", model.time);
             result += SerializeMember(serialized, null, "value", model.value);
@@ -23,9 +23,9 @@ namespace UMS.Converters
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref Keyframe model)
+        protected override Result DoDeserialize(Dictionary<string, Data> data, ref Keyframe model)
         {
-            var result = fsResult.Success;
+            var result = Result.Success;
 
             var t0 = model.time;
             result += DeserializeMember(data, null, "time", out t0);
@@ -50,7 +50,7 @@ namespace UMS.Converters
             return result;
         }
 
-        public override object CreateInstance(fsData data, Type storageType)
+        public override object CreateInstance(Data data, Type storageType)
         {
             return new Keyframe();
         }

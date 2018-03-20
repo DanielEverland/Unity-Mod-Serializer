@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace UMS.Converters
 {
-    partial class fsConverterRegistrar
+    partial class ConverterRegistrar
     {
         public static GUIStyleState_DirectConverter Register_GUIStyleState_DirectConverter;
     }
-    public class GUIStyleState_DirectConverter : fsDirectConverter<GUIStyleState>
+    public class GUIStyleState_DirectConverter : DirectConverter<GUIStyleState>
     {
-        protected override fsResult DoSerialize(GUIStyleState model, Dictionary<string, fsData> serialized)
+        protected override Result DoSerialize(GUIStyleState model, Dictionary<string, Data> serialized)
         {
-            var result = fsResult.Success;
+            var result = Result.Success;
 
             result += SerializeMember(serialized, null, "background", model.background);
             result += SerializeMember(serialized, null, "textColor", model.textColor);
@@ -20,9 +20,9 @@ namespace UMS.Converters
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref GUIStyleState model)
+        protected override Result DoDeserialize(Dictionary<string, Data> data, ref GUIStyleState model)
         {
-            var result = fsResult.Success;
+            var result = Result.Success;
 
             var t0 = model.background;
             result += DeserializeMember(data, null, "background", out t0);
@@ -35,7 +35,7 @@ namespace UMS.Converters
             return result;
         }
 
-        public override object CreateInstance(fsData data, Type storageType)
+        public override object CreateInstance(Data data, Type storageType)
         {
             return new GUIStyleState();
         }

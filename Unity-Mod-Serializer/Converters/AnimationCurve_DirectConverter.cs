@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace UMS.Converters
 {
-    partial class fsConverterRegistrar
+    partial class ConverterRegistrar
     {
         public static AnimationCurve_DirectConverter Register_AnimationCurve_DirectConverter;
     }
-    public class AnimationCurve_DirectConverter : fsDirectConverter<AnimationCurve>
+    public class AnimationCurve_DirectConverter : DirectConverter<AnimationCurve>
     {
-        protected override fsResult DoSerialize(AnimationCurve model, Dictionary<string, fsData> serialized)
+        protected override Result DoSerialize(AnimationCurve model, Dictionary<string, Data> serialized)
         {
-            var result = fsResult.Success;
+            var result = Result.Success;
 
             result += SerializeMember(serialized, null, "keys", model.keys);
             result += SerializeMember(serialized, null, "preWrapMode", model.preWrapMode);
@@ -21,9 +21,9 @@ namespace UMS.Converters
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref AnimationCurve model)
+        protected override Result DoDeserialize(Dictionary<string, Data> data, ref AnimationCurve model)
         {
-            var result = fsResult.Success;
+            var result = Result.Success;
 
             var t0 = model.keys;
             result += DeserializeMember(data, null, "keys", out t0);
@@ -40,7 +40,7 @@ namespace UMS.Converters
             return result;
         }
 
-        public override object CreateInstance(fsData data, Type storageType)
+        public override object CreateInstance(Data data, Type storageType)
         {
             return new AnimationCurve();
         }

@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace UMS.Converters
 {
-    partial class fsConverterRegistrar
+    partial class ConverterRegistrar
     {
         public static Bounds_DirectConverter Register_Bounds_DirectConverter;
     }
-    public class Bounds_DirectConverter : fsDirectConverter<Bounds>
+    public class Bounds_DirectConverter : DirectConverter<Bounds>
     {
-        protected override fsResult DoSerialize(Bounds model, Dictionary<string, fsData> serialized)
+        protected override Result DoSerialize(Bounds model, Dictionary<string, Data> serialized)
         {
-            var result = fsResult.Success;
+            var result = Result.Success;
 
             result += SerializeMember(serialized, null, "center", model.center);
             result += SerializeMember(serialized, null, "size", model.size);
@@ -20,9 +20,9 @@ namespace UMS.Converters
             return result;
         }
 
-        protected override fsResult DoDeserialize(Dictionary<string, fsData> data, ref Bounds model)
+        protected override Result DoDeserialize(Dictionary<string, Data> data, ref Bounds model)
         {
-            var result = fsResult.Success;
+            var result = Result.Success;
 
             var t0 = model.center;
             result += DeserializeMember(data, null, "center", out t0);
@@ -35,7 +35,7 @@ namespace UMS.Converters
             return result;
         }
 
-        public override object CreateInstance(fsData data, Type storageType)
+        public override object CreateInstance(Data data, Type storageType)
         {
             return new Bounds();
         }
