@@ -26,7 +26,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;RELEASE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -85,6 +85,7 @@
     <Compile Include="JsonParser.cs" />
     <Compile Include="JsonPrinter.cs" />
     <Compile Include="MemberSerialization.cs" />
+    <Compile Include="Mods.cs" />
     <Compile Include="ObjectAttribute.cs" />
     <Compile Include="ObjectProcessor.cs" />
     <Compile Include="PropertyAttribute.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Option.cs" />
     <Compile Include="PortableReflection.cs" />
     <Compile Include="TypeExtensions.cs" />
+    <Compile Include="Utility.cs" />
     <Compile Include="VersionedType.cs" />
     <Compile Include="VersionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

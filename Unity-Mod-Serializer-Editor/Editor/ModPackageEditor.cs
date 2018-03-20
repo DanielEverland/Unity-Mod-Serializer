@@ -42,8 +42,7 @@ namespace UMS.Editor
 
             if (GUI.Button(rect, buttonText))
             {
-                throw new System.NotImplementedException();
-                //Serializer.SerializePackage(Target, System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop));
+                Target.Save(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop));
             }
         }
         protected virtual ModPackageReorderableList CreateList(string propertyName)

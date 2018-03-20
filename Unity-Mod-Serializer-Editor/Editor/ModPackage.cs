@@ -10,10 +10,23 @@ namespace UMS.Editor
     {
         public IEnumerable<ObjectEntry> ObjectEntries { get { return _objectEntries; } }
 
+        public string FileName { get { return string.Format("{0}.{1}", FileNameWithoutExtension, Extension); } }
+        public string FileNameWithoutExtension { get { return name; } }
+        public string Extension { get { return Utility.MOD_EXTENSION; } }
+
 #pragma warning disable
         [SerializeField]
         private List<ObjectEntry> _objectEntries;
 #pragma warning restore
+
+        /// <summary>
+        /// Saves a package 
+        /// </summary>
+        /// <param name="folderPath">Path of the folder</param>
+        public void Save(string folderPath)
+        {
+            Mods.Save(this, string.Format("{0}/{1}", folderPath, FileName));
+        }
 
         [Serializable]
         public class ObjectEntry
