@@ -40,61 +40,67 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>C:\Program Files\Unity_2017.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <HintPath>C:\Program Files\Unity_2017.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.UIModule.dll</HintPath>
+      <HintPath>C:\Program Files\Unity_2017.3.1f1\Editor\Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AOT\fsAotCompilationManager.cs" />
+    <Compile Include="AOT\fsAotConfiguration.cs" />
+    <Compile Include="AOT\fsAotVersionInfo.cs" />
+    <Compile Include="AOT\fsIAotConverter.cs" />
+    <Compile Include="Converters\fsArrayConverter.cs" />
+    <Compile Include="Converters\fsDateConverter.cs" />
+    <Compile Include="Converters\fsDictionaryConverter.cs" />
+    <Compile Include="Converters\fsEnumConverter.cs" />
+    <Compile Include="Converters\fsForwardConverter.cs" />
+    <Compile Include="Converters\fsGuidConverter.cs" />
+    <Compile Include="Converters\fsIEnumerableConverter.cs" />
+    <Compile Include="Converters\fsKeyValuePairConverter.cs" />
+    <Compile Include="Converters\fsNullableConverter.cs" />
+    <Compile Include="Converters\fsPrimitiveConverter.cs" />
+    <Compile Include="Converters\fsReflectedConverter.cs" />
+    <Compile Include="Converters\fsTypeConverter.cs" />
+    <Compile Include="Converters\fsWeakReferenceConverter.cs" />
+    <Compile Include="Converters\AnimationCurve_DirectConverter.cs" />
+    <Compile Include="Converters\Bounds_DirectConverter.cs" />
+    <Compile Include="Converters\Gradient_DirectConverter.cs" />
+    <Compile Include="Converters\GUIStyleState_DirectConverter.cs" />
+    <Compile Include="Converters\GUIStyle_DirectConverter.cs" />
+    <Compile Include="Converters\Keyframe_DirectConverter.cs" />
+    <Compile Include="Converters\LayerMask_DirectConverter.cs" />
+    <Compile Include="Converters\RectOffset_DirectConverter.cs" />
+    <Compile Include="Converters\Rect_DirectConverter.cs" />
+    <Compile Include="Converters\UnityEvent_Converter.cs" />
+    <Compile Include="fsBaseConverter.cs" />
+    <Compile Include="fsConfig.cs" />
+    <Compile Include="fsContext.cs" />
+    <Compile Include="fsConverter.cs" />
+    <Compile Include="fsConverterRegistrar.cs" />
+    <Compile Include="fsData.cs" />
+    <Compile Include="fsDirectConverter.cs" />
+    <Compile Include="fsExceptions.cs" />
+    <Compile Include="fsIgnoreAttribute.cs" />
+    <Compile Include="fsISerializationCallbacks.cs" />
+    <Compile Include="fsJsonParser.cs" />
+    <Compile Include="fsJsonPrinter.cs" />
+    <Compile Include="fsMemberSerialization.cs" />
+    <Compile Include="fsObjectAttribute.cs" />
+    <Compile Include="fsObjectProcessor.cs" />
+    <Compile Include="fsPropertyAttribute.cs" />
+    <Compile Include="fsResult.cs" />
+    <Compile Include="fsSerializer.cs" />
+    <Compile Include="fsCyclicReferenceManager.cs" />
+    <Compile Include="fsOption.cs" />
+    <Compile Include="fsPortableReflection.cs" />
+    <Compile Include="fsTypeExtensions.cs" />
+    <Compile Include="fsVersionedType.cs" />
+    <Compile Include="fsVersionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Zip\ComHelper.cs" />
-    <Compile Include="Zip\EncryptionAlgorithm.cs" />
-    <Compile Include="Zip\Events.cs" />
-    <Compile Include="Zip\Exceptions.cs" />
-    <Compile Include="Zip\ExtractExistingFileAction.cs" />
-    <Compile Include="Zip\FileSelector.cs" />
-    <Compile Include="Zip\OffsetStream.cs" />
-    <Compile Include="Zip\Resources\CommandLineSelfExtractorStub.cs" />
-    <Compile Include="Zip\Resources\FolderBrowserDialogEx.cs" />
-    <Compile Include="Zip\Resources\PasswordDialog.cs" />
-    <Compile Include="Zip\Resources\PasswordDialog.Designer.cs">
-      <DependentUpon>PasswordDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Zip\Resources\WinFormsSelfExtractorStub.cs" />
-    <Compile Include="Zip\Resources\WinFormsSelfExtractorStub.Designer.cs">
-      <DependentUpon>WinFormsSelfExtractorStub.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Zip\Resources\ZipContentsDialog.cs" />
-    <Compile Include="Zip\Resources\ZipContentsDialog.Designer.cs">
-      <DependentUpon>ZipContentsDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Zip\Shared.cs" />
-    <Compile Include="Zip\WinZipAes.cs" />
-    <Compile Include="Zip\ZipConstants.cs" />
-    <Compile Include="Zip\ZipCrypto.cs" />
-    <Compile Include="Zip\ZipDirEntry.cs" />
-    <Compile Include="Zip\ZipEntry.cs" />
-    <Compile Include="Zip\ZipEntry.Extract.cs" />
-    <Compile Include="Zip\ZipEntry.Read.cs" />
-    <Compile Include="Zip\ZipEntry.Write.cs" />
-    <Compile Include="Zip\ZipEntrySource.cs" />
-    <Compile Include="Zip\ZipErrorAction.cs" />
-    <Compile Include="Zip\ZipFile.AddUpdate.cs" />
-    <Compile Include="Zip\ZipFile.Check.cs" />
-    <Compile Include="Zip\ZipFile.cs" />
-    <Compile Include="Zip\ZipFile.Events.cs" />
-    <Compile Include="Zip\ZipFile.Extract.cs" />
-    <Compile Include="Zip\ZipFile.Read.cs" />
-    <Compile Include="Zip\ZipFile.Save.cs" />
-    <Compile Include="Zip\ZipFile.SaveSelfExtractor.cs" />
-    <Compile Include="Zip\ZipFile.Selector.cs" />
-    <Compile Include="Zip\ZipFile.x-IEnumerable.cs" />
-    <Compile Include="Zip\ZipInputStream.cs" />
-    <Compile Include="Zip\ZipOutputStream.cs" />
-    <Compile Include="Zip\ZipSegmentedStream.cs" />
+    <Compile Include="Reflection\fsMetaProperty.cs" />
+    <Compile Include="Reflection\fsMetaType.cs" />
+    <Compile Include="Reflection\fsReflectionUtility.cs" />
+    <Compile Include="Reflection\fsTypeCache.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

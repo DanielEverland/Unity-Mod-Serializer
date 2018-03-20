@@ -44,16 +44,20 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>C:\Program Files\Unity_2017.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <HintPath>C:\Program Files\Unity_2017.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.UIModule.dll</HintPath>
+      <HintPath>C:\Program Files\Unity_2017.3.1f1\Editor\Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aot\fsAotConfigurationEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Unity-Mod-Serializer\Unity-Mod-Serializer.csproj">
+      <Project>{6aa2de65-b12b-4fb3-bb6d-f5ed83dcdeed}</Project>
+      <Name>Unity-Mod-Serializer</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
