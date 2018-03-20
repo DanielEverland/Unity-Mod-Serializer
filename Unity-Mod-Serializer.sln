@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity-Mod-Serializer", "Unity-Mod-Serializer\Unity-Mod-Serializer.csproj", "{6AA2DE65-B12B-4FB3-BB6D-F5ED83DCDEED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity-Mod-Serializer-Editor", "Unity-Mod-Serializer-Editor\Unity-Mod-Serializer-Editor.csproj", "{6D3AB471-E03B-4450-ACC9-EF9F41202044}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6AA2DE65-B12B-4FB3-BB6D-F5ED83DCDEED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AA2DE65-B12B-4FB3-BB6D-F5ED83DCDEED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AA2DE65-B12B-4FB3-BB6D-F5ED83DCDEED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AA2DE65-B12B-4FB3-BB6D-F5ED83DCDEED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D3AB471-E03B-4450-ACC9-EF9F41202044}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D3AB471-E03B-4450-ACC9-EF9F41202044}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D3AB471-E03B-4450-ACC9-EF9F41202044}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D3AB471-E03B-4450-ACC9-EF9F41202044}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1C9BFFB3-7467-433D-8890-5666C001A2E1}
+	EndGlobalSection
+EndGlobal
