@@ -6,7 +6,9 @@ namespace UMS.Converters
 {
     partial class ConverterRegistrar
     {
+#pragma warning disable 0649
         public static Keyframe_DirectConverter Register_Keyframe_DirectConverter;
+#pragma warning restore
     }
     public class Keyframe_DirectConverter : DirectConverter<Keyframe>
     {

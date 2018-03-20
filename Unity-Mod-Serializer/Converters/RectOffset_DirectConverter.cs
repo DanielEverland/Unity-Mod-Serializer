@@ -6,7 +6,9 @@ namespace UMS.Converters
 {
     partial class ConverterRegistrar
     {
+#pragma warning disable 0649
         public static RectOffset_DirectConverter Register_RectOffset_DirectConverter;
+#pragma warning restore
     }
     public class RectOffset_DirectConverter : DirectConverter<RectOffset>
     {

@@ -7,7 +7,9 @@ namespace UMS.Converters
 {
     partial class ConverterRegistrar
     {
+#pragma warning disable 0649
         public static GUIStyle_DirectConverter Register_GUIStyle_DirectConverter;
+#pragma warning restore
     }
     public class GUIStyle_DirectConverter : DirectConverter<GUIStyle>
     {

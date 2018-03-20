@@ -6,7 +6,9 @@ namespace UMS.Converters
 {
     partial class ConverterRegistrar
     {
+#pragma warning disable 0649
         public static LayerMask_DirectConverter Register_LayerMask_DirectConverter;
+#pragma warning restore
     }
     public class LayerMask_DirectConverter : DirectConverter<LayerMask>
     {
