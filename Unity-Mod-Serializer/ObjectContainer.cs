@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace UMS
 {
@@ -57,20 +58,14 @@ namespace UMS
             {
                 return _data[_keyIndexes[key]];
             }
-            public void Add(object obj, string guid, string key)
+            public void Add(string content, System.Type type, string guid, string key)
             {
-                BufferData data = new BufferData()
-                {
-                    obj = obj,
-                    guid = guid,
-                    key = key,
-                };
-
                 if(!IsNull(guid))
                 {
                     if(_guidIndexes.ContainsKey(guid))
                     {
-                        throw new System.ArgumentException("GUID " + guid + " already exists!");
+                        Debug.LogError("GUID " + guid + " already exists!");
+                        return;
                     }
 
                     _guidIndexes.Add(guid, CurrentIndex);
@@ -79,11 +74,19 @@ namespace UMS
                 {
                     if(_keyIndexes.ContainsKey(key))
                     {
-                        throw new System.ArgumentException("Key " + key + " already exists!");
+                        Debug.LogError("Key " + key + " already exists!");
+                        return;
                     }
 
                     _keyIndexes.Add(key, CurrentIndex);
                 }
+
+                BufferData data = new BufferData()
+                {
+                    obj = Mods.DeserializeString(content, type),
+                    guid = guid,
+                    key = key,
+                };
 
                 _data.Add(data);
             }

@@ -15,9 +15,9 @@ public static class Mods
     {
         return (T)ObjectContainer.Instance.GetFromKey(key).obj;
     }
-    public static void Add(object obj, string guid, string key)
+    public static void Add(string json, System.Type type, string guid, string key)
     {
-        ObjectContainer.Instance.Add(obj, guid, key);
+        ObjectContainer.Instance.Add(json, type, guid, key);
     }
 
     /// <summary>
@@ -35,9 +35,9 @@ public static class Mods
 
             foreach (Manifest.Entry entry in manifest.Entries)
             {
-                object obj = file[entry.path].ToObject(entry.type);
+                string json = file[entry.path].ToJson();
 
-
+                Add(json, entry.type, entry.guid, entry.key);
             }
         }        
     }
