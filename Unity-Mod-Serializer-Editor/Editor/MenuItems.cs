@@ -10,6 +10,11 @@ namespace UMS.Editor
 {
     public static class MenuItems
     {
+        [MenuItem(EditorUtilities.MENU_ITEM_ROOT + "/Create New Session", priority = EditorUtilities.MENU_ITEM_PRIORITY)]
+        private static void CreateNewSession()
+        {
+            Mods.CreateNewSession();
+        }
         [MenuItem(EditorUtilities.MENU_ITEM_ROOT + "/Deserialize Desktop", priority = EditorUtilities.MENU_ITEM_PRIORITY)]
         private static void DeserializeDesktop()
         {

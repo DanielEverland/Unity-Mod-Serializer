@@ -11,6 +11,10 @@ public static class Mods
 {
     private static Serializer _serializer = new Serializer();
     
+    public static void CreateNewSession()
+    {
+        ObjectContainer.Initialize();
+    }
     public static T GetObject<T>(string key)
     {
         return (T)ObjectContainer.Instance.GetFromKey(key).obj;
@@ -35,7 +39,7 @@ public static class Mods
 
             foreach (Manifest.Entry entry in manifest.Entries)
             {
-                string json = file[entry.path].ToJson();
+                string json = file[entry.path].ZipToJson();
 
                 Add(json, entry.type, entry.guid, entry.key);
             }

@@ -80,7 +80,7 @@ namespace UMS
 
                     _keyIndexes.Add(key, CurrentIndex);
                 }
-
+                
                 BufferData data = new BufferData()
                 {
                     obj = Mods.DeserializeString(content, type),

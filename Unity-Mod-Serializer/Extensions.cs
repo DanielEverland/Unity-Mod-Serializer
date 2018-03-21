@@ -16,20 +16,9 @@ namespace UMS
         }
         public static object ToObject(this ZipEntry entry, System.Type type)
         {
-            string content = "";
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                entry.Extract(stream);
-                stream.Position = 0;
-
-                StreamReader reader = new StreamReader(stream);
-                content = reader.ReadToEnd();
-            }
-
-            return Mods.DeserializeString(content, type);
+            return Mods.DeserializeString(ZipToJson(entry), type);
         }        
-        public static string FromJson(this ZipEntry entry)
+        public static string ZipToJson(this ZipEntry entry)
         {
             string toReturn = "";
 
