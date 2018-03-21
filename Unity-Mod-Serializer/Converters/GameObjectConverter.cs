@@ -25,9 +25,8 @@ namespace UMS.Converters
 
         private const string NAME_KEY = "name";
         
-        public override Result TryDeserialize(Data input, ref object instance, Type storageType)
+        public override Result TryDeserialize(Data data, ref object instance, Type storageType)
         {
-            Dictionary<string, Data> data = input.AsDictionary;
             GameObject obj = (GameObject)instance;
 
             obj.name = data[NAME_KEY].AsString;

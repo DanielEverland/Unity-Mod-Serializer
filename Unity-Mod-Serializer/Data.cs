@@ -32,6 +32,38 @@ namespace UMS
         /// </summary>
         private object _value;
 
+        public Data this[string index]
+        {
+            get
+            {
+                if (_dictionary == null)
+                    CreateInternalDictionary();
+
+                if(!_dictionary.ContainsKey(index))
+                {
+                    UnityEngine.Debug.LogError(@"Data doesn't contain key """ + index + @"""");
+                    return null;
+                }
+
+                return _dictionary[index];
+            }
+        }
+
+        [Ignore]
+        private Dictionary<string, Data> _dictionary;
+        private void CreateInternalDictionary()
+        {
+            try
+            {
+                _dictionary = Cast<Dictionary<string, Data>>();
+            }
+            catch (Exception)
+            {
+                UnityEngine.Debug.LogError("Issue creating internal dictionary for " + _value);
+                throw;
+            }
+        }
+
         #region Constructors
         /// <summary>
         /// Creates a Data instance that holds null.
