@@ -36,7 +36,13 @@ namespace UMS.Zip
             {
                 zipFile.Serialize(zip);
 
-                zip.Save(string.Format("{0}/{1}", folderPath, zipFile.FileName));
+                string fullPath = string.Format("{0}/{1}", folderPath, zipFile.FileName);
+
+#if DEBUG
+                UnityEngine.Debug.Log("Serializing " + fullPath);
+#endif
+
+                zip.Save(fullPath);
             }
         }
 
@@ -51,6 +57,10 @@ namespace UMS.Zip
             using (ZipFile zip = new ZipFile())
             {
                 zip.AddEntry(entryName, content);
+
+#if DEBUG
+                UnityEngine.Debug.Log("Serializing " + zipFullPath);
+#endif
 
                 zip.Save(zipFullPath);
             }

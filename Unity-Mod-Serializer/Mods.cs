@@ -40,7 +40,7 @@ public static class Mods
     /// <param name="fullPath">Full path with filename and extension</param>
     public static void Save<T>(T obj, string fullPath)
     {
-        Create(obj, typeof(T), fullPath);
+        Create(obj, fullPath);
     }
 
     /// <summary>

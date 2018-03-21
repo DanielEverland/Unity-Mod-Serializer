@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
+using UMS.Zip;
+using Ionic.Zip;
 
 namespace UMS.Editor
 {
     [Serializable]
     [CreateAssetMenu(fileName = "ModPackage.asset", menuName = "Modding/Package", order = EditorUtilities.MENU_ITEM_PRIORITY)]
-    public class ModPackage : ScriptableObject
+    public class ModPackage : ScriptableObject, IZipFile
     {
         public IEnumerable<ObjectEntry> ObjectEntries { get { return _objectEntries; } }
 
@@ -25,7 +28,25 @@ namespace UMS.Editor
         /// <param name="folderPath">Path of the folder</param>
         public void Save(string folderPath)
         {
-            Mods.Save(this, string.Format("{0}/{1}", folderPath, FileName));
+            ZipSerializer.Create(this, folderPath);
+        }
+
+        public void Serialize(ZipFile file)
+        {
+            Manifest manifest = new Manifest();
+
+            foreach (ObjectEntry entry in ObjectEntries)
+            {
+                string zipPath = entry.Object.ToString();
+                string assetPath = AssetDatabase.GetAssetPath(entry.Object);
+                string guid = AssetDatabase.AssetPathToGUID(assetPath);
+                string content = Mods.Serialize(entry.Object);
+
+                manifest.Add(guid, zipPath, entry.Key);
+                file.AddEntry(zipPath, content);
+            }
+
+            file.AddEntry(".manifest", manifest.ToJson());
         }
 
         [Serializable]

@@ -88,6 +88,7 @@
     <Compile Include="ISerializationCallbacks.cs" />
     <Compile Include="JsonParser.cs" />
     <Compile Include="JsonPrinter.cs" />
+    <Compile Include="Manifest.cs" />
     <Compile Include="MemberSerialization.cs" />
     <Compile Include="Mods.cs" />
     <Compile Include="ObjectAttribute.cs" />
