@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 using UnityEditor;
 
 namespace UMS.Editor
@@ -9,8 +10,9 @@ namespace UMS.Editor
         protected const float SERIALIZE_BUTTON_WIDTH = 200;
 
         protected ModPackage Target { get { return (ModPackage)target; } }
-
         protected ModPackageReorderableList _objectEntryList;
+
+        private static readonly string _desktopPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
 
         protected virtual void OnEnable()
         {
@@ -26,6 +28,7 @@ namespace UMS.Editor
 
             EditorGUILayout.Space();
             DrawSerializeButton();
+            DrawDeserializeButton();
             EditorGUILayout.Space();
 
             if (GUI.changed)
@@ -42,8 +45,26 @@ namespace UMS.Editor
 
             if (GUI.Button(rect, buttonText))
             {
-                Target.Save(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop));
+                Target.Save(_desktopPath);
             }
+        }
+        private void DrawDeserializeButton()
+        {
+            GUIContent buttonText = new GUIContent("Deserialize", "Deserializes package from Desktop. To deserialize all packages use Modding/Deserialize Desktop");
+            GUIStyle buttonStyle = EditorStyles.largeLabel;
+
+            Rect rect = GUILayoutUtility.GetRect(buttonText, buttonStyle);
+            rect.x = (rect.width - SERIALIZE_BUTTON_WIDTH) / 2;
+            rect.width = SERIALIZE_BUTTON_WIDTH;
+
+            string fullPath = _desktopPath + @"\" + Target.FileName;
+
+            EditorGUI.BeginDisabledGroup(!File.Exists(fullPath));
+            if (GUI.Button(rect, buttonText))
+            {
+                Mods.Load(fullPath);
+            }
+            EditorGUI.EndDisabledGroup();
         }
         protected virtual ModPackageReorderableList CreateList(string propertyName)
         {

@@ -93,6 +93,7 @@
     <Compile Include="MemberSerialization.cs" />
     <Compile Include="Mods.cs" />
     <Compile Include="ObjectAttribute.cs" />
+    <Compile Include="ObjectContainer.cs" />
     <Compile Include="ObjectProcessor.cs" />
     <Compile Include="PropertyAttribute.cs" />
     <Compile Include="Result.cs" />

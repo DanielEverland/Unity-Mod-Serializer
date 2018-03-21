@@ -30,7 +30,7 @@ namespace UMS.Zip
         /// </summary>
         /// <param name="zipFile">The object to serialize</param>
         /// <param name="folderPath">The folder in which to serialize the object</param>
-        public static void Create(IZipFile zipFile, string folderPath)
+        public static void Create<T>(IZipFile<T> zipFile, string folderPath)
         {
             using (ZipFile zip = new ZipFile())
             {

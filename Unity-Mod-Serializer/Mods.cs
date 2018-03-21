@@ -2,6 +2,7 @@
 using System.IO;
 using UMS;
 using UMS.Zip;
+using Ionic.Zip;
 
 /// <summary>
 /// Front-end for calling UMS functions
@@ -9,27 +10,36 @@ using UMS.Zip;
 public static class Mods
 {
     private static Serializer _serializer = new Serializer();
-
-    /// <summary>
-    /// Loads an object
-    /// </summary>
-    /// <param name="T">The expected type to load</param>
-    /// <param name="fullPath">Full path with filename and extension</param>
-    /// <returns></returns>
-    public static T Load<T>(string fullPath)
+    
+    public static T GetObject<T>(string key)
     {
-        return (T)Deserialize(typeof(T), fullPath);
+        return (T)ObjectContainer.Instance.GetFromKey(key).obj;
+    }
+    public static void Add(object obj, string guid, string key)
+    {
+        ObjectContainer.Instance.Add(obj, guid, key);
     }
 
     /// <summary>
-    /// Loads an object
+    /// Loads .mod file into memory
     /// </summary>
-    /// <param name="type">The expected type to load</param>
-    /// <param name="fullPath">Full path with filename and extension</param>
-    /// <returns></returns>
-    public static object Load(System.Type type, string fullPath)
+    /// <param name="fullPath">Full path of the .mod file</param>
+    public static void Load(string fullPath)
     {
-        return Deserialize(type, fullPath);
+        using (ZipFile file = ZipFile.Read(fullPath))
+        {
+            if (!file.ContainsEntry(Utility.MANIFEST_NAME))
+                throw new System.NullReferenceException();
+
+            Manifest manifest = file[Utility.MANIFEST_NAME].ToObject<Manifest>();
+
+            foreach (Manifest.Entry entry in manifest.Entries)
+            {
+                object obj = file[entry.path].ToObject(entry.type);
+
+
+            }
+        }        
     }
 
     /// <summary>
@@ -106,7 +116,20 @@ public static class Mods
 
         return deserialized;
     }
-#endif
+    public static T DeserializeString<T>(string content)
+    {
+        return (T)DeserializeString(content, typeof(T));
+    }
+    public static object DeserializeString(string content, System.Type type)
+    {
+        Data data = JsonParser.Parse(content);
+
+        object deserialized = null;
+        _serializer.TryDeserialize(data, type, ref deserialized).AssertSuccessWithoutWarnings();
+
+        return deserialized;
+    }
+    #endif
 #if RELEASE
     internal static void Serialize(object obj, System.Type type, string fullPath)
     {

@@ -9,14 +9,14 @@ namespace UMS.Editor
 {
     [Serializable]
     [CreateAssetMenu(fileName = "ModPackage.asset", menuName = "Modding/Package", order = EditorUtilities.MENU_ITEM_PRIORITY)]
-    public class ModPackage : ScriptableObject, IZipFile
+    public class ModPackage : ScriptableObject, IZipFile<ModPackage>
     {
         public IEnumerable<ObjectEntry> ObjectEntries { get { return _objectEntries; } }
 
         public string FileName { get { return string.Format("{0}.{1}", FileNameWithoutExtension, Extension); } }
         public string FileNameWithoutExtension { get { return name; } }
         public string Extension { get { return Utility.MOD_EXTENSION; } }
-
+        
 #pragma warning disable
         [SerializeField]
         private List<ObjectEntry> _objectEntries;
@@ -34,7 +34,7 @@ namespace UMS.Editor
         public void Serialize(ZipFile file)
         {
             Manifest manifest = new Manifest();
-
+                        
             foreach (ObjectEntry entry in ObjectEntries)
             {
                 string zipPath = entry.Object.ToString();
@@ -42,13 +42,13 @@ namespace UMS.Editor
                 string guid = AssetDatabase.AssetPathToGUID(assetPath);
                 string content = Mods.Serialize(entry.Object);
 
-                manifest.Add(guid, zipPath, entry.Key);
+                manifest.Add(guid, zipPath, entry.Object.GetType(), entry.Key);
                 file.AddEntry(zipPath, content);
             }
-
-            file.AddEntry(".manifest", manifest.ToJson());
+            
+            file.AddEntry(Utility.MANIFEST_NAME, Mods.Serialize(manifest));
         }
-
+        
         [Serializable]
         public class ObjectEntry
         {
