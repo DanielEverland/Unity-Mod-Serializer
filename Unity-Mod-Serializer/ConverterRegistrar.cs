@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using UMS.AOT;
-using UMS.Converters;
 using UMS.Reflection;
 
-namespace UMS
+namespace UMS.Converters
 {
     /// <summary>
     /// This class allows arbitrary code to easily register global converters. To

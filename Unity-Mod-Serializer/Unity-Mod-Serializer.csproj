@@ -57,6 +57,7 @@
     <Compile Include="Converters\DictionaryConverter.cs" />
     <Compile Include="Converters\EnumConverter.cs" />
     <Compile Include="Converters\ForwardConverter.cs" />
+    <Compile Include="Converters\GameObjectConverter.cs" />
     <Compile Include="Converters\GuidConverter.cs" />
     <Compile Include="Converters\IEnumerableConverter.cs" />
     <Compile Include="Converters\KeyValuePairConverter.cs" />

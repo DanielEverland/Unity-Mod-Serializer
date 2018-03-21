@@ -87,7 +87,7 @@ namespace UMS
         /// <summary>
         /// Deserialize data into the object instance.
         /// </summary>
-        /// <param name="data">Serialization data to deserialize from.</param>
+        /// <param name="input">Serialization data to deserialize from.</param>
         /// <param name="instance">
         /// The object instance to deserialize into.
         /// </param>
@@ -97,7 +97,7 @@ namespace UMS
         /// <returns>
         /// True if serialization was successful, false otherwise.
         /// </returns>
-        public abstract Result TryDeserialize(Data data, ref object instance, Type storageType);
+        public abstract Result TryDeserialize(Data input, ref object instance, Type storageType);
 
         protected Result FailExpectedType(Data data, params DataType[] types)
         {
