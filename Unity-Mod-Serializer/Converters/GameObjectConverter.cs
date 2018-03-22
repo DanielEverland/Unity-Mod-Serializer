@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UMS.ConverterHelpers;
 
 namespace UMS.Converters
 {
@@ -69,8 +70,13 @@ namespace UMS.Converters
         }
         public override Result TrySerialize(object instance, out Data serialized, Type storageType)
         {
+            serialized = null;
             Dictionary<string, Data> _data = new Dictionary<string, Data>();
             GameObject obj = (GameObject)instance;
+
+            Result objResult = UnityEngineObjectHelper.TrySerialize(_data, obj);
+            if (!objResult.Succeeded)
+                return objResult;
 
             List<Data> components = new List<Data>();
             foreach (Component comp in obj.GetComponents<Component>())

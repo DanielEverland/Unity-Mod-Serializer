@@ -52,6 +52,7 @@
     <Compile Include="AOT\AOTConfiguration.cs" />
     <Compile Include="AOT\AOTVersionInfo.cs" />
     <Compile Include="AOT\AOTConverter.cs" />
+    <Compile Include="ConverterHelpers\UnityEngineObjectHelper.cs" />
     <Compile Include="Converters\ArrayConverter.cs" />
     <Compile Include="Converters\ComponentConverter.cs" />
     <Compile Include="Converters\DateConverter.cs" />
