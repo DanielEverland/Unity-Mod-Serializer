@@ -32,6 +32,8 @@ namespace UMS.Zip
         /// <param name="folderPath">The folder in which to serialize the object</param>
         public static void Create<T>(IZipFile<T> zipFile, string folderPath)
         {
+            Utility.KillZipReaders();
+
             using (ZipFile zip = new ZipFile())
             {
                 zipFile.Serialize(zip);
@@ -54,6 +56,8 @@ namespace UMS.Zip
         /// <param name="entryName">The name to give <paramref name="content"/> inside the zip file</param>
         public static void Create(string content, string zipFullPath, string entryName)
         {
+            Utility.KillZipReaders();
+
             using (ZipFile zip = new ZipFile())
             {
                 zip.AddEntry(entryName, content);
