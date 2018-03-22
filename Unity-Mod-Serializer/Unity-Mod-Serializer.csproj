@@ -53,6 +53,7 @@
     <Compile Include="AOT\AOTVersionInfo.cs" />
     <Compile Include="AOT\AOTConverter.cs" />
     <Compile Include="Converters\ArrayConverter.cs" />
+    <Compile Include="Converters\ComponentConverter.cs" />
     <Compile Include="Converters\DateConverter.cs" />
     <Compile Include="Converters\DictionaryConverter.cs" />
     <Compile Include="Converters\EnumConverter.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="JsonPrinter.cs" />
     <Compile Include="Manifest.cs" />
     <Compile Include="MemberSerialization.cs" />
+    <Compile Include="MetaData.cs" />
     <Compile Include="Mods.cs" />
     <Compile Include="ObjectAttribute.cs" />
     <Compile Include="ObjectContainer.cs" />

@@ -17,11 +17,11 @@ namespace UMS
         static Serializer()
         {
             _reservedKeywords = new HashSet<string> {
-                Key_ObjectReference,
-                Key_ObjectDefinition,
-                Key_InstanceType,
-                Key_Version,
-                Key_Content
+                _objectReferenceKey,
+                _objectDefinitionKey,
+                _instanceTypeKey,
+                _versionKey,
+                _contentKey
             };
         }
         /// <summary>
@@ -37,54 +37,59 @@ namespace UMS
         /// <summary>
         /// This is an object reference in part of a cyclic graph.
         /// </summary>
-        private static readonly string Key_ObjectReference = string.Format("{0}ref", GlobalConfig.InternalFieldPrefix);
+        private static readonly string _objectReferenceKey = string.Format("{0}ref", GlobalConfig.InternalFieldPrefix);
+        public static string ObjectReferenceKey { get { return _objectReferenceKey; } }
 
         /// <summary>
         /// This is an object definition, as part of a cyclic graph.
         /// </summary>
-        private static readonly string Key_ObjectDefinition = string.Format("{0}id", GlobalConfig.InternalFieldPrefix);
+        private static readonly string _objectDefinitionKey = string.Format("{0}id", GlobalConfig.InternalFieldPrefix);
+        public static string ObjectDefinitionKey { get { return _objectDefinitionKey; } }
 
         /// <summary>
         /// This specifies the actual type of an object (the instance type was
         /// different from the field type).
         /// </summary>
-        private static readonly string Key_InstanceType = string.Format("{0}type", GlobalConfig.InternalFieldPrefix);
+        private static readonly string _instanceTypeKey = string.Format("{0}type", GlobalConfig.InternalFieldPrefix);
+        public static string InstanceTypeKey { get { return _instanceTypeKey; } }
 
         /// <summary>
         /// The version string for the serialized data.
         /// </summary>
-        private static readonly string Key_Version = string.Format("{0}version", GlobalConfig.InternalFieldPrefix);
+        private static readonly string _versionKey = string.Format("{0}version", GlobalConfig.InternalFieldPrefix);
+        public static string VersionKey { get { return _versionKey; } }
 
         /// <summary>
         /// If we have to add metadata but the original serialized state was not
         /// a dictionary, then this will contain the original data.
         /// </summary>
-        private static readonly string Key_Content = string.Format("{0}content", GlobalConfig.InternalFieldPrefix);
+        private static readonly string _contentKey = string.Format("{0}content", GlobalConfig.InternalFieldPrefix);
+        public static string ContentKey { get { return _contentKey; } }
 
         private static bool IsObjectReference(Data data)
         {
             if (data.IsDictionary == false) return false;
-            return data.AsDictionary.ContainsKey(Key_ObjectReference);
+            return data.AsDictionary.ContainsKey(_objectReferenceKey);
         }
         private static bool IsObjectDefinition(Data data)
         {
             if (data.IsDictionary == false) return false;
-            return data.AsDictionary.ContainsKey(Key_ObjectDefinition);
+            return data.AsDictionary.ContainsKey(_objectDefinitionKey);
         }
         private static bool IsVersioned(Data data)
         {
             if (data.IsDictionary == false) return false;
-            return data.AsDictionary.ContainsKey(Key_Version);
+            return data.AsDictionary.ContainsKey(_versionKey);
         }
         private static bool IsTypeSpecified(Data data)
         {
             if (data.IsDictionary == false) return false;
-            return data.AsDictionary.ContainsKey(Key_InstanceType);
+            return data.AsDictionary.ContainsKey(_instanceTypeKey);
         }
         private static bool IsWrappedData(Data data)
         {
             if (data.IsDictionary == false) return false;
-            return data.AsDictionary.ContainsKey(Key_Content);
+            return data.AsDictionary.ContainsKey(_contentKey);
         }
 
         /// <summary>
@@ -98,18 +103,18 @@ namespace UMS
         /// </remarks>
         public static void StripDeserializationMetadata(ref Data data)
         {
-            if (data.IsDictionary && data.AsDictionary.ContainsKey(Key_Content))
+            if (data.IsDictionary && data.AsDictionary.ContainsKey(_contentKey))
             {
-                data = data.AsDictionary[Key_Content];
+                data = data.AsDictionary[_contentKey];
             }
 
             if (data.IsDictionary)
             {
                 var dict = data.AsDictionary;
-                dict.Remove(Key_ObjectReference);
-                dict.Remove(Key_ObjectDefinition);
-                dict.Remove(Key_InstanceType);
-                dict.Remove(Key_Version);
+                dict.Remove(_objectReferenceKey);
+                dict.Remove(_objectDefinitionKey);
+                dict.Remove(_instanceTypeKey);
+                dict.Remove(_versionKey);
             }
         }
 
@@ -140,7 +145,7 @@ namespace UMS
                 EnsureDictionary(data);
                 ConvertLegacyData(ref data);
 
-                data.AsDictionary[Key_InstanceType] = dict[typeString];
+                data.AsDictionary[_instanceTypeKey] = dict[typeString];
             }
 
             // object definition
@@ -150,14 +155,14 @@ namespace UMS
                 EnsureDictionary(data);
                 ConvertLegacyData(ref data);
 
-                data.AsDictionary[Key_ObjectDefinition] = dict[sourceIdString];
+                data.AsDictionary[_objectDefinitionKey] = dict[sourceIdString];
             }
 
             // object reference
             else if (dict.Count == 1 && dict.ContainsKey(referenceIdString))
             {
                 data = Data.CreateDictionary();
-                data.AsDictionary[Key_ObjectReference] = dict[referenceIdString];
+                data.AsDictionary[_objectReferenceKey] = dict[referenceIdString];
             }
         }
         #endregion Keys
@@ -215,7 +220,7 @@ namespace UMS
             {
                 var existingData = data.Clone();
                 data.BecomeDictionary();
-                data.AsDictionary[Key_Content] = existingData;
+                data.AsDictionary[_contentKey] = existingData;
             }
         }
 
@@ -236,7 +241,7 @@ namespace UMS
                 if (_references.Contains(id))
                 {
                     EnsureDictionary(data);
-                    data.AsDictionary[Key_ObjectDefinition] = new Data(id.ToString());
+                    data.AsDictionary[_objectDefinitionKey] = new Data(id.ToString());
                 }
                 else
                 {
@@ -251,7 +256,7 @@ namespace UMS
                 {
                     var data = _pendingDefinitions[id];
                     EnsureDictionary(data);
-                    data.AsDictionary[Key_ObjectDefinition] = new Data(id.ToString());
+                    data.AsDictionary[_objectDefinitionKey] = new Data(id.ToString());
                     _pendingDefinitions.Remove(id);
                 }
                 else
@@ -260,7 +265,7 @@ namespace UMS
                 }
 
                 // Write the reference
-                dict[Key_ObjectReference] = new Data(id.ToString());
+                dict[_objectReferenceKey] = new Data(id.ToString());
             }
 
             public void Clear()
@@ -767,7 +772,7 @@ namespace UMS
             {
                 // Add the inheritance metadata
                 EnsureDictionary(data);
-                data.AsDictionary[Key_InstanceType] = new Data(instance.GetType().FullName);
+                data.AsDictionary[_instanceTypeKey] = new Data(instance.GetType().FullName);
             }
 
             return serializeResult;
@@ -795,7 +800,7 @@ namespace UMS
 
                 // Add the versioning information
                 EnsureDictionary(data);
-                data.AsDictionary[Key_Version] = new Data(versionedType.VersionString);
+                data.AsDictionary[_versionKey] = new Data(versionedType.VersionString);
 
                 return result;
             }
@@ -874,7 +879,7 @@ namespace UMS
             // it.
             if (IsObjectReference(data))
             {
-                int refId = int.Parse(data.AsDictionary[Key_ObjectReference].AsString);
+                int refId = int.Parse(data.AsDictionary[_objectReferenceKey].AsString);
                 result = _references.GetReferenceObject(refId);
                 processors = GetProcessors(result.GetType());
                 return Result.Success;
@@ -888,7 +893,7 @@ namespace UMS
             if (IsVersioned(data))
             {
                 // data is versioned, but we might not need to do a migration
-                string version = data.AsDictionary[Key_Version].AsString;
+                string version = data.AsDictionary[_versionKey].AsString;
 
                 Option<VersionedType> versionedType = VersionManager.GetVersionedType(storageType);
                 if (versionedType.HasValue &&
@@ -923,7 +928,7 @@ namespace UMS
                     // the migrated version, we must update the reference.
                     if (IsObjectDefinition(data))
                     {
-                        int sourceId = int.Parse(data.AsDictionary[Key_ObjectDefinition].AsString);
+                        int sourceId = int.Parse(data.AsDictionary[_objectDefinitionKey].AsString);
                         _references.AddReferenceWithId(sourceId, result);
                     }
 
@@ -947,7 +952,7 @@ namespace UMS
             // deserialization we run it on the proper type.
             if (IsTypeSpecified(data))
             {
-                Data typeNameData = data.AsDictionary[Key_InstanceType];
+                Data typeNameData = data.AsDictionary[_instanceTypeKey];
 
                 // we wrap everything in a do while false loop so we can break
                 // out it
@@ -955,7 +960,7 @@ namespace UMS
                 {
                     if (typeNameData.IsString == false)
                     {
-                        deserializeResult.AddMessage(Key_InstanceType + " value must be a string (in " + data + ")");
+                        deserializeResult.AddMessage(_instanceTypeKey + " value must be a string (in " + data + ")");
                         break;
                     }
 
@@ -1030,7 +1035,7 @@ namespace UMS
                 // do this before actually deserializing the object because when
                 // deserializing the object there may be references to itself.
 
-                int sourceId = int.Parse(data.AsDictionary[Key_ObjectDefinition].AsString);
+                int sourceId = int.Parse(data.AsDictionary[_objectDefinitionKey].AsString);
                 _references.AddReferenceWithId(sourceId, result);
             }
 
@@ -1042,7 +1047,7 @@ namespace UMS
         {
             if (IsWrappedData(data))
             {
-                data = data.AsDictionary[Key_Content];
+                data = data.AsDictionary[_contentKey];
             }
 
             return GetConverter(resultType, overrideConverterType).TryDeserialize(data, ref result, resultType);
