@@ -34,15 +34,7 @@ namespace UMS
             return _reservedKeywords.Contains(key);
         }
 
-        /// <summary>
-        /// The object we're currently serializing. Useful so we know whether to write reference IDs or actual data into Data structs
-        /// </summary>
-        public static object CurrentlySerializingObject { get; set; }
-
-        /// <summary>
-        /// The queue of objects to serialize
-        /// </summary>
-        public static Queue<object> SerializationQueue { get; set; }
+        
 
         /// <summary>
         /// This is an object reference in part of a cyclic graph.
@@ -273,7 +265,7 @@ namespace UMS
                 {
                     _references.Add(id);
                 }
-
+                
                 // Write the reference
                 dict[_objectReferenceKey] = new Data(id.ToString());
             }
@@ -284,6 +276,21 @@ namespace UMS
                 _references.Clear();
             }
         }
+
+        /// <summary>
+        /// The object we're currently serializing. Useful so we know whether to write reference IDs or actual data into Data structs
+        /// </summary>
+        public object CurrentlySerializingObject;
+
+        /// <summary>
+        /// The queue of objects to serialize
+        /// </summary>
+        public Queue<object> SerializationQueue;
+
+        /// <summary>
+        /// Used to ensure we don't add an object to the queue several times
+        /// </summary>
+        private HashSet<object> _serilizationQueueManifest;
 
         /// <summary> Converter type to converter instance lookup table. This
         /// could likely be stored inside
@@ -336,6 +343,15 @@ namespace UMS
         /// </summary>
         private readonly Dictionary<Type, Type> _abstractTypeRemap;
 
+        public void AddToQueue(object obj)
+        {
+            if (_serilizationQueueManifest.Contains(obj))
+                throw new ArgumentException(obj + " has already been added to the serialization queue before!");
+
+            _serilizationQueueManifest.Add(obj);
+            SerializationQueue.Enqueue(obj);
+            Manifest.Instance.Add(obj);
+        }
         private void RemapAbstractStorageTypeToDefaultType(ref Type storageType)
         {
             if ((storageType.IsInterface() || storageType.IsAbstract()) == false)
@@ -357,17 +373,13 @@ namespace UMS
                     storageType = remappedType;
             }
         }
-
-        public void ResetReferenceCycle()
-        {
-            _references.Reset();
-            SerializationQueue = new Queue<object>();
-        }
         public Serializer()
         {
             _cachedConverterTypeInstances = new Dictionary<Type, BaseConverter>();
             _cachedConverters = new Dictionary<Type, BaseConverter>();
             _cachedProcessors = new Dictionary<Type, List<ObjectProcessor>>();
+            _serilizationQueueManifest = new HashSet<object>();
+            SerializationQueue = new Queue<object>();
 
             _references = new CyclicReferenceManager();
             _lazyReferenceWriter = new LazyCycleDefinitionWriter();
@@ -738,6 +750,14 @@ namespace UMS
                 //       lose any information in a conversion to/from double.
                 if (IDManager.CanGetGUID(instance) && CurrentlySerializingObject != instance)
                 {
+                    string id = IDManager.GetID(instance);
+
+                    if (!Manifest.Instance.Contains(id))
+                    {
+                        AddToQueue(instance);
+                        
+                    }
+
                     data = Data.CreateDictionary();
                     _lazyReferenceWriter.WriteReference(IDManager.GetID(instance), data.AsDictionary);
                     return Result.Success;
@@ -748,7 +768,7 @@ namespace UMS
                 // back into this function recursively, it'll already be marked
                 // and we can handle the cycle properly without going into an
                 // infinite loop.
-                _references.MarkSerialized(instance);
+                //_references.MarkSerialized(instance);
 
                 // We've created the cycle metadata, so we can now serialize the
                 // actual object. InternalSerialize will handle inheritance
@@ -758,7 +778,8 @@ namespace UMS
 
                 _lazyReferenceWriter.WriteDefinition(_references.GetReferenceId(instance), data);
 
-                Manifest.Instance.AddContent(IDManager.GetID(instance), JsonPrinter.PrettyJson(data));
+                if(IDManager.CanGetGUID(instance))
+                    Manifest.Instance.AddContent(IDManager.GetID(instance), JsonPrinter.PrettyJson(data));
                 
                 return result;
             }

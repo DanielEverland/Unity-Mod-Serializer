@@ -32,10 +32,16 @@ namespace UMS
 
         public string GetContent(string id)
         {
+            if (!_content.ContainsKey(id))
+                throw new ArgumentException("ID " + id + " has not been added to manifest!");
+
             return _content[id];
         }
         public void AddContent(string id, string content)
         {
+            if (_content.ContainsKey(id))
+                throw new ArgumentException("ID " + id + " has already been serialized!");
+
             _content.Add(id, content);
         }
         public void UpdateObject(string id, object obj)

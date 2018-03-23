@@ -9,8 +9,18 @@ using Ionic.Zip;
 /// </summary>
 public static class Mods
 {
+    public static Serializer Serializer { get { return _serializer; } }
+
     private static Serializer _serializer = new Serializer();
     
+    public static void EmptySerializationQueue()
+    {
+        while (_serializer.SerializationQueue.Count > 0)
+        {
+            object obj = _serializer.SerializationQueue.Dequeue();
+            Serialize(obj);
+        }
+    }
     public static void CreateNewSession()
     {
         ObjectContainer.Initialize();
@@ -84,9 +94,8 @@ public static class Mods
     /// <param name="obj">Object to serialize</param>
     /// <returns>Json string</returns>
     public static string Serialize(object obj)
-    {
-        _serializer.ResetReferenceCycle();
-        Serializer.CurrentlySerializingObject = obj;
+    {        
+        _serializer.CurrentlySerializingObject = obj;
         _serializer.TrySerialize(obj.GetType(), obj, out Data data);
 
         return JsonPrinter.PrettyJson(data);
@@ -101,8 +110,7 @@ public static class Mods
     }
     internal static void Create(object obj, System.Type type, string fullPath)
     {
-        _serializer.ResetReferenceCycle();
-        Serializer.CurrentlySerializingObject = obj;
+        _serializer.CurrentlySerializingObject = obj;
         _serializer.TrySerialize(type, obj, out Data data).AssertSuccessWithoutWarnings();
 
         string json = JsonPrinter.PrettyJson(data);
@@ -141,8 +149,7 @@ public static class Mods
 #if RELEASE
     internal static void Serialize(object obj, System.Type type, string fullPath)
     {
-        _serializer.ResetReferenceCycle();
-        Serializer.CurrentlySerializingObject = obj;
+        _serializer.CurrentlySerializingObject = obj;
         _serializer.TrySerialize(type, obj, out Data data);
 
         string json = JsonPrinter.PrettyJson(data);

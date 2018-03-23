@@ -84,18 +84,5 @@ namespace UMS.Converters
         {
             return Manifest.Instance.Contains(IDManager.GetID(item));
         }
-
-        public void MarkSerialized(object item)
-        {
-            string id = IDManager.GetID(item);
-
-            if (Manifest.Instance.Contains(id))
-            {
-                throw new InvalidOperationException("Internal Error - " + item +
-                    " has already been marked as serialized");
-            }
-
-            Manifest.Instance.Add(item);
-        }
     }
 }
