@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace UMS
 {
-    public interface IGUIDObject
+    public interface IIDObject
     {
-        string GUID { get; }
+        string ID { get; }
     }
 }

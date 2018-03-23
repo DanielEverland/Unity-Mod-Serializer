@@ -15,19 +15,19 @@ namespace UMS
             if (_hook == null)
                 throw new NullReferenceException("There's no event hook assigned!");
 
-            if(CanGetGUID(obj))
+            if(CanGetID(obj))
             {
-                return _hook.GetGUID(obj);
+                return _hook.GetID(obj);
             }
 
             throw new ArgumentException(obj + " isn't UnityObject");
         }
-        public static bool CanGetGUID(object obj)
+        public static bool CanGetID(object obj)
         {
             if (_hook == null)
                 throw new NullReferenceException("There's no event hook assigned!");
 
-            return _hook.CanGetGUID(obj);
+            return _hook.CanGetID(obj);
         }
         public static void AssignHook(EventHook hook)
         {
@@ -36,8 +36,8 @@ namespace UMS
 
         public class EventHook
         {
-            public Func<object, string> GetGUID;
-            public Func<object, bool> CanGetGUID;
+            public Func<object, string> GetID;
+            public Func<object, bool> CanGetID;
         }
     }
 }

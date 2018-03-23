@@ -29,46 +29,46 @@ namespace UMS
         {
             int CurrentIndex { get { return _data.Count; } }
 
-            Dictionary<string, int> _guidIndexes = new Dictionary<string, int>();
+            Dictionary<string, int> _idIndexes = new Dictionary<string, int>();
             Dictionary<string, int> _keyIndexes = new Dictionary<string, int>();
 
             List<BufferData> _data = new List<BufferData>();
 
-            public bool ContainsGUID(string guid)
+            public bool ContainsID(string id)
             {
-                return _guidIndexes.ContainsKey(guid);
+                return _idIndexes.ContainsKey(id);
             }
             public bool ContainsKey(string key)
             {
                 return _keyIndexes.ContainsKey(key);
             }
-            public int GetIndexFromGUID(string guid)
+            public int GetIndexFromID(string id)
             {
-                return _guidIndexes[guid];
+                return _idIndexes[id];
             }
             public int GetIndexFromKey(string key)
             {
                 return _keyIndexes[key];
             }
-            public BufferData GetFromGUID(string guid)
+            public BufferData GetFromID(string id)
             {
-                return _data[_guidIndexes[guid]];
+                return _data[_idIndexes[id]];
             }
             public BufferData GetFromKey(string key)
             {
                 return _data[_keyIndexes[key]];
             }
-            public void Add(string content, System.Type type, string guid, string key)
+            public void Add(string content, System.Type type, string id, string key)
             {
-                if(!IsNull(guid))
+                if(!IsNull(id))
                 {
-                    if(_guidIndexes.ContainsKey(guid))
+                    if(_idIndexes.ContainsKey(id))
                     {
-                        Debug.LogError("GUID " + guid + " already exists!");
+                        Debug.LogError("ID " + id + " already exists!");
                         return;
                     }
 
-                    _guidIndexes.Add(guid, CurrentIndex);
+                    _idIndexes.Add(id, CurrentIndex);
                 }
                 if (!IsNull(key))
                 {
@@ -84,7 +84,7 @@ namespace UMS
                 BufferData data = new BufferData()
                 {
                     obj = Mods.DeserializeString(content, type),
-                    guid = guid,
+                    id = id,
                     key = key,
                 };
 
@@ -100,7 +100,7 @@ namespace UMS
             public struct BufferData
             {
                 public object obj;
-                public string guid;
+                public string id;
                 public string key;
             }
         }

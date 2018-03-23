@@ -712,7 +712,7 @@ namespace UMS
 
                 // This type does not need cycle support.
                 var converter = GetConverter(instance.GetType(), overrideConverterType);
-                if (converter.RequestCycleSupport(instance.GetType()) == false || !IDManager.CanGetGUID(instance))
+                if (converter.RequestCycleSupport(instance.GetType()) == false || !IDManager.CanGetID(instance))
                 {
                     return InternalSerialize_2_Inheritance(storageType, overrideConverterType, instance, out data);
                 }
@@ -722,7 +722,7 @@ namespace UMS
                 //currently serializing, we should simply write its ID instead,
                 //and then add it to the serialization queue so we can serialize
                 //its definition properly later
-                if (IDManager.CanGetGUID(instance) && Manifest.Instance.CurrentlySerializingObject != instance)
+                if (IDManager.CanGetID(instance) && Manifest.Instance.CurrentlySerializingObject != instance)
                 {
                     string id = IDManager.GetID(instance);
 
@@ -755,7 +755,7 @@ namespace UMS
 
                 //Save the object definition in the manifest. Every object defintion
                 //will eventually be written into an entry in the .mod zip file.
-                if(IDManager.CanGetGUID(instance))
+                if(IDManager.CanGetID(instance))
                     Manifest.Instance.AddContent(IDManager.GetID(instance), JsonPrinter.PrettyJson(data));
                 
                 return result;

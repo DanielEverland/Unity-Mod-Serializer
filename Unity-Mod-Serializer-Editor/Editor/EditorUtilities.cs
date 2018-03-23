@@ -12,11 +12,11 @@ namespace UMS.Editor
         public const string MENU_ITEM_ROOT = "Modding";
         public const string MENU_SERIALIZATION = "Serialization";
 
-        public static string GetGUID(object obj)
+        public static string GetID(object obj)
         {
-            if(obj is IGUIDObject guidObject)
+            if(obj is IIDObject idObject)
             {
-                return guidObject.GUID;
+                return idObject.ID;
             }
             else if(obj is Object unityObject)
             {
@@ -27,9 +27,9 @@ namespace UMS.Editor
                 throw new System.ArgumentException();
             }            
         }
-        public static bool CanGetGUID(object obj)
+        public static bool CanGetID(object obj)
         {
-            return obj is IGUIDObject || obj is Object;
+            return obj is IIDObject || obj is Object;
         }
         public static List<ModPackage> GetAllPackages()
         {

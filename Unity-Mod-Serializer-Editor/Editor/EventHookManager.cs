@@ -16,13 +16,13 @@ namespace UMS.Editor
         {
             IDManager.EventHook hook = new IDManager.EventHook()
             {
-                GetGUID = obj =>
+                GetID = obj =>
                 {
-                    return EditorUtilities.GetGUID(obj);
+                    return EditorUtilities.GetID(obj);
                 },
-                CanGetGUID = obj =>
+                CanGetID = obj =>
                 {
-                    return EditorUtilities.CanGetGUID(obj);
+                    return EditorUtilities.CanGetID(obj);
                 }
             };
 

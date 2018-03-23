@@ -29,9 +29,9 @@ public static class Mods
     {
         return (T)ObjectContainer.Instance.GetFromKey(key).obj;
     }
-    public static void Add(string json, System.Type type, string guid, string key)
+    public static void Add(string json, System.Type type, string id, string key)
     {
-        ObjectContainer.Instance.Add(json, type, guid, key);
+        ObjectContainer.Instance.Add(json, type, id, key);
     }
 
     /// <summary>
