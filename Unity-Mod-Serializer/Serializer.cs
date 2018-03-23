@@ -717,20 +717,20 @@ namespace UMS
                     return InternalSerialize_2_Inheritance(storageType, overrideConverterType, instance, out data);
                 }
                 
-                // We've already serialized this object instance (or it is
-                // pending higher up on the call stack). Just serialize a
-                // reference to it to escape the cycle.
-                //
-                // note: We serialize the int as a string to so that we don't
-                //       lose any information in a conversion to/from double.
+                //We've found an object that needs to be serialized into its
+                //own file in the .mod zip file. Since it's not the object we're
+                //currently serializing, we should simply write its ID instead,
+                //and then add it to the serialization queue so we can serialize
+                //its definition properly later
                 if (IDManager.CanGetGUID(instance) && Manifest.Instance.CurrentlySerializingObject != instance)
                 {
                     string id = IDManager.GetID(instance);
 
+                    //If we haven't already added the object to the serialization
+                    //queue, do so.
                     if (!Manifest.Instance.Contains(id))
                     {
                         Manifest.Instance.AddToQueue(instance);
-                        
                     }
 
                     data = Data.CreateDictionary();
@@ -753,6 +753,8 @@ namespace UMS
 
                 _lazyReferenceWriter.WriteDefinition(_references.GetReferenceId(instance), data);
 
+                //Save the object definition in the manifest. Every object defintion
+                //will eventually be written into an entry in the .mod zip file.
                 if(IDManager.CanGetGUID(instance))
                     Manifest.Instance.AddContent(IDManager.GetID(instance), JsonPrinter.PrettyJson(data));
                 
