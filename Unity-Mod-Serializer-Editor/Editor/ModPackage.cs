@@ -41,7 +41,7 @@ namespace UMS.Editor
 
             foreach (ObjectEntry entry in _objectEntries)
             {
-                Mods.Serializer.AddToQueue(entry.Object);
+                Manifest.Instance.AddToQueue(entry.Object);
                 _keys.Add(IDManager.GetID(entry.Object), entry.Key);
             }
 

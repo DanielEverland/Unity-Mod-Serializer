@@ -15,6 +15,9 @@ namespace UMS
             _entries = new List<Entry>();
             _objects = new Dictionary<string, object>();
             _content = new Dictionary<string, string>();
+            _serilizationQueueManifest = new HashSet<object>();
+
+            SerializationQueue = new Queue<object>();
 
             Instance = this;
         }
@@ -23,13 +26,31 @@ namespace UMS
         
         public IEnumerable<Entry> Entries { get { return _entries; } }
 
+        [Ignore]
+        public object CurrentlySerializingObject;
+        [Ignore]
+        public Queue<object> SerializationQueue;
+
+
         [Property]
         private List<Entry> _entries;
+
         [Ignore]
         private Dictionary<string, object> _objects;
         [Ignore]
-        private Dictionary<string, string> _content;
+        private Dictionary<string, string> _content;        
+        [Ignore]
+        private HashSet<object> _serilizationQueueManifest;
 
+        public void AddToQueue(object obj)
+        {
+            if (_serilizationQueueManifest.Contains(obj))
+                throw new ArgumentException(obj + " has already been added to the serialization queue before!");
+
+            _serilizationQueueManifest.Add(obj);
+            SerializationQueue.Enqueue(obj);
+            Instance.Add(obj);
+        }
         public string GetContent(string id)
         {
             if (!_content.ContainsKey(id))

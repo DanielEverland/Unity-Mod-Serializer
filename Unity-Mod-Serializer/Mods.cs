@@ -15,9 +15,9 @@ public static class Mods
     
     public static void EmptySerializationQueue()
     {
-        while (_serializer.SerializationQueue.Count > 0)
+        while (Manifest.Instance.SerializationQueue.Count > 0)
         {
-            object obj = _serializer.SerializationQueue.Dequeue();
+            object obj = Manifest.Instance.SerializationQueue.Dequeue();
             Serialize(obj);
         }
     }
@@ -94,8 +94,8 @@ public static class Mods
     /// <param name="obj">Object to serialize</param>
     /// <returns>Json string</returns>
     public static string Serialize(object obj)
-    {        
-        _serializer.CurrentlySerializingObject = obj;
+    {
+        Manifest.Instance.CurrentlySerializingObject = obj;
         _serializer.TrySerialize(obj.GetType(), obj, out Data data);
 
         return JsonPrinter.PrettyJson(data);
@@ -110,7 +110,7 @@ public static class Mods
     }
     internal static void Create(object obj, System.Type type, string fullPath)
     {
-        _serializer.CurrentlySerializingObject = obj;
+        Manifest.Instance.CurrentlySerializingObject = obj;
         _serializer.TrySerialize(type, obj, out Data data).AssertSuccessWithoutWarnings();
 
         string json = JsonPrinter.PrettyJson(data);
