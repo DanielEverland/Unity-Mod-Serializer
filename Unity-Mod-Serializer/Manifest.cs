@@ -13,6 +13,7 @@ namespace UMS
         public Manifest()
         {
             _entries = new List<Entry>();
+            _keys = new Dictionary<string, string>();
             _objects = new Dictionary<string, object>();
             _content = new Dictionary<string, string>();
             _serilizationQueueManifest = new HashSet<object>();
@@ -41,7 +42,24 @@ namespace UMS
         private Dictionary<string, string> _content;        
         [Ignore]
         private HashSet<object> _serilizationQueueManifest;
+        [Ignore]
+        private Dictionary<string, string> _keys;
 
+        public void AddKey(string id, string key)
+        {
+            _keys.Add(id, key);
+        }
+        public bool ContainsKey(string id)
+        {
+            return _keys.ContainsKey(id);
+        }
+        public string GetKey(string id)
+        {
+            if (!_keys.ContainsKey(id))
+                throw new NullReferenceException("No key for " + id);
+
+            return _keys[id];
+        }
         public void AddToQueue(object obj)
         {
             if (_serilizationQueueManifest.Contains(obj))

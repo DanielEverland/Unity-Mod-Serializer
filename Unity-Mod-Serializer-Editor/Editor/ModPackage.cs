@@ -22,10 +22,7 @@ namespace UMS.Editor
         [SerializeField]
         private List<ObjectEntry> _objectEntries;
 #pragma warning restore
-
-        [Ignore]
-        private Dictionary<string, string> _keys = new Dictionary<string, string>();
-
+        
         /// <summary>
         /// Saves a package 
         /// </summary>
@@ -42,7 +39,7 @@ namespace UMS.Editor
             foreach (ObjectEntry entry in _objectEntries)
             {
                 Manifest.Instance.AddToQueue(entry.Object);
-                _keys.Add(IDManager.GetID(entry.Object), entry.Key);
+                Manifest.Instance.AddKey(IDManager.GetID(entry.Object), entry.Key);
             }
 
             Mods.EmptySerializationQueue();
