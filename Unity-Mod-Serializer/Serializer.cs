@@ -746,6 +746,8 @@ namespace UMS
                 if (result.Failed) return result;
 
                 _lazyReferenceWriter.WriteDefinition(_references.GetReferenceId(instance), data);
+
+                Manifest.Instance.AddContent(IDManager.GetID(instance), JsonPrinter.PrettyJson(data));
                 
                 return result;
             }

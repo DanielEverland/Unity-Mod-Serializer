@@ -14,6 +14,7 @@ namespace UMS
         {
             _entries = new List<Entry>();
             _objects = new Dictionary<string, object>();
+            _content = new Dictionary<string, string>();
 
             Instance = this;
         }
@@ -26,7 +27,17 @@ namespace UMS
         private List<Entry> _entries;
         [Ignore]
         private Dictionary<string, object> _objects;
+        [Ignore]
+        private Dictionary<string, string> _content;
 
+        public string GetContent(string id)
+        {
+            return _content[id];
+        }
+        public void AddContent(string id, string content)
+        {
+            _content.Add(id, content);
+        }
         public void UpdateObject(string id, object obj)
         {
             _objects[id] = obj;

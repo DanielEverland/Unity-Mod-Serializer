@@ -42,6 +42,14 @@ namespace UMS.Editor
             foreach (ObjectEntry entry in _objectEntries)
             {
                 Mods.Serialize(entry.Object);
+                _keys.Add(IDManager.GetID(entry.Object), entry.Key);
+            }
+
+            foreach (Manifest.Entry manifestEntry in Manifest.Instance.Entries)
+            {
+                string content = Manifest.Instance.GetContent(manifestEntry.id);
+
+                file.AddEntry(manifestEntry.path, content);
             }
                         
             file.AddEntry(Utility.MANIFEST_NAME, Mods.Serialize(manifest));
