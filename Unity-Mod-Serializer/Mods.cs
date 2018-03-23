@@ -86,6 +86,7 @@ public static class Mods
     public static string Serialize(object obj)
     {
         _serializer.ResetReferenceCycle();
+        Serializer.CurrentlySerializingObject = obj;
         _serializer.TrySerialize(obj.GetType(), obj, out Data data);
 
         return JsonPrinter.PrettyJson(data);
@@ -101,6 +102,7 @@ public static class Mods
     internal static void Create(object obj, System.Type type, string fullPath)
     {
         _serializer.ResetReferenceCycle();
+        Serializer.CurrentlySerializingObject = obj;
         _serializer.TrySerialize(type, obj, out Data data).AssertSuccessWithoutWarnings();
 
         string json = JsonPrinter.PrettyJson(data);
@@ -140,6 +142,7 @@ public static class Mods
     internal static void Serialize(object obj, System.Type type, string fullPath)
     {
         _serializer.ResetReferenceCycle();
+        Serializer.CurrentlySerializingObject = obj;
         _serializer.TrySerialize(type, obj, out Data data);
 
         string json = JsonPrinter.PrettyJson(data);

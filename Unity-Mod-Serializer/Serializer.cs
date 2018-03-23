@@ -35,6 +35,16 @@ namespace UMS
         }
 
         /// <summary>
+        /// The object we're currently serializing. Useful so we know whether to write reference IDs or actual data into Data structs
+        /// </summary>
+        public static object CurrentlySerializingObject { get; set; }
+
+        /// <summary>
+        /// The queue of objects to serialize
+        /// </summary>
+        public static Queue<object> SerializationQueue { get; set; }
+
+        /// <summary>
         /// This is an object reference in part of a cyclic graph.
         /// </summary>
         private static readonly string _objectReferenceKey = string.Format("{0}ref", GlobalConfig.InternalFieldPrefix);
@@ -351,6 +361,7 @@ namespace UMS
         public void ResetReferenceCycle()
         {
             _references.Reset();
+            SerializationQueue = new Queue<object>();
         }
         public Serializer()
         {
@@ -725,7 +736,7 @@ namespace UMS
                 //
                 // note: We serialize the int as a string to so that we don't
                 //       lose any information in a conversion to/from double.
-                if (_references.IsReference(instance))
+                if (IDManager.CanGetGUID(instance) && CurrentlySerializingObject != instance)
                 {
                     data = Data.CreateDictionary();
                     _lazyReferenceWriter.WriteReference(IDManager.GetID(instance), data.AsDictionary);
