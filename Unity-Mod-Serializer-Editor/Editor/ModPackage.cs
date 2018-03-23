@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -22,6 +23,9 @@ namespace UMS.Editor
         private List<ObjectEntry> _objectEntries;
 #pragma warning restore
 
+        [Ignore]
+        private Dictionary<string, string> _keys = new Dictionary<string, string>();
+
         /// <summary>
         /// Saves a package 
         /// </summary>
@@ -34,18 +38,12 @@ namespace UMS.Editor
         public void Serialize(ZipFile file)
         {
             Manifest manifest = new Manifest();
-                        
-            foreach (ObjectEntry entry in ObjectEntries)
-            {
-                string zipPath = entry.Object.ToString();
-                string assetPath = AssetDatabase.GetAssetPath(entry.Object);
-                string guid = AssetDatabase.AssetPathToGUID(assetPath);
-                string content = Mods.Serialize(entry.Object);
 
-                manifest.Add(guid, zipPath, entry.Object.GetType(), entry.Key);
-                file.AddEntry(zipPath, content);
+            foreach (ObjectEntry entry in _objectEntries)
+            {
+                Mods.Serialize(entry.Object);
             }
-            
+                        
             file.AddEntry(Utility.MANIFEST_NAME, Mods.Serialize(manifest));
         }
         

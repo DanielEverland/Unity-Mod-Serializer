@@ -87,7 +87,9 @@
     <Compile Include="DirectConverter.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IDManager.cs" />
     <Compile Include="IgnoreAttribute.cs" />
+    <Compile Include="IGUIDObject.cs" />
     <Compile Include="ISerializationCallbacks.cs" />
     <Compile Include="JsonParser.cs" />
     <Compile Include="JsonPrinter.cs" />

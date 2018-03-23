@@ -55,6 +55,7 @@
     <Compile Include="AOT\AOTConfigurationEditor.cs" />
     <Compile Include="Editor\BuildHandler.cs" />
     <Compile Include="Editor\EditorUtilities.cs" />
+    <Compile Include="Editor\EventHookManager.cs" />
     <Compile Include="Editor\MenuItems.cs" />
     <Compile Include="Editor\ModPackage.cs" />
     <Compile Include="Editor\ModPackageEditor.cs" />

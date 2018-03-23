@@ -41,7 +41,7 @@ public static class Mods
             {
                 string json = file[entry.path].ZipToJson();
 
-                Add(json, entry.type, entry.guid, entry.key);
+                Add(json, entry.type, entry.id, entry.key);
             }
         }        
     }
@@ -85,6 +85,7 @@ public static class Mods
     /// <returns>Json string</returns>
     public static string Serialize(object obj)
     {
+        _serializer.ResetReferenceCycle();
         _serializer.TrySerialize(obj.GetType(), obj, out Data data);
 
         return JsonPrinter.PrettyJson(data);
@@ -99,6 +100,7 @@ public static class Mods
     }
     internal static void Create(object obj, System.Type type, string fullPath)
     {
+        _serializer.ResetReferenceCycle();
         _serializer.TrySerialize(type, obj, out Data data).AssertSuccessWithoutWarnings();
 
         string json = JsonPrinter.PrettyJson(data);
@@ -133,10 +135,11 @@ public static class Mods
 
         return deserialized;
     }
-    #endif
+#endif
 #if RELEASE
     internal static void Serialize(object obj, System.Type type, string fullPath)
     {
+        _serializer.ResetReferenceCycle();
         _serializer.TrySerialize(type, obj, out Data data);
 
         string json = JsonPrinter.PrettyJson(data);

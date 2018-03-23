@@ -233,10 +233,10 @@ namespace UMS
         /// </summary>
         internal class LazyCycleDefinitionWriter
         {
-            private Dictionary<int, Data> _pendingDefinitions = new Dictionary<int, Data>();
-            private HashSet<int> _references = new HashSet<int>();
+            private Dictionary<string, Data> _pendingDefinitions = new Dictionary<string, Data>();
+            private HashSet<string> _references = new HashSet<string>();
 
-            public void WriteDefinition(int id, Data data)
+            public void WriteDefinition(string id, Data data)
             {
                 if (_references.Contains(id))
                 {
@@ -249,7 +249,7 @@ namespace UMS
                 }
             }
 
-            public void WriteReference(int id, Dictionary<string, Data> dict)
+            public void WriteReference(string id, Dictionary<string, Data> dict)
             {
                 // Write the actual definition if necessary
                 if (_pendingDefinitions.ContainsKey(id))
@@ -348,6 +348,10 @@ namespace UMS
             }
         }
 
+        public void ResetReferenceCycle()
+        {
+            _references.Reset();
+        }
         public Serializer()
         {
             _cachedConverterTypeInstances = new Dictionary<Type, BaseConverter>();
@@ -710,11 +714,11 @@ namespace UMS
 
                 // This type does not need cycle support.
                 var converter = GetConverter(instance.GetType(), overrideConverterType);
-                if (converter.RequestCycleSupport(instance.GetType()) == false)
+                if (converter.RequestCycleSupport(instance.GetType()) == false || !IDManager.CanGetGUID(instance))
                 {
                     return InternalSerialize_2_Inheritance(storageType, overrideConverterType, instance, out data);
                 }
-
+                
                 // We've already serialized this object instance (or it is
                 // pending higher up on the call stack). Just serialize a
                 // reference to it to escape the cycle.
@@ -724,10 +728,10 @@ namespace UMS
                 if (_references.IsReference(instance))
                 {
                     data = Data.CreateDictionary();
-                    _lazyReferenceWriter.WriteReference(_references.GetReferenceId(instance), data.AsDictionary);
+                    _lazyReferenceWriter.WriteReference(IDManager.GetID(instance), data.AsDictionary);
                     return Result.Success;
                 }
-
+                
                 // Mark inside the object graph that we've serialized the
                 // instance. We do this *before* serialization so that if we get
                 // back into this function recursively, it'll already be marked
@@ -742,7 +746,7 @@ namespace UMS
                 if (result.Failed) return result;
 
                 _lazyReferenceWriter.WriteDefinition(_references.GetReferenceId(instance), data);
-
+                
                 return result;
             }
             finally
@@ -759,7 +763,7 @@ namespace UMS
             // the object type so that we won't go into an infinite loop.
             var serializeResult = InternalSerialize_3_ProcessVersioning(overrideConverterType, instance, out data);
             if (serializeResult.Failed) return serializeResult;
-
+            
             // Do we need to add type information? If the field type and the
             // instance type are different then we will not be able to recover
             // the correct instance type from the field type when we deserialize
@@ -811,8 +815,10 @@ namespace UMS
         }
         private Result InternalSerialize_4_Converter(Type overrideConverterType, object instance, out Data data)
         {
-            var instanceType = instance.GetType();
-            return GetConverter(instanceType, overrideConverterType).TrySerialize(instance, out data, instanceType);
+            Type instanceType = instance.GetType();
+            BaseConverter converter = GetConverter(instanceType, overrideConverterType);
+            
+            return converter.TrySerialize(instance, out data, instanceType);
         }
 
         /// <summary>
@@ -879,7 +885,7 @@ namespace UMS
             // it.
             if (IsObjectReference(data))
             {
-                int refId = int.Parse(data.AsDictionary[_objectReferenceKey].AsString);
+                string refId = data.AsDictionary[_objectReferenceKey].AsString;
                 result = _references.GetReferenceObject(refId);
                 processors = GetProcessors(result.GetType());
                 return Result.Success;
@@ -928,8 +934,8 @@ namespace UMS
                     // the migrated version, we must update the reference.
                     if (IsObjectDefinition(data))
                     {
-                        int sourceId = int.Parse(data.AsDictionary[_objectDefinitionKey].AsString);
-                        _references.AddReferenceWithId(sourceId, result);
+                        string sourceId = data.AsDictionary[_objectDefinitionKey].AsString;
+                        Manifest.Instance.UpdateObject(sourceId, result);
                     }
 
                     processors = GetProcessors(deserializeResult.GetType());
@@ -1035,8 +1041,8 @@ namespace UMS
                 // do this before actually deserializing the object because when
                 // deserializing the object there may be references to itself.
 
-                int sourceId = int.Parse(data.AsDictionary[_objectDefinitionKey].AsString);
-                _references.AddReferenceWithId(sourceId, result);
+                string sourceId = data.AsDictionary[_objectDefinitionKey].AsString;
+                Manifest.Instance.UpdateObject(sourceId, result);
             }
 
             // Nothing special, go through the standard deserialization logic.

@@ -25,6 +25,7 @@ namespace UMS.Converters
         }
 
         private const string COMPONENT_KEY = "components";
+        private const string CHILDREN_KEY = "children";
         
         public override Result TryDeserialize(Data data, ref object instance, Type storageType)
         {
@@ -77,7 +78,28 @@ namespace UMS.Converters
             Result objResult = UnityEngineObjectHelper.TrySerialize(_data, obj);
             if (!objResult.Succeeded)
                 return objResult;
+            
+            _data.Add(CHILDREN_KEY, new Data(GetChildren(obj)));
+            _data.Add(COMPONENT_KEY, new Data(GetComponents(obj)));
 
+            serialized = new Data(_data);
+
+            return Result.Success;
+        }
+        private List<Data> GetChildren(GameObject obj)
+        {
+            List<Data> children = new List<Data>();
+            foreach (Transform child in obj.transform)
+            {
+                Serializer.TrySerialize(child.gameObject, out Data data);
+                children.Add(data);
+            }
+
+            return children;
+        }
+
+        private List<Data> GetComponents(GameObject obj)
+        {
             List<Data> components = new List<Data>();
             foreach (Component comp in obj.GetComponents<Component>())
             {
@@ -85,11 +107,7 @@ namespace UMS.Converters
                 components.Add(data);
             }
 
-            _data.Add(COMPONENT_KEY, new Data(components));
-            
-            serialized = new Data(_data);
-
-            return Result.Success;
+            return components;
         }
     }
 }

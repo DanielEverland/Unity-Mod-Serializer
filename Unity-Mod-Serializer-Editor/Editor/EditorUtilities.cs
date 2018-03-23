@@ -12,11 +12,24 @@ namespace UMS.Editor
         public const string MENU_ITEM_ROOT = "Modding";
         public const string MENU_SERIALIZATION = "Serialization";
 
-        public static string GetGUID(Object obj)
+        public static string GetGUID(object obj)
         {
-            string path = AssetDatabase.GetAssetPath(obj);
-
-            return AssetDatabase.AssetPathToGUID(path);
+            if(obj is IGUIDObject guidObject)
+            {
+                return guidObject.GUID;
+            }
+            else if(obj is Object unityObject)
+            {
+                return unityObject.GetInstanceID().ToString();
+            }
+            else
+            {
+                throw new System.ArgumentException();
+            }            
+        }
+        public static bool CanGetGUID(object obj)
+        {
+            return obj is IGUIDObject || obj is Object;
         }
         public static List<ModPackage> GetAllPackages()
         {

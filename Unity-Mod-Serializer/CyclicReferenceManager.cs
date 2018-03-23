@@ -25,10 +25,7 @@ namespace UMS.Converters
             public static readonly IEqualityComparer<object> Instance = new ObjectReferenceEqualityComparator();
         }
 
-        private Dictionary<object, int> _objectIds = new Dictionary<object, int>(ObjectReferenceEqualityComparator.Instance);
-        private int _nextId;
-
-        private Dictionary<int, object> _marked = new Dictionary<int, object>();
+        private Dictionary<object, string> _objectIds = new Dictionary<object, string>(ObjectReferenceEqualityComparator.Instance);
         private int _depth;
 
         public void Enter()
@@ -36,15 +33,17 @@ namespace UMS.Converters
             _depth++;
         }
 
+        public void Reset()
+        {
+            _depth = 0;
+        }
         public bool Exit()
         {
             _depth--;
 
             if (_depth == 0)
             {
-                _objectIds = new Dictionary<object, int>(ObjectReferenceEqualityComparator.Instance);
-                _nextId = 0;
-                _marked = new Dictionary<int, object>();
+                _objectIds = new Dictionary<object, string>(ObjectReferenceEqualityComparator.Instance);
             }
 
             if (_depth < 0)
@@ -56,9 +55,9 @@ namespace UMS.Converters
             return _depth == 0;
         }
 
-        public object GetReferenceObject(int id)
+        public object GetReferenceObject(string id)
         {
-            if (_marked.ContainsKey(id) == false)
+            if (!Manifest.Instance.Contains(id))
             {
                 throw new InvalidOperationException("Internal Deserialization Error - Object " +
                     "definition has not been encountered for object with id=" + id +
@@ -67,20 +66,15 @@ namespace UMS.Converters
                     "data, please report an issue with an included test case.");
             }
 
-            return _marked[id];
+            return Manifest.Instance.GetObject(id);
         }
 
-        public void AddReferenceWithId(int id, object reference)
+        public string GetReferenceId(object item)
         {
-            _marked[id] = reference;
-        }
-
-        public int GetReferenceId(object item)
-        {
-            int id;
+            string id;
             if (_objectIds.TryGetValue(item, out id) == false)
             {
-                id = _nextId++;
+                id = IDManager.GetID(item);
                 _objectIds[item] = id;
             }
             return id;
@@ -88,20 +82,20 @@ namespace UMS.Converters
 
         public bool IsReference(object item)
         {
-            return _marked.ContainsKey(GetReferenceId(item));
+            return Manifest.Instance.Contains(IDManager.GetID(item));
         }
 
         public void MarkSerialized(object item)
         {
-            int referenceId = GetReferenceId(item);
+            string id = IDManager.GetID(item);
 
-            if (_marked.ContainsKey(referenceId))
+            if (Manifest.Instance.Contains(id))
             {
                 throw new InvalidOperationException("Internal Error - " + item +
                     " has already been marked as serialized");
             }
 
-            _marked[referenceId] = item;
+            Manifest.Instance.Add(item);
         }
     }
 }
