@@ -38,8 +38,8 @@ namespace UMS.Editor
 
             foreach (ObjectEntry entry in _objectEntries)
             {
-                Manifest.Instance.AddToQueue(entry.Object);
                 Manifest.Instance.AddKey(IDManager.GetID(entry.Object), entry.Key);
+                Manifest.Instance.AddToQueue(entry.Object);
             }
 
             Mods.EmptySerializationQueue();

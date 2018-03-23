@@ -56,7 +56,7 @@ namespace UMS
         public string GetKey(string id)
         {
             if (!_keys.ContainsKey(id))
-                throw new NullReferenceException("No key for " + id);
+                return null;
 
             return _keys[id];
         }
@@ -97,9 +97,11 @@ namespace UMS
         }
         public void Add(object obj)
         {
-            _objects.Add(IDManager.GetID(obj), obj);
+            string id = IDManager.GetID(obj);
 
-            Entry entry = new Entry(obj, null);
+            Entry entry = new Entry(obj, GetKey(id));
+
+            _objects.Add(id, obj);
             _entries.Add(entry);
         }
         
