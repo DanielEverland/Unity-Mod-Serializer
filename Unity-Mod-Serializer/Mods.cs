@@ -100,8 +100,6 @@ public static class Mods
 
         return JsonPrinter.PrettyJson(data);
     }
-
-#if DEBUG
     internal static void Create(object obj, string fullPath)
     {
         ZipSerializer.Create(obj, fullPath);
@@ -111,7 +109,12 @@ public static class Mods
     internal static void Create(object obj, System.Type type, string fullPath)
     {
         Manifest.Instance.CurrentlySerializingObject = obj;
+
+#if DEBUG
         _serializer.TrySerialize(type, obj, out Data data).AssertSuccessWithoutWarnings();
+#else
+        _serializer.TrySerialize(type, obj, out Data data);
+#endif
 
         string json = JsonPrinter.PrettyJson(data);
 
@@ -126,7 +129,11 @@ public static class Mods
         Data data = JsonParser.Parse(json);
 
         object deserialized = null;
+#if DEBUG
         _serializer.TryDeserialize(data, type, ref deserialized).AssertSuccessWithoutWarnings();
+#else
+        _serializer.TryDeserialize(data, type, ref deserialized);
+#endif
 
         Debug.Log("Deserialized " + type + " from " + fullPath);
 
@@ -141,31 +148,12 @@ public static class Mods
         Data data = JsonParser.Parse(content);
 
         object deserialized = null;
+#if DEBUG
         _serializer.TryDeserialize(data, type, ref deserialized).AssertSuccessWithoutWarnings();
-
-        return deserialized;
-    }
-#endif
-#if RELEASE
-    internal static void Serialize(object obj, System.Type type, string fullPath)
-    {
-        _serializer.CurrentlySerializingObject = obj;
-        _serializer.TrySerialize(type, obj, out Data data);
-
-        string json = JsonPrinter.PrettyJson(data);
-
-        File.WriteAllText(fullPath, json);
-    }
-    internal static object Deserialize(System.Type type, string fullPath)
-    {
-        string json = File.ReadAllText(fullPath);
-
-        Data data = JsonParser.Parse(json);
-
-        object deserialized = null;
+#else
         _serializer.TryDeserialize(data, type, ref deserialized);
+#endif
 
         return deserialized;
     }
-#endif
 }
