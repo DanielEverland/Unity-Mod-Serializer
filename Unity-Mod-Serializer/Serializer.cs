@@ -34,8 +34,6 @@ namespace UMS
             return _reservedKeywords.Contains(key);
         }
         
-        
-
         /// <summary>
         /// This is an object reference in part of a cyclic graph.
         /// </summary>

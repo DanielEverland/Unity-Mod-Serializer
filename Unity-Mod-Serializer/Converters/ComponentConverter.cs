@@ -31,68 +31,11 @@ namespace UMS.Converters
         {
             if (!input.IsDictionary)
                 return Result.Fail("Input data is not dictionary");
-
-            Dictionary<string, Data> dictionary = input.AsDictionary;
-
-            foreach (KeyValuePair<string, Data> keyvaluePair in dictionary)
-            {
-                string memberName = keyvaluePair.Key;
-                Data memberValue = keyvaluePair.Value;
-
-                if(!TryDeserializeMember(memberName, memberValue, storageType, instance))
-                {
-                    Result.Warn("Couldn't deserialize member " + memberName + " with data value " + memberValue);
-                }
-            }
-
+            
+            DeserializationHelper.TryDeserializeDictionary(input.AsDictionary, ref instance, storageType);
+            
             return Result.Success;
         }
-        private bool TryDeserializeMember(string memberName, Data memberValue, Type containerType, object containerInstance)
-        {
-            if (TryDeserializeAsField(memberName, memberValue, containerType, containerInstance))
-                return true;
-
-            if (TryDeserializeAsProperty(memberName, memberValue, containerType, containerInstance))
-                return true;
-
-            return false;
-        }
-        private bool TryDeserializeAsField(string memberName, Data memberValue, Type containerType, object containerInstance)
-        {
-            FieldInfo field = containerType.GetField(memberName);
-
-            if (field == null)
-                return false;
-
-            object deserialized = null;
-            Serializer.TryDeserialize(memberValue, field.FieldType, ref deserialized);
-
-            if (deserialized == null)
-                return false;
-
-            field.SetValue(containerInstance, deserialized);
-            return true;
-        }
-        private bool TryDeserializeAsProperty(string memberName, Data memberValue, Type containerType, object containerInstance)
-        {
-            PropertyInfo property = containerType.GetProperty(memberName);
-
-            if (property == null)
-                return false;
-
-            if (property.SetMethod == null)
-                return false;
-
-            object deserialized = null;
-            Serializer.TryDeserialize(memberValue, property.PropertyType, ref deserialized);
-
-            if (deserialized == null)
-                return false;
-
-            property.SetValue(containerInstance, deserialized);
-            return true;
-        }
-
         public override Result TrySerialize(object instance, out Data serialized, Type storageType)
         {
             Dictionary<string, Data> dictionary = new Dictionary<string, Data>();

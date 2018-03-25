@@ -84,6 +84,7 @@
     <Compile Include="Converter.cs" />
     <Compile Include="ConverterRegistrar.cs" />
     <Compile Include="Data.cs" />
+    <Compile Include="DeserializationHelper.cs" />
     <Compile Include="DirectConverter.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions.cs" />
