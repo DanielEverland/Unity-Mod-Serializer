@@ -66,6 +66,7 @@
     <Compile Include="Converters\NullableConverter.cs" />
     <Compile Include="Converters\PrimitiveConverter.cs" />
     <Compile Include="Converters\ReflectedConverter.cs" />
+    <Compile Include="Converters\TransformConverter.cs" />
     <Compile Include="Converters\TypeConverter.cs" />
     <Compile Include="Converters\WeakReferenceConverter.cs" />
     <Compile Include="Converters\AnimationCurve_DirectConverter.cs" />
