@@ -19,5 +19,17 @@ namespace UMS.ConverterHelpers
 
             return Result.Success;
         }
+        public static Result TryDeserialize(Dictionary<string, Data> dictionary, Object obj)
+        {
+            if (obj == null)
+                return Result.Fail("Object is null!");
+
+            if (!dictionary.ContainsKey(NAME_KEY))
+                return Result.Fail("Data did not contain key " + NAME_KEY);
+
+            obj.name = dictionary[NAME_KEY].AsString;
+
+            return Result.Success;
+        }
     }
 }

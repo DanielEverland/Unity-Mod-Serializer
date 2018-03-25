@@ -31,19 +31,32 @@ namespace UMS.Converters
         {
             if (!data.IsDictionary)
                 return Result.Fail("Input data is not dictionary");
-
+            
             Dictionary<string, Data> dictionary = data.AsDictionary;
             List<Data> componentList = dictionary[COMPONENT_KEY].AsList;
 
             GameObject gameObject = (GameObject)instance;
-            
-            foreach (Data componentData in componentList)
+
+            Result objResult = UnityEngineObjectHelper.TryDeserialize(dictionary, gameObject);
+            if (!objResult.Succeeded)
+                return objResult;
+
+            foreach (Data dataIndex in componentList)
             {
+                //Id of the component
+                string id = MetaData.GetID(dataIndex);
+
+                //Actual data for the component. Grabbed from the manifest using ID
+                Data componentData = ObjectContainer.GetData(id);
+
+                //Assign the current component, since ComponentConverter can't create a new instance without a GameObject to add it to.
                 ComponentConverter.CurrentComponent = GetComponent(componentData, gameObject);
 
+                //Deserialize the data into the component
                 object outObj = null;
                 Serializer.TryDeserialize(componentData, typeof(Component), ref outObj);
 
+                //Remove the component to avoid tampering elsewhere.
                 ComponentConverter.CurrentComponent = null;
             }
 

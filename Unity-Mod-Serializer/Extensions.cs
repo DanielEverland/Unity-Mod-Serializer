@@ -10,6 +10,17 @@ namespace UMS
 {
     public static class Extensions
     {
+        public static void Set<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        {
+            if (dictionary.ContainsKey(key))
+            {
+                dictionary[key] = value;
+            }
+            else
+            {
+                dictionary.Add(key, value);
+            }
+        }
         public static T ToObject<T>(this ZipEntry entry)
         {
             return (T)ToObject(entry, typeof(T));

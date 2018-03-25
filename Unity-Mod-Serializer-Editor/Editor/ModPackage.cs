@@ -17,6 +17,8 @@ namespace UMS.Editor
         public string FileName { get { return string.Format("{0}.{1}", FileNameWithoutExtension, Extension); } }
         public string FileNameWithoutExtension { get { return name; } }
         public string Extension { get { return Utility.MOD_EXTENSION; } }
+
+        private Serializer Serializer { get { return Mods.Serializer; } }
         
 #pragma warning disable
         [SerializeField]
@@ -29,26 +31,45 @@ namespace UMS.Editor
         /// <param name="folderPath">Path of the folder</param>
         public void Save(string folderPath)
         {
+            Mods.CreateNewSession();
+
             ZipSerializer.Create(this, folderPath);
         }
 
         public void Serialize(ZipFile file)
         {
             Manifest manifest = new Manifest();
+            Dictionary<string, string> keys = new Dictionary<string, string>();
+            Dictionary<string, string> content = new Dictionary<string, string>();
 
             foreach (ObjectEntry entry in _objectEntries)
             {
-                Manifest.Instance.AddKey(IDManager.GetID(entry.Object), entry.Key);
-                Manifest.Instance.AddToQueue(entry.Object);
+                if (entry.Key != null && entry.Key != "")
+                {
+                    string id = IDManager.GetID(entry.Object);
+
+                    keys.Add(id, entry.Key);
+                }
+                
+                Serializer.SerializationQueue.Enqueue(entry.Object);
             }
 
-            Mods.EmptySerializationQueue();
-
-            foreach (Manifest.Entry manifestEntry in Manifest.Instance.Entries)
+            while (Serializer.SerializationQueue.Count > 0)
             {
-                string content = Manifest.Instance.GetContent(manifestEntry.id);
+                object toSerialize = Serializer.SerializationQueue.Dequeue();
 
-                file.AddEntry(manifestEntry.path, content);
+                string json = Mods.Serialize(toSerialize);
+                string id = IDManager.GetID(toSerialize);
+                string key = keys.ContainsKey(id) ? keys[id] : null;
+
+                content.Set(IDManager.GetID(toSerialize), json);
+
+                manifest.AddEntry(new Manifest.Entry(toSerialize, key));
+            }
+
+            foreach (Manifest.Entry manifestEntry in manifest.Entries)
+            {
+                file.AddEntry(manifestEntry.path, content[manifestEntry.id]);
             }
                         
             file.AddEntry(Utility.MANIFEST_NAME, Mods.Serialize(manifest));

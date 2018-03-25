@@ -57,7 +57,7 @@ namespace UMS.Converters
 
         public object GetReferenceObject(string id)
         {
-            if (!Manifest.Instance.Contains(id))
+            if (!ObjectContainer.ContainsObject(id, ObjectContainer.IndexType.ID))
             {
                 throw new InvalidOperationException("Internal Deserialization Error - Object " +
                     "definition has not been encountered for object with id=" + id +
@@ -66,7 +66,7 @@ namespace UMS.Converters
                     "data, please report an issue with an included test case.");
             }
 
-            return Manifest.Instance.GetObject(id);
+            return ObjectContainer.GetObjectFromID(id);
         }
 
         public string GetReferenceId(object item)
@@ -78,11 +78,6 @@ namespace UMS.Converters
                 _objectIds[item] = id;
             }
             return id;
-        }
-
-        public bool IsReference(object item)
-        {
-            return Manifest.Instance.Contains(IDManager.GetID(item));
         }
     }
 }

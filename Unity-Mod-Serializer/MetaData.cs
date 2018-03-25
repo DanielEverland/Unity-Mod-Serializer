@@ -32,13 +32,27 @@ namespace UMS
             
             return data.AsDictionary.ContainsKey(key);
         }
+        public static string GetID(Data data)
+        {
+            if (!data.IsDictionary)
+                throw new InvalidCastException();
+
+            Data id = GetMetaData(data, MetaDataType.Ref);
+
+            if (id.IsString == false)
+            {
+                throw new InvalidCastException();
+            }
+
+            return id.AsString;
+        }
         public static Type GetMetaDataType(Data data)
         {
             if (!data.IsDictionary)
                 throw new InvalidCastException();
 
-            Data typeData = data.AsDictionary[Serializer.InstanceTypeKey];
-            
+            Data typeData = GetMetaData(data, MetaDataType.Type);
+
             if (typeData.IsString == false)
             {
                 throw new InvalidCastException();
@@ -52,6 +66,11 @@ namespace UMS
         {
             if (!data.IsDictionary)
                 throw new InvalidCastException();
+
+            Dictionary<string, Data> dictionary = data.AsDictionary;
+
+            if (!dictionary.ContainsKey(_keys[type]))
+                throw new NullReferenceException("Data doesn't contain metadata " + _keys[type] + "\n" + data.ToString());
 
             return data.AsDictionary[_keys[type]];
         }

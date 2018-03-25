@@ -33,7 +33,7 @@ namespace UMS
         {
             return _reservedKeywords.Contains(key);
         }
-
+        
         
 
         /// <summary>
@@ -227,6 +227,25 @@ namespace UMS
         }
 
         /// <summary>
+        /// Used to enqueue objects that need to be serialized
+        /// </summary>
+        public SerializationQueue<object> SerializationQueue { get; set; }
+
+        /// <summary>
+        /// The object that we're currently doing work for. This is only
+        /// used by the serializer to determine whether we should write
+        /// definitions or reference ids for a given object
+        /// 
+        /// If the given object is the active object, we write out the
+        /// full definition, which is later serialized into a zip entry
+        /// 
+        /// If the given object is not the active object, but it needs
+        /// to be serialized within the definition, write a reference
+        /// metadata token instead.
+        /// </summary>
+        public object ActiveObject { get; set; }
+
+        /// <summary>
         /// This manages instance writing so that we do not write unnecessary $id
         /// fields. We only need to write out an $id field when there is a
         /// corresponding $ref field. This is able to write $id references lazily
@@ -352,6 +371,8 @@ namespace UMS
         }
         public Serializer()
         {
+            SerializationQueue = new SerializationQueue<object>();
+
             _cachedConverterTypeInstances = new Dictionary<Type, BaseConverter>();
             _cachedConverters = new Dictionary<Type, BaseConverter>();
             _cachedProcessors = new Dictionary<Type, List<ObjectProcessor>>();
@@ -722,15 +743,15 @@ namespace UMS
                 //currently serializing, we should simply write its ID instead,
                 //and then add it to the serialization queue so we can serialize
                 //its definition properly later
-                if (IDManager.CanGetID(instance) && Manifest.Instance.CurrentlySerializingObject != instance)
+                if (IDManager.CanGetID(instance) && ActiveObject != instance)
                 {
                     string id = IDManager.GetID(instance);
 
                     //If we haven't already added the object to the serialization
                     //queue, do so.
-                    if (!Manifest.Instance.Contains(id))
+                    if (!SerializationQueue.HasBeenEnqueued(instance))
                     {
-                        Manifest.Instance.AddToQueue(instance);
+                        SerializationQueue.Enqueue(instance);
                     }
 
                     data = Data.CreateDictionary();
@@ -756,7 +777,12 @@ namespace UMS
                 //Save the object definition in the manifest. Every object defintion
                 //will eventually be written into an entry in the .mod zip file.
                 if(IDManager.CanGetID(instance))
-                    Manifest.Instance.AddContent(IDManager.GetID(instance), JsonPrinter.PrettyJson(data));
+                {
+                    //Add the $type metadata
+                    data.AsDictionary[_instanceTypeKey] = new Data(instance.GetType().FullName);
+
+                    ObjectContainer.AddData(IDManager.GetID(instance), data);
+                }                    
                 
                 return result;
             }
@@ -896,8 +922,8 @@ namespace UMS
             // it.
             if (IsObjectReference(data))
             {
-                string refId = data.AsDictionary[_objectReferenceKey].AsString;
-                result = _references.GetReferenceObject(refId);
+                string id = MetaData.GetID(data);
+                result = ObjectContainer.GetObjectFromID(id);
                 processors = GetProcessors(result.GetType());
                 return Result.Success;
             }
@@ -946,7 +972,7 @@ namespace UMS
                     if (IsObjectDefinition(data))
                     {
                         string sourceId = data.AsDictionary[_objectDefinitionKey].AsString;
-                        Manifest.Instance.UpdateObject(sourceId, result);
+                        ObjectContainer.SetObject(sourceId, result);
                     }
 
                     processors = GetProcessors(deserializeResult.GetType());
@@ -1053,7 +1079,7 @@ namespace UMS
                 // deserializing the object there may be references to itself.
 
                 string sourceId = data.AsDictionary[_objectDefinitionKey].AsString;
-                Manifest.Instance.UpdateObject(sourceId, result);
+                ObjectContainer.SetObject(sourceId, result);
             }
 
             // Nothing special, go through the standard deserialization logic.

@@ -6,103 +6,116 @@ using UnityEngine;
 
 namespace UMS
 {
-    internal static class ObjectContainer
+    /// <summary>
+    /// Handles data that shouldn't be serialized
+    /// </summary>
+    public static class ObjectContainer
     {
-        public static Buffer Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    Initialize();
+        public static IEnumerable<object> Objects { get { return _idToObjects.Values; } }
+        public static IEnumerable<Data> Data { get { return _idToData.Values; } }
+        public static IEnumerable<string> IDs { get { return _idToData.Keys.Union(_idToObjects.Keys); } }
+        public static IEnumerable<string> Keys { get { return _keyToObjects.Keys; } }
 
-                return _instance;
-            }
-        }
-        private static Buffer _instance;
+        /// <summary>
+        /// Index for getting data from an ID
+        /// </summary>
+        private static Dictionary<string, Data> _idToData;
+        
+        /// <summary>
+        /// Index for getting deserialized objects from a key
+        /// </summary>
+        private static Dictionary<string, object> _keyToObjects;
+
+        /// <summary>
+        /// Index for getting deserialized objects from an index
+        /// </summary>
+        private static Dictionary<string, object> _idToObjects;
 
         public static void Initialize()
         {
-            _instance = new Buffer();
+            _idToData = new Dictionary<string, Data>();
+            _keyToObjects = new Dictionary<string, object>();
+            _idToObjects = new Dictionary<string, object>();
         }
-
-        public class Buffer
+        public static bool ContainsData(string id)
         {
-            int CurrentIndex { get { return _data.Count; } }
-
-            Dictionary<string, int> _idIndexes = new Dictionary<string, int>();
-            Dictionary<string, int> _keyIndexes = new Dictionary<string, int>();
-
-            List<BufferData> _data = new List<BufferData>();
-
-            public bool ContainsID(string id)
+            return _idToData.ContainsKey(id);
+        }
+        public static bool ContainsObject(string index, IndexType type)
+        {
+            switch (type)
             {
-                return _idIndexes.ContainsKey(id);
+                case IndexType.ID:
+                    return _idToObjects.ContainsKey(index);
+                case IndexType.Key:
+                    return _keyToObjects.ContainsKey(index);
+                default:
+                    throw new System.NotImplementedException();
             }
-            public bool ContainsKey(string key)
+        }
+        public static void SetObject(string id, object obj)
+        {
+            _idToObjects.Set(id, obj);
+        }
+        public static object GetObjectFromID(string id)
+        {
+            if (!_idToObjects.ContainsKey(id))
             {
-                return _keyIndexes.ContainsKey(key);
-            }
-            public int GetIndexFromID(string id)
-            {
-                return _idIndexes[id];
-            }
-            public int GetIndexFromKey(string key)
-            {
-                return _keyIndexes[key];
-            }
-            public BufferData GetFromID(string id)
-            {
-                return _data[_idIndexes[id]];
-            }
-            public BufferData GetFromKey(string key)
-            {
-                return _data[_keyIndexes[key]];
-            }
-            public void Add(string content, System.Type type, string id, string key)
-            {
-                if(!IsNull(id))
+                if (_idToData.ContainsKey(id))
                 {
-                    if(_idIndexes.ContainsKey(id))
-                    {
-                        Debug.LogError("ID " + id + " already exists!");
-                        return;
-                    }
+                    Data data = GetData(id);
+                    System.Type type = MetaData.GetMetaDataType(data);
 
-                    _idIndexes.Add(id, CurrentIndex);
+                    object obj = Mods.DeserializeData(data, type);
+
+                    SetObject(id, obj);
                 }
-                if (!IsNull(key))
+                else
                 {
-                    if(_keyIndexes.ContainsKey(key))
-                    {
-                        Debug.LogError("Key " + key + " already exists!");
-                        return;
-                    }
-
-                    _keyIndexes.Add(key, CurrentIndex);
+                    throw new System.NullReferenceException("No object using id " + id + " is in memory");
                 }
-                
-                BufferData data = new BufferData()
-                {
-                    obj = Mods.DeserializeString(content, type),
-                    id = id,
-                    key = key,
-                };
+            }                
 
-                _data.Add(data);
-            }
-            private bool IsNull(string value)
-            {
-                if (value == null)
-                    return true;
+            return _idToObjects[id];
+        }
+        public static object GetObjectFromKey(string key)
+        {
+            if (!_keyToObjects.ContainsKey(key))
+                throw new System.NullReferenceException("No object using key " + key + " is in memory");
 
-                return value == "" || value == string.Empty;
-            }
-            public struct BufferData
-            {
-                public object obj;
-                public string id;
-                public string key;
-            }
+            return _keyToObjects[key];
+        }
+        public static Data GetData(string id)
+        {
+            if (!_idToData.ContainsKey(id))
+                throw new System.NullReferenceException("No deserialized data from ID " + id);
+
+            return _idToData[id];
+        }
+        public static void CreateObjectInstance(string id, string key)
+        {
+            if (id == null)
+                throw new System.ArgumentException("ID is null " + id);
+
+            Data data = GetData(id);
+
+            object deserialized = Mods.DeserializeData(data, MetaData.GetMetaDataType(data));
+
+            _idToObjects.Add(id, deserialized);
+            
+            if (key != null)
+                _keyToObjects.Add(key, deserialized);
+        }
+        public static void AddData(string id, Data data)
+        {
+            _idToData.Add(id, data);           
+        }
+        public enum IndexType
+        {
+            None = 0,
+
+            ID = 1,
+            Key = 2,
         }
     }
 }
