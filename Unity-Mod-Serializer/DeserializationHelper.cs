@@ -12,6 +12,8 @@ namespace UMS
     /// </summary>
     public static class DeserializationHelper
     {
+        private static readonly BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Public;
+
         /// <summary>
         /// Deserializes a dictionary into an object using reflection
         /// </summary>
@@ -32,7 +34,7 @@ namespace UMS
         }
         private static Result TryDeserializeMember(string memberName, Data memberValue, Type containerType, object containerInstance)
         {
-            MemberInfo[] members = containerType.GetMember(memberName);
+            MemberInfo[] members = containerType.GetMember(memberName, _bindingFlags);
 
             foreach (MemberInfo info in members)
             {
