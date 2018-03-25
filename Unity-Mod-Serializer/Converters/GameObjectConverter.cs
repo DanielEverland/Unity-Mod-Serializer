@@ -48,13 +48,16 @@ namespace UMS.Converters
 
                 //Actual data for the component. Grabbed from the manifest using ID
                 Data componentData = ObjectContainer.GetData(id);
-
+                                
                 //Assign the current component, since ComponentConverter can't create a new instance without a GameObject to add it to.
                 ComponentConverter.CurrentComponent = GetComponent(componentData, gameObject);
 
                 //Deserialize the data into the component
                 object outObj = null;
-                Serializer.TryDeserialize(componentData, typeof(Component), ref outObj);
+                Serializer.TryDeserialize(componentData, ComponentConverter.CurrentComponent.GetType(), ref outObj);
+
+                //Save it into the object container
+                ObjectContainer.SetObject(id, outObj);
 
                 //Remove the component to avoid tampering elsewhere.
                 ComponentConverter.CurrentComponent = null;
