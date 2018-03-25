@@ -35,13 +35,13 @@ namespace UMS
         public static string GetID(Data data)
         {
             if (!data.IsDictionary)
-                throw new InvalidCastException();
+                throw new InvalidCastException("Cannot convert data to dictionary \n" + data);
 
             Data id = GetMetaData(data, MetaDataType.Ref);
 
             if (id.IsString == false)
             {
-                throw new InvalidCastException();
+                throw new InvalidCastException("Cannot convert data to string \n" + id);
             }
 
             return id.AsString;
