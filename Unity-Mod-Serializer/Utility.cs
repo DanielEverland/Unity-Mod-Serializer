@@ -8,7 +8,7 @@ namespace UMS
     {
         public const string MOD_EXTENSION = "mod";
         public const string MANIFEST_NAME = ".manifest";
-
+        
         public static void KillZipReaders()
         {
             if (!Application.isEditor)

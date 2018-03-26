@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,13 @@ namespace UMS
 {
     public static class Extensions
     {
+        public static string ToCamelCase(this string value)
+        {
+            if (value.Length == 1)
+                return Char.ToLowerInvariant(value[0]).ToString();
+
+            return (Char.ToLowerInvariant(value[0]) + value.Substring(1)).Replace("_", string.Empty);
+        }
         public static void Set<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
         {
             if (dictionary.ContainsKey(key))

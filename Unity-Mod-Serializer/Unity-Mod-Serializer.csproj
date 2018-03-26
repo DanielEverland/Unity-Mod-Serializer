@@ -87,6 +87,12 @@
     <Compile Include="Data.cs" />
     <Compile Include="DeserializationHelper.cs" />
     <Compile Include="DirectConverter.cs" />
+    <Compile Include="EntryWriters\ComponentEntryWriter.cs" />
+    <Compile Include="EntryWriters\DefaultEntryWriter.cs" />
+    <Compile Include="EntryWriters\EntryWriter.cs" />
+    <Compile Include="EntryWriters\EntryWriterRegistrar.cs" />
+    <Compile Include="EntryWriters\GameObjectEntryWriter.cs" />
+    <Compile Include="EntryWriters\UnityEngineObjectEntryWriter.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IDManager.cs" />
@@ -109,7 +115,9 @@
     <Compile Include="CyclicReferenceManager.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="PortableReflection.cs" />
+    <Compile Include="StaticObjects.cs" />
     <Compile Include="TypeExtensions.cs" />
+    <Compile Include="TypeInheritanceTree.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="VersionedType.cs" />
     <Compile Include="VersionManager.cs" />
@@ -124,5 +132,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

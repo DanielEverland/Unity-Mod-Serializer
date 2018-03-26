@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UMS.Zip;
+using UMS.EntryWriters;
 using Ionic.Zip;
 
 namespace UMS.Editor
@@ -39,7 +40,6 @@ namespace UMS.Editor
         public void Serialize(ZipFile file)
         {
             Manifest manifest = new Manifest();
-            Dictionary<string, string> keys = new Dictionary<string, string>();
             Dictionary<string, string> content = new Dictionary<string, string>();
 
             foreach (ObjectEntry entry in _objectEntries)
@@ -48,7 +48,7 @@ namespace UMS.Editor
                 {
                     string id = IDManager.GetID(entry.Object);
 
-                    keys.Add(id, entry.Key);
+                    Manifest.Instance.AddKey(id, entry.Key);
                 }
                 
                 Serializer.SerializationQueue.Enqueue(entry.Object);
@@ -57,14 +57,20 @@ namespace UMS.Editor
             while (Serializer.SerializationQueue.Count > 0)
             {
                 object toSerialize = Serializer.SerializationQueue.Dequeue();
+                Type objectType = toSerialize.GetType();
 
                 string json = Mods.Serialize(toSerialize);
-                string id = IDManager.GetID(toSerialize);
-                string key = keys.ContainsKey(id) ? keys[id] : null;
 
-                content.Set(IDManager.GetID(toSerialize), json);
+                //We check this after serializing so the converters have a chance to execute,
+                //in case they need to add any other objects to the serialization queue
+                if (EntryWriter.IsWritable(objectType))
+                {
+                    EntryWriter writer = EntryWriter.GetWriter(objectType);
+                    Manifest.Entry entry = writer.Write(toSerialize);
 
-                manifest.AddEntry(new Manifest.Entry(toSerialize, key));
+                    content.Add(entry.id, json);
+                    manifest.AddEntry(entry);
+                }                
             }
 
             foreach (Manifest.Entry manifestEntry in manifest.Entries)

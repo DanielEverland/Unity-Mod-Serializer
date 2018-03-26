@@ -13,6 +13,7 @@ namespace UMS
         public Manifest()
         {
             _entries = new List<Entry>();
+            _keys = new Dictionary<string, string>();
 
             Instance = this;
         }
@@ -23,6 +24,8 @@ namespace UMS
         
         [Property]
         private List<Entry> _entries;
+        [Ignore]
+        private Dictionary<string, string> _keys;
                 
         public Entry this[int index]
         {
@@ -32,6 +35,17 @@ namespace UMS
             }
         }
 
+        public string GetKey(string id)
+        {
+            if (!_keys.ContainsKey(id))
+                return null;
+
+            return _keys[id];
+        }
+        public void AddKey(string id, string key)
+        {
+            _keys.Set(id, key);
+        }
         public void AddEntry(Entry entry)
         {
             _entries.Add(entry);
@@ -40,13 +54,6 @@ namespace UMS
         [Serializable]
         public struct Entry
         {
-            public Entry(object obj, string key)
-            {
-                this.id = IDManager.GetID(obj);
-                this.path = obj.ToString();
-                this.key = key;
-            }
-
             [Property]
             public string id;
             [Property]
