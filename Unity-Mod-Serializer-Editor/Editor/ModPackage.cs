@@ -70,7 +70,11 @@ namespace UMS.Editor
 
                     content.Add(entry.id, json);
                     manifest.AddEntry(entry);
-                }                
+                }
+                else
+                {
+                    Debug.LogWarning("Omitting serializing " + toSerialize + " because it doesn't have a writer");
+                }
             }
 
             foreach (Manifest.Entry manifestEntry in manifest.Entries)

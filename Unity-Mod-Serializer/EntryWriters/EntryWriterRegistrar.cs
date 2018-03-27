@@ -13,7 +13,7 @@ namespace UMS.EntryWriters
     {
         static EntryWriterRegistrar()
         {
-            Converters = new List<EntryWriter>();
+            Writers = new List<EntryWriter>();
 
             foreach (var field in typeof(EntryWriterRegistrar).GetDeclaredFields())
             {
@@ -29,14 +29,14 @@ namespace UMS.EntryWriters
 
                     EntryWriter writer = (EntryWriter)Activator.CreateInstance(type);
 
-                    if (!Converters.Contains(writer))
+                    if (!Writers.Contains(writer))
                     {
-                        Converters.Add(writer);
+                        Writers.Add(writer);
                     }
                 }
             }
         }
 
-        public static List<EntryWriter> Converters;
+        public static List<EntryWriter> Writers;
     }
 }

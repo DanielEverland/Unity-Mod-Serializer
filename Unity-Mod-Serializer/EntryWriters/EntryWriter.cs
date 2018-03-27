@@ -15,7 +15,7 @@ namespace UMS.EntryWriters
         }
         public static EntryWriter GetWriter(Type type)
         {
-            return TypeInheritanceTree.GetClosestType(EntryWriterRegistrar.Converters, type, x => x.WriterType);
+            return TypeInheritanceTree.GetClosestType(EntryWriterRegistrar.Writers, type, x => x.WriterType);
         }
         #endregion
 

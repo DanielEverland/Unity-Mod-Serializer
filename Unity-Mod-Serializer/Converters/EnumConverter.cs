@@ -87,8 +87,9 @@ namespace UMS.Converters
                     long flagValue = (long)Convert.ChangeType(Enum.Parse(storageType, enumValue), typeof(long));
                     instanceValue |= flagValue;
                 }
-
-                instance = Enum.ToObject(storageType, (object)instanceValue);
+                
+                instance = Enum.ToObject(storageType, instanceValue);
+                
                 return Result.Success;
             }
             else if (data.IsInt64)
