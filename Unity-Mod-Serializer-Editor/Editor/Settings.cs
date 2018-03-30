@@ -12,6 +12,7 @@ namespace UMS.Editor
         public static string BuildModFolderLocation { get { return Instance._builtModFolderLocation; } }
         public static string FolderName { get { return Instance._folderName; } }
         public static string CoreFolderName { get { return Instance._coreFolderName; } }
+        public static bool SimulateBuildLoading { get { return Instance._simulateBuildLoading; } }
 
         public static Settings Instance
         {
@@ -33,7 +34,10 @@ namespace UMS.Editor
         private string _folderName = "Mods";
         [SerializeField]
         [Tooltip("The name of the subfolder where the core files will reside")]
-        private string _coreFolderName = "Core";
+        private string _coreFolderName = "Core";        
+        [SerializeField]
+        [Tooltip("Forces UMS to deserialize mods the same way as when the game has been built")]
+        private bool _simulateBuildLoading;
 
         private static Settings GetSettings()
         {
