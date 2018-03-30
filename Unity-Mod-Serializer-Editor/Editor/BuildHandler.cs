@@ -46,16 +46,14 @@ namespace UMS.Editor
         }
         private static void BuildMod(ModPackage package)
         {
-            throw new System.NotImplementedException();
-            //try
-            //{
-            //    Serializer.SerializePackage(package, _pathToCoreMods);
-            //}
-            //catch (System.Exception)
-            //{
-            //    Debug.LogWarning("Failed to serialize " + package);
-            //}
-
+            try
+            {
+                package.Save(_pathToCoreMods);
+            }
+            catch (System.Exception)
+            {
+                Debug.LogWarning("Failed to serialize " + package);
+            }
         }
         private static void CreateCoreModsFolder()
         {
