@@ -14,6 +14,7 @@ namespace UMS.Editor
     public class ModPackage : ScriptableObject, IZipFile<ModPackage>
     {
         public IEnumerable<ObjectEntry> ObjectEntries { get { return _objectEntries; } }
+        public bool IncludeInBuilds { get { return _includeInBuilds; }  set { _includeInBuilds = value; } }
 
         public string FileName { get { return string.Format("{0}.{1}", FileNameWithoutExtension, Extension); } }
         public string FileNameWithoutExtension { get { return name; } }
@@ -24,6 +25,8 @@ namespace UMS.Editor
 #pragma warning disable
         [SerializeField]
         private List<ObjectEntry> _objectEntries;
+        [SerializeField]
+        private bool _includeInBuilds = true;
 #pragma warning restore
         
         /// <summary>

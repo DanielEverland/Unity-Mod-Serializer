@@ -40,6 +40,8 @@ namespace UMS.Editor
         {
             ModPackage.ObjectEntry entry = Package.ObjectEntries.ElementAt(index);
 
+            float oldLabelWidth = EditorGUIUtility.labelWidth;
+
             #region Object & Key
             Rect element = GetElementRect(rect);
             Rect textRect = new Rect(element.x, element.y, element.width / 2 - SPACING / 2, element.height);
@@ -56,6 +58,8 @@ namespace UMS.Editor
             #endregion Object & Key
 
             rect.y += EditorGUIUtility.singleLineHeight;
+
+            EditorGUIUtility.labelWidth = oldLabelWidth;
         }
         protected virtual float TextWidth(GUIContent content, GUIStyle style)
         {

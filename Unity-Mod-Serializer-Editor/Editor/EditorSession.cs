@@ -56,7 +56,10 @@ namespace UMS.Editor
                 string path = AssetDatabase.GUIDToAssetPath(guid);
                 ModPackage package = AssetDatabase.LoadAssetAtPath<ModPackage>(path);
 
-                package.Save(directory);
+                if (package.IncludeInBuilds)
+                {
+                    package.Save(directory);
+                }                
             }
 
             Debug.Log("Deserializing temp data");

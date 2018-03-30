@@ -46,6 +46,9 @@ namespace UMS.Editor
         }
         private static void BuildMod(ModPackage package)
         {
+            if (!package.IncludeInBuilds)
+                return;
+
             try
             {
                 package.Save(_pathToCoreMods);

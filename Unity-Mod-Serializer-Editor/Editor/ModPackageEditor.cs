@@ -27,12 +27,22 @@ namespace UMS.Editor
             EditorGUILayout.Space();
 
             EditorGUILayout.Space();
+            DrawSettings();
+            EditorGUILayout.Space();
+
+            EditorGUILayout.Space();
             DrawSerializeButton();
             DrawDeserializeButton();
             EditorGUILayout.Space();
 
             if (GUI.changed)
                 EditorUtility.SetDirty(target);
+        }
+        protected virtual void DrawSettings()
+        {
+            EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
+
+            Target.IncludeInBuilds = EditorGUILayout.Toggle("Include In Builds", Target.IncludeInBuilds);
         }
         protected virtual void DrawSerializeButton()
         {
