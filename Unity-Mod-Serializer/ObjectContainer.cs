@@ -124,13 +124,13 @@ namespace UMS
                 foreach (string key in keys)
                 {
                     if (key != null)
-                        _keyToObjects.Add(key, deserialized);
+                        _keyToObjects.Set(key, deserialized);
                 }
             }                     
         }
         public static void AddData(string id, Data data)
         {
-            _idToData.Add(id, data);           
+            _idToData.Set(id, data);           
         }
         public enum IndexType
         {
