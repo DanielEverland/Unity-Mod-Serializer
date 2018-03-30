@@ -60,6 +60,8 @@ public static class Mods
             {
                 ObjectContainer.CreateObjectInstance(entry.id, entry.key);
             }
+
+            Debug.Log("Deserialized " + fullPath);
         }        
     }
 
