@@ -714,6 +714,11 @@ namespace UMS
 
             var result = InternalSerialize_1_ProcessCycles(storageType, overrideConverterType, instance, out data);
             Invoke_OnAfterSerialize(processors, storageType, instance, ref data);
+
+#if DEBUG
+            result.AssertSuccessWithoutWarnings();
+#endif
+
             return result;
         }
 
@@ -895,6 +900,11 @@ namespace UMS
                 {
                     Invoke_OnAfterDeserialize(processors, storageType, result);
                 }
+
+#if DEBUG
+                r.AssertSuccessWithoutWarnings();
+#endif
+
                 return r;
             }
             finally

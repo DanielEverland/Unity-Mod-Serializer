@@ -53,8 +53,7 @@ namespace UMS.Converters
                 ComponentConverter.CurrentComponent = GetComponent(componentData, gameObject);
 
                 //Deserialize the data into the component
-                object outObj = null;
-                Serializer.TryDeserialize(componentData, ComponentConverter.CurrentComponent.GetType(), ref outObj);
+                object outObj = Mods.DeserializeData(componentData, ComponentConverter.CurrentComponent.GetType());
 
                 //Save it into the object container
                 ObjectContainer.SetObject(id, outObj);

@@ -61,8 +61,7 @@ namespace UMS
             if (field == null)
                 return Result.Fail("Field is null");
 
-            object deserialized = null;
-            Mods.Serializer.TryDeserialize(memberValue, field.FieldType, ref deserialized);
+            object deserialized = Mods.DeserializeData(memberValue, field.FieldType);
 
             if (deserialized == null)
                 return Result.Warn("Deserialized object is null");
@@ -81,8 +80,7 @@ namespace UMS
             if (property.SetMethod == null)
                 return Result.Warn("Property " + property + " doesn't have a setter");
 
-            object deserialized = null;
-            Mods.Serializer.TryDeserialize(memberValue, property.PropertyType, ref deserialized);
+            object deserialized = Mods.DeserializeData(memberValue, property.PropertyType);
 
             if (deserialized == null)
                 return Result.Warn("Deserialized object is null");
