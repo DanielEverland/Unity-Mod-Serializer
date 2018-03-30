@@ -14,7 +14,7 @@ namespace UMS.Editor
     public class ModPackage : ScriptableObject, IZipFile<ModPackage>
     {
         public IEnumerable<ObjectEntry> ObjectEntries { get { return _objectEntries; } }
-        public bool IncludeInBuilds { get { return _includeInBuilds; }  set { _includeInBuilds = value; } }
+        public bool IncludeInBuilds { get { return _includeInBuilds; } }
 
         public string FileName { get { return string.Format("{0}.{1}", FileNameWithoutExtension, Extension); } }
         public string FileNameWithoutExtension { get { return name; } }

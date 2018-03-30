@@ -5,6 +5,7 @@ using UnityEditor;
 namespace UMS.Editor
 {
     [CustomEditor(typeof(ModPackage))]
+    [CanEditMultipleObjects()]
     public class ModPackageEditor : UnityEditor.Editor
     {
         protected const float SERIALIZE_BUTTON_WIDTH = 200;
@@ -14,17 +15,24 @@ namespace UMS.Editor
 
         private static readonly string _desktopPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
 
+        private SerializedProperty _includeInBuildsProperty;
+
         protected virtual void OnEnable()
         {
             _objectEntryList = CreateList("_objectEntries");
+
+            _includeInBuildsProperty = serializedObject.FindProperty("_includeInBuilds");
         }
         public override void OnInspectorGUI()
         {
             GUI.changed = false;
 
-            EditorGUILayout.Space();
-            _objectEntryList.Draw();
-            EditorGUILayout.Space();
+            if(Selection.objects.Length == 1)
+            {
+                EditorGUILayout.Space();
+                _objectEntryList.Draw();
+                EditorGUILayout.Space();
+            }            
 
             EditorGUILayout.Space();
             DrawSettings();
@@ -36,13 +44,17 @@ namespace UMS.Editor
             EditorGUILayout.Space();
 
             if (GUI.changed)
+            {
+                serializedObject.ApplyModifiedProperties();
+
                 EditorUtility.SetDirty(target);
+            }                
         }
         protected virtual void DrawSettings()
         {
             EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
 
-            Target.IncludeInBuilds = EditorGUILayout.Toggle("Include In Builds", Target.IncludeInBuilds);
+            EditorGUILayout.PropertyField(_includeInBuildsProperty, new GUIContent("Include In Builds"));
         }
         protected virtual void DrawSerializeButton()
         {
@@ -55,7 +67,10 @@ namespace UMS.Editor
 
             if (GUI.Button(rect, buttonText))
             {
-                Target.Save(_desktopPath);
+                foreach (ModPackage package in Selection.objects)
+                {
+                    package.Save(_desktopPath);
+                }  
             }
         }
         private void DrawDeserializeButton()
@@ -66,15 +81,30 @@ namespace UMS.Editor
             Rect rect = GUILayoutUtility.GetRect(buttonText, buttonStyle);
             rect.x = (rect.width - SERIALIZE_BUTTON_WIDTH) / 2;
             rect.width = SERIALIZE_BUTTON_WIDTH;
-
-            string fullPath = _desktopPath + @"\" + Target.FileName;
-
-            EditorGUI.BeginDisabledGroup(!File.Exists(fullPath));
+            
+            EditorGUI.BeginDisabledGroup(!CanDeserialize());
             if (GUI.Button(rect, buttonText))
             {
-                Mods.Load(fullPath);
+                foreach (ModPackage package in Selection.objects)
+                {
+                    string fullPath = _desktopPath + @"\" + package.FileName;
+
+                    Mods.Load(fullPath);
+                }                
             }
             EditorGUI.EndDisabledGroup();
+        }
+        private bool CanDeserialize()
+        {
+            foreach (ModPackage package in Selection.objects)
+            {
+                string fullPath = _desktopPath + @"\" + package.FileName;
+
+                if (File.Exists(fullPath))
+                    return true;
+            }
+
+            return false;
         }
         protected virtual ModPackageReorderableList CreateList(string propertyName)
         {
