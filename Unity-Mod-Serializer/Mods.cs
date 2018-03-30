@@ -56,7 +56,7 @@ public static class Mods
             }
 
             //Create instances
-            foreach (Manifest.Entry entry in manifest.Entries.Where(x => x.key != null))
+            foreach (Manifest.Entry entry in manifest.Entries)
             {
                 ObjectContainer.CreateObjectInstance(entry.id, entry.key);
             }
