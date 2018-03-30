@@ -37,8 +37,6 @@ public static class Mods
     /// <param name="fullPath">Full path of the .mod file</param>
     public static void Load(string fullPath)
     {
-        CreateNewSession();
-
         using (ZipFile file = ZipFile.Read(fullPath))
         {
             if (!file.ContainsEntry(Utility.MANIFEST_NAME))
