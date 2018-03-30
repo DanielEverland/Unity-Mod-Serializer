@@ -37,6 +37,10 @@ namespace UMS
             _keyToObjects = new Dictionary<string, object>();
             _idToObjects = new Dictionary<string, object>();
         }
+        public static bool ContainsKey(string key)
+        {
+            return _keyToObjects.ContainsKey(key);
+        }
         public static bool ContainsData(string id)
         {
             return _idToData.ContainsKey(id);
@@ -56,6 +60,13 @@ namespace UMS
         public static void SetObject(string id, object obj)
         {
             _idToObjects.Set(id, obj);
+        }
+        public static void SetObject(string id, string key, object obj)
+        {
+            _idToObjects.Set(id, obj);
+            
+            if(key != null && key != "")
+                _keyToObjects.Set(key, obj);
         }
         public static object GetObjectFromID(string id)
         {
