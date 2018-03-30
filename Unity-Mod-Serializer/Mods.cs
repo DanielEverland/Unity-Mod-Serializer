@@ -12,15 +12,18 @@ namespace UMS
     /// </summary>
     public static class Mods
     {
-        public static bool SessionInitiated { get; private set; } = false;
-        public static Serializer Serializer { get { return _serializer; } }
+        static Mods()
+        {
+            Serializer = new Serializer();
+        }
 
-        private static Serializer _serializer;
+        public static bool SessionInitiated { get; private set; } = false;
+        public static Serializer Serializer { get; private set; }
 
         public static void CreateNewSession()
         {
             ObjectContainer.Initialize();
-            _serializer = new Serializer();
+            Serializer = new Serializer();
 
             SessionInitiated = true;
         }
@@ -105,7 +108,7 @@ namespace UMS
         public static string Serialize(object obj)
         {
             Serializer.ActiveObject = obj;
-            _serializer.TrySerialize(obj.GetType(), obj, out Data data);
+            Serializer.TrySerialize(obj.GetType(), obj, out Data data);
 
             return JsonPrinter.PrettyJson(data);
         }
@@ -120,9 +123,9 @@ namespace UMS
             Serializer.ActiveObject = obj;
 
 #if DEBUG
-            _serializer.TrySerialize(type, obj, out Data data).AssertSuccessWithoutWarnings();
+            Serializer.TrySerialize(type, obj, out Data data).AssertSuccessWithoutWarnings();
 #else
-        _serializer.TrySerialize(type, obj, out Data data);
+            Serializer.TrySerialize(type, obj, out Data data);
 #endif
 
             string json = JsonPrinter.PrettyJson(data);
@@ -154,9 +157,9 @@ namespace UMS
         {
             object deserialized = null;
 #if DEBUG
-            _serializer.TryDeserialize(data, type, ref deserialized).AssertSuccessWithoutWarnings();
+            Serializer.TryDeserialize(data, type, ref deserialized).AssertSuccessWithoutWarnings();
 #else
-        _serializer.TryDeserialize(data, type, ref deserialized);
+            Serializer.TryDeserialize(data, type, ref deserialized);
 #endif
 
             return deserialized;
