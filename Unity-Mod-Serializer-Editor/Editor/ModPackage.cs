@@ -51,7 +51,8 @@ namespace UMS.Editor
                     Manifest.Instance.AddKey(id, entry.Key);
                 }
                 
-                Serializer.SerializationQueue.Enqueue(entry.Object);
+                if(!Serializer.SerializationQueue.HasBeenEnqueued(entry.Object))
+                    Serializer.SerializationQueue.Enqueue(entry.Object);
             }
 
             while (Serializer.SerializationQueue.Count > 0)

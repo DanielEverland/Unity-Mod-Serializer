@@ -92,7 +92,7 @@ namespace UMS
 
             return _idToData[id];
         }
-        public static void CreateObjectInstance(string id, string key)
+        public static void CreateObjectInstance(string id, IEnumerable<string> keys)
         {
             if (id == null)
                 throw new System.ArgumentException("ID is null " + id);
@@ -102,9 +102,12 @@ namespace UMS
             object deserialized = Mods.DeserializeData(data, MetaData.GetMetaDataType(data));
 
             _idToObjects.Add(id, deserialized);
-            
-            if (key != null)
-                _keyToObjects.Add(key, deserialized);
+
+            foreach (string key in keys)
+            {
+                if (key != null)
+                    _keyToObjects.Add(key, deserialized);
+            }            
         }
         public static void AddData(string id, Data data)
         {

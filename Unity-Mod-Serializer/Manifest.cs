@@ -13,7 +13,7 @@ namespace UMS
         public Manifest()
         {
             _entries = new List<Entry>();
-            _keys = new Dictionary<string, string>();
+            _keys = new Dictionary<string, List<string>>();
 
             Instance = this;
         }
@@ -25,7 +25,7 @@ namespace UMS
         [Property]
         private List<Entry> _entries;
         [Ignore]
-        private Dictionary<string, string> _keys;
+        private Dictionary<string, List<string>> _keys;
                 
         public Entry this[int index]
         {
@@ -35,7 +35,7 @@ namespace UMS
             }
         }
 
-        public string GetKey(string id)
+        public IEnumerable<string> GetKeys(string id)
         {
             if (!_keys.ContainsKey(id))
                 return null;
@@ -44,7 +44,14 @@ namespace UMS
         }
         public void AddKey(string id, string key)
         {
-            _keys.Set(id, key);
+            if(key != "" && key != null)
+            {
+                if (!_keys.ContainsKey(id))
+                    _keys.Add(id, new List<string>());
+
+                if(!_keys[id].Contains(key))
+                    _keys[id].Add(key);
+            }
         }
         public void AddEntry(Entry entry)
         {
@@ -52,14 +59,29 @@ namespace UMS
         }
         
         [Serializable]
-        public struct Entry
+        public class Entry
         {
+            private Entry() { }
+            public Entry(string id, string path, IEnumerable<string> keys)
+            {
+                this.id = id;
+                this.path = path;
+                
+                if(keys != null)
+                {
+                    List<string> keyList = new List<string>(keys.Where(x => x != "" && x != null));
+                    
+                    if (keyList.Count > 0)
+                        this.keys = keyList;
+                }
+            }
+
             [Property]
             public string id;
             [Property]
             public string path;
             [Property]
-            public string key;
+            public List<string> keys;
         }
     }
 }

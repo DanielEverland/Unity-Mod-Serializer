@@ -58,7 +58,7 @@ public static class Mods
             //Create instances
             foreach (Manifest.Entry entry in manifest.Entries)
             {
-                ObjectContainer.CreateObjectInstance(entry.id, entry.key);
+                ObjectContainer.CreateObjectInstance(entry.id, entry.keys);
             }
 
             Debug.Log("Deserialized " + fullPath);

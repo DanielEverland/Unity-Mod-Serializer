@@ -19,13 +19,10 @@ namespace UMS.EntryWriters
         public override Manifest.Entry Write(object obj)
         {
             string id = IDManager.GetID(obj);
+            IEnumerable<string> keys = Manifest.Instance.GetKeys(id);
+            string path = string.Format("{0}.{1}", GetFileName((T)obj), GetExtension((T)obj));
 
-            return new Manifest.Entry()
-            {
-                id = id,
-                key = Manifest.Instance.GetKey(id),
-                path = string.Format("{0}.{1}", GetFileName((T)obj), GetExtension((T)obj)),
-            };
+            return new Manifest.Entry(id, path, keys);
         }
     }
 }
