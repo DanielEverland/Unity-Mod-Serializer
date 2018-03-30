@@ -36,6 +36,21 @@ namespace UMS
         /// </summary>
         private static Dictionary<string, object> _idToObjects;
 
+        private static Transform GameObjectContainer
+        {
+            get
+            {
+                if (Application.isEditor && !Application.isPlaying)
+                    return null;
+
+                if (_containerObject == null)
+                    _containerObject = new GameObject("Mods Container");
+
+                return _containerObject.transform;
+            }
+        }
+        private static GameObject _containerObject;
+
         public static void Initialize()
         {
             _idToData = new Dictionary<string, Data>();
@@ -116,6 +131,12 @@ namespace UMS
             Data data = GetData(id);
 
             object deserialized = Mods.DeserializeData(data, MetaData.GetMetaDataType(data));
+
+            if(deserialized is GameObject gameObject)
+            {
+                gameObject.SetActive(false);
+                gameObject.transform.SetParent(GameObjectContainer);
+            }
             
             _idToObjects.Set(id, deserialized);
             
