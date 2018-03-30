@@ -100,14 +100,17 @@ namespace UMS
             Data data = GetData(id);
 
             object deserialized = Mods.DeserializeData(data, MetaData.GetMetaDataType(data));
-
-            _idToObjects.Add(id, deserialized);
-
-            foreach (string key in keys)
+            
+            _idToObjects.Set(id, deserialized);
+            
+            if(keys != null)
             {
-                if (key != null)
-                    _keyToObjects.Add(key, deserialized);
-            }            
+                foreach (string key in keys)
+                {
+                    if (key != null)
+                        _keyToObjects.Add(key, deserialized);
+                }
+            }                     
         }
         public static void AddData(string id, Data data)
         {

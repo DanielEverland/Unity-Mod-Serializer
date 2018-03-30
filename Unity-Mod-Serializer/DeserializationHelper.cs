@@ -23,7 +23,7 @@ namespace UMS
             {
                 string memberName = keyvaluePair.Key;
                 Data memberValue = keyvaluePair.Value;
-
+                
                 Result result = TryDeserializeMember(memberName, memberValue, storageType, instance);
 
                 if (result.Failed)
@@ -67,6 +67,9 @@ namespace UMS
             if (deserialized == null)
                 return Result.Warn("Deserialized object is null");
 
+            if (containerInstance == null && !field.IsStatic)
+                return Result.Fail("Cannot set a non-static field without a target");
+
             field.SetValue(containerInstance, deserialized);
             return Result.Success;
         }
@@ -84,7 +87,11 @@ namespace UMS
             if (deserialized == null)
                 return Result.Warn("Deserialized object is null");
 
+            if (containerInstance == null && !property.SetMethod.IsStatic)
+                return Result.Fail("Cannot set a non-static property without a target");
+
             property.SetValue(containerInstance, deserialized);
+
             return Result.Success;
         }
     }
