@@ -11,6 +11,11 @@ namespace UMS
     /// </summary>
     public static class ObjectContainer
     {
+        static ObjectContainer()
+        {
+            Initialize();
+        }
+
         public static IEnumerable<object> Objects { get { return _idToObjects.Values; } }
         public static IEnumerable<Data> Data { get { return _idToData.Values; } }
         public static IEnumerable<string> IDs { get { return _idToData.Keys.Union(_idToObjects.Keys); } }
