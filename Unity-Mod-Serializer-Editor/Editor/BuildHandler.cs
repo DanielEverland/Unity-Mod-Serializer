@@ -5,6 +5,8 @@ using System.IO;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
+using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace UMS.Editor
 {
@@ -13,18 +15,27 @@ namespace UMS.Editor
         private static string _pathToRootBuildFolder;
         private static string _pathToRootModsFolder;
         private static string _pathToCoreMods;
+        private static string _pathToLibrary;
 
         [PostProcessBuild()]
         private static void PostBuild(BuildTarget target, string pathToBuiltProject)
         {
-            _pathToRootBuildFolder = string.Format("{0}/{1}_Data", Path.GetDirectoryName(pathToBuiltProject), Path.GetFileNameWithoutExtension(pathToBuiltProject));
+            _pathToRootBuildFolder = string.Format(@"{0}\{1}_Data", Path.GetDirectoryName(pathToBuiltProject), Path.GetFileNameWithoutExtension(pathToBuiltProject));
 
             BuildMods();
         }
         private static void BuildMods()
         {
+            BuildSettings();
             CreateModsDirectory();
             BuildCoreMods();
+            CreateLibraries();
+        }
+        private static void BuildSettings()
+        {
+            string json = JsonUtility.ToJson(Settings.Instance, true);
+            
+            File.WriteAllText(_pathToRootBuildFolder + @"\" + Settings.FILE_NAME, json);
         }
         private static void BuildCoreMods()
         {
@@ -60,22 +71,39 @@ namespace UMS.Editor
         }
         private static void CreateCoreModsFolder()
         {
-            _pathToCoreMods = string.Format("{0}/{1}", _pathToRootModsFolder, Settings.CoreFolderName);
+            _pathToCoreMods = string.Format(@"{0}\{1}", _pathToRootModsFolder, Settings.CoreFolderName);
 
             Directory.CreateDirectory(_pathToCoreMods);
         }
         private static void CreateModsDirectory()
         {
-            if (Settings.BuildModFolderLocation != "")
-            {
-                _pathToRootModsFolder = string.Format("{0}/{1}/{2}", _pathToRootBuildFolder, Settings.BuildModFolderLocation, Settings.FolderName);
-            }
-            else
-            {
-                _pathToRootModsFolder = string.Format("{0}/{1}", _pathToRootBuildFolder, Settings.FolderName);
-            }
+            _pathToRootModsFolder = string.Format(@"{0}\{1}", _pathToRootBuildFolder, Settings.ModsDirectory);
 
             Directory.CreateDirectory(_pathToRootModsFolder);
+        }
+        private static void CreateLibraries()
+        {
+            if (Settings.PredefinedAssemblies.Count() == 0)
+                return;
+
+            _pathToLibrary = string.Format(@"{0}\{1}", _pathToRootModsFolder, Settings.PredefinedAssembliesFolderName);
+
+            Directory.CreateDirectory(_pathToLibrary);
+
+            foreach (string assemblyName in Settings.PredefinedAssemblies)
+            {
+                Assembly assembly = Assembly.Load(assemblyName);
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+
+                    formatter.Serialize(stream, assembly);
+                    byte[] data = stream.ToArray();
+
+                    File.WriteAllBytes(string.Format(@"{0}\{1}.dll", _pathToLibrary, assemblyName), data);
+                }
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using UMS;
 using UMS.Zip;
+using UMS.Reflection;
 using Ionic.Zip;
 
 namespace UMS
@@ -15,6 +16,7 @@ namespace UMS
         static Mods()
         {
             Serializer = new Serializer();
+            AssemblyManager.Initialize();
         }
 
         public static bool SessionInitiated { get; private set; } = false;

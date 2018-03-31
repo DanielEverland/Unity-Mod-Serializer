@@ -6,6 +6,7 @@ namespace UMS
 {
     public static class Utility
     {
+        public const int MENU_ITEM_PRIORITY = 100;
         public const string MOD_EXTENSION = "mod";
         public const string MANIFEST_NAME = ".manifest";
         

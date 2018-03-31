@@ -10,7 +10,7 @@ using Ionic.Zip;
 namespace UMS.Editor
 {
     [Serializable]
-    [CreateAssetMenu(fileName = "ModPackage.asset", menuName = "Modding/Package", order = EditorUtilities.MENU_ITEM_PRIORITY)]
+    [CreateAssetMenu(fileName = "ModPackage.asset", menuName = "Modding/Package", order = Utility.MENU_ITEM_PRIORITY)]
     public class ModPackage : ScriptableObject, IZipFile<ModPackage>
     {
         public IEnumerable<ObjectEntry> ObjectEntries { get { return _objectEntries; } }

@@ -88,6 +88,7 @@
     <Compile Include="Data.cs" />
     <Compile Include="DeserializationHelper.cs" />
     <Compile Include="DirectConverter.cs" />
+    <Compile Include="Editor\Hooks.cs" />
     <Compile Include="EntryWriters\ComponentEntryWriter.cs" />
     <Compile Include="EntryWriters\DefaultEntryWriter.cs" />
     <Compile Include="EntryWriters\EntryWriter.cs" />
@@ -111,12 +112,15 @@
     <Compile Include="ObjectContainer.cs" />
     <Compile Include="ObjectProcessor.cs" />
     <Compile Include="PropertyAttribute.cs" />
+    <Compile Include="Reflection\AssemblyManager.cs" />
+    <Compile Include="Reflection\LoadTypeAttribute.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="SerializationQueue.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="CyclicReferenceManager.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="PortableReflection.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="StaticObjects.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeInheritanceTree.cs" />
