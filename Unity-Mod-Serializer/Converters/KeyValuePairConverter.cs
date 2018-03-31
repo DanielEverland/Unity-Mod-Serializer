@@ -4,8 +4,10 @@ using System.Reflection;
 
 namespace UMS.Converters
 {
-    public sealed class KeyValuePairConverter<TKey, TValue> : DirectConverter<KeyValuePair<TKey, TValue>>
+    public sealed class KeyValuePairConverter : DirectConverter
     {
+        public override Type ModelType => typeof(KeyValuePair<,>);
+
         public override bool RequestCycleSupport(Type storageType)
         {
             return false;
@@ -15,7 +17,7 @@ namespace UMS.Converters
         {
             return false;
         }
-
+        
         public override Result TryDeserialize(Data data, ref object instance, Type storageType)
         {
             var result = Result.Success;

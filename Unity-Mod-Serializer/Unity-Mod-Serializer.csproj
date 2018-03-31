@@ -68,9 +68,9 @@
     <Compile Include="Converters\KeyValuePairConverter.cs" />
     <Compile Include="Converters\MeshConverter.cs" />
     <Compile Include="Converters\NullableConverter.cs" />
-    <Compile Include="Converters\PrimitiveConverter.cs" />
     <Compile Include="Converters\Primitives\BoolConverter.cs" />
     <Compile Include="Converters\Primitives\ByteConverter.cs" />
+    <Compile Include="Converters\Primitives\CharConverter.cs" />
     <Compile Include="Converters\Primitives\DecimalConverter.cs" />
     <Compile Include="Converters\Primitives\DoubleConverter.cs" />
     <Compile Include="Converters\Primitives\FloatConverter.cs" />
