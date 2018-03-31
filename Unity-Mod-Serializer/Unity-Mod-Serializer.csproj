@@ -69,6 +69,7 @@
     <Compile Include="Converters\MeshConverter.cs" />
     <Compile Include="Converters\NullableConverter.cs" />
     <Compile Include="Converters\PrimitiveConverter.cs" />
+    <Compile Include="Converters\Primitives\BoolConverter.cs" />
     <Compile Include="Converters\ReflectedConverter.cs" />
     <Compile Include="Converters\TimeSpanConverter.cs" />
     <Compile Include="Converters\TransformConverter.cs" />
