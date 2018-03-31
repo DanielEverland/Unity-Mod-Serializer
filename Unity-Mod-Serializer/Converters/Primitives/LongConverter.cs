@@ -23,21 +23,22 @@ namespace UMS.Converters.Primitives
         }
         public override Result TryDeserialize(Data data, ref object instance, Type storageType)
         {
-            if (Serializer.Config.Serialize64BitIntegerAsString)
+            if (data.IsInt64)
             {
-                if (!data.IsString)
-                    return Result.Fail("Expected type string");
-
-                instance = Convert.ChangeType(data.AsString, typeof(long));
-            }
-            else
-            {
-                if (!data.IsInt64)
-                    return Result.Fail("Expected type Int64");
-
                 instance = data.AsInt64;
             }
-
+            else if(data.IsString)
+            {
+                if (Serializer.Config.Serialize64BitIntegerAsString)
+                {
+                    instance = Convert.ChangeType(data.AsString, typeof(long));
+                }
+                else
+                {
+                    return Result.Fail("Value is serialized as string, but the config doesn't allow conversion from string");
+                }
+            }
+            
             return Result.Success;
         }
     }
