@@ -18,12 +18,11 @@ namespace UMS
     {
         public abstract Type ModelType { get; }
     }
-
     public abstract class DirectConverter<TModel> : DirectConverter
     {
         public override Type ModelType { get { return typeof(TModel); } }
 
-        public sealed override Result TrySerialize(object instance, out Data serialized, Type storageType)
+        public override Result TrySerialize(object instance, out Data serialized, Type storageType)
         {
             var serializedDictionary = new Dictionary<string, Data>();
             var result = DoSerialize((TModel)instance, serializedDictionary);
@@ -31,7 +30,7 @@ namespace UMS
             return result;
         }
 
-        public sealed override Result TryDeserialize(Data data, ref object instance, Type storageType)
+        public override Result TryDeserialize(Data data, ref object instance, Type storageType)
         {
             var result = Result.Success;
             if ((result += CheckType(data, DataType.Object)).Failed) return result;
@@ -42,7 +41,7 @@ namespace UMS
             return result;
         }
 
-        protected abstract Result DoSerialize(TModel model, Dictionary<string, Data> serialized);
-        protected abstract Result DoDeserialize(Dictionary<string, Data> data, ref TModel model);
+        protected virtual Result DoSerialize(TModel model, Dictionary<string, Data> serialized) { throw new System.NotImplementedException(); }
+        protected virtual Result DoDeserialize(Dictionary<string, Data> data, ref TModel model) { throw new System.NotImplementedException(); }
     }
 }

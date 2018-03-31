@@ -6,15 +6,13 @@ namespace UMS
     /// The serialization converter allows for customization of the serialization
     /// process.
     /// </summary>
+    /// <typeparam name="T">The type this converter can convert. Supports inheritance</typeparam>
     public abstract class Converter : BaseConverter
     {
-        /// <summary>
-        /// Can this converter serialize and deserialize the given object type?
-        /// </summary>
-        /// <param name="type">The given object type.</param>
-        /// <returns>
-        /// True if the converter can serialize it, false otherwise.
-        /// </returns>
-        public abstract bool CanProcess(Type type);
+        public abstract Type ModelType { get; }
+    }
+    public abstract class Converter<T> : Converter
+    {
+        public sealed override Type ModelType { get { return typeof(T); } }
     }
 }

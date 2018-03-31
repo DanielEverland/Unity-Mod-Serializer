@@ -11,13 +11,8 @@ namespace UMS.Converters
     // use-cases with dictionaries, such as inline strings. Further, dictionary
     // processing in general is a bit more advanced because a few of the
     // collection implementations are buggy.
-    public class DictionaryConverter : Converter
+    public sealed class DictionaryConverter : Converter<IDictionary>
     {
-        public override bool CanProcess(Type type)
-        {
-            return typeof(IDictionary).IsAssignableFrom(type);
-        }
-
         public override object CreateInstance(Data data, Type storageType)
         {
             return MetaType.Get(Serializer.Config, storageType).CreateInstance();

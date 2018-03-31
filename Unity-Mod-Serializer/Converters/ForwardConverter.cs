@@ -35,18 +35,14 @@ namespace UMS.Converters
             MemberName = memberName;
         }
     }
-    public class ForwardConverter : Converter
+    [Ignore]
+    public sealed class ForwardConverter : BaseConverter
     {
         private string _memberName;
 
         public ForwardConverter(ForwardAttributeAttribute attribute)
         {
             _memberName = attribute.MemberName;
-        }
-
-        public override bool CanProcess(Type type)
-        {
-            throw new NotSupportedException("Please use the [Forward(...)] attribute.");
         }
 
         private Result GetProperty(object instance, out MetaProperty property)

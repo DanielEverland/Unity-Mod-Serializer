@@ -9,10 +9,6 @@ using UMS.ConverterHelpers;
 
 namespace UMS.Converters
 {
-    public partial class ConverterRegistrar
-    {
-        public MeshConverter Register_MeshConverter;
-    }
     public class MeshConverter : DirectConverter<Mesh>
     {
         private const string KEY_INDEX_FORMAT = "indexFormat";

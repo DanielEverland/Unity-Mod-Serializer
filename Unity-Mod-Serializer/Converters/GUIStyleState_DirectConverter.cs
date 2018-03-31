@@ -4,13 +4,7 @@ using UnityEngine;
 
 namespace UMS.Converters
 {
-    partial class ConverterRegistrar
-    {
-#pragma warning disable 0649
-        public static GUIStyleState_DirectConverter Register_GUIStyleState_DirectConverter;
-#pragma warning restore
-    }
-    public class GUIStyleState_DirectConverter : DirectConverter<GUIStyleState>
+    public sealed class GUIStyleState_DirectConverter : DirectConverter<GUIStyleState>
     {
         protected override Result DoSerialize(GUIStyleState model, Dictionary<string, Data> serialized)
         {

@@ -128,11 +128,7 @@ namespace UMS.Editor
             Type converterType = TypeCache.GetType(converterName);
             if (converterType == null)
                 return OutOfDateResult.NoAot;
-
-            // TODO: We should also verify that the type is contained inside of ConverterRegistrar as
-            //       an additional diagnostic. If it is not, then that means the type will not be used
-            //       at runtime.
-
+            
             object instance_ = null;
             try
             {

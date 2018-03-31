@@ -7,19 +7,10 @@ using UnityEngine;
 
 namespace UMS.Converters
 {
-    public partial class ConverterRegistrar
-    {
-        public static TransformConverter Register_TransformConverter;
-    }
-    public class TransformConverter : ComponentConverter
+    public sealed class TransformConverter : DirectConverter<Transform>
     {
         private const string PARENT_KEY = "parent";
-
-        public override bool CanProcess(Type type)
-        {
-            //We purposely don't use IsAssignableFrom since we don't want to grab RectTransforms
-            return type == typeof(Transform);
-        }
+        
         public override Result TryDeserialize(Data input, ref object instance, Type storageType)
         {
             if (input.IsDictionary)
@@ -65,7 +56,7 @@ namespace UMS.Converters
                 }
             }
 
-            GameObject gameObject = CurrentComponent.gameObject;
+            GameObject gameObject = ComponentConverter.CurrentComponent.gameObject;
 
             gameObject.transform.SetParent(parent);
 

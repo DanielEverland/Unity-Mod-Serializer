@@ -5,13 +5,8 @@ namespace UMS.Converters
     /// <summary>
     /// Serializes and deserializes guids.
     /// </summary>
-    public class GuidConverter : Converter
+    public sealed class GuidConverter : DirectConverter<Guid>
     {
-        public override bool CanProcess(Type type)
-        {
-            return type == typeof(Guid);
-        }
-
         public override bool RequestCycleSupport(Type storageType)
         {
             return false;

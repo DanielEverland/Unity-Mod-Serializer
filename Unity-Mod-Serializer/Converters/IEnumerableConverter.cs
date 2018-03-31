@@ -10,14 +10,8 @@ namespace UMS.Converters
     /// Provides serialization support for anything which extends from
     /// `IEnumerable` and has an `Add` method.
     /// </summary>
-    public class IEnumerableConverter : Converter
+    public class IEnumerableConverter : Converter<IEnumerable>
     {
-        public override bool CanProcess(Type type)
-        {
-            if (typeof(IEnumerable).IsAssignableFrom(type) == false) return false;
-            return GetAddMethod(type) != null;
-        }
-
         public override object CreateInstance(Data data, Type storageType)
         {
             return MetaType.Get(Serializer.Config, storageType).CreateInstance();

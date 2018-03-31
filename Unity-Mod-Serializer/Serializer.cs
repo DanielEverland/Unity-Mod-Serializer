@@ -378,23 +378,7 @@ namespace UMS
             _references = new CyclicReferenceManager();
             _lazyReferenceWriter = new LazyCycleDefinitionWriter();
 
-            // note: The order here is important. Items at the beginning of this
-            //       list will be used before converters at the end. Converters
-            //       added via AddConverter() are added to the front of the list.
-            _availableConverters = new List<Converter> {
-                new NullableConverter { Serializer = this },
-                new GuidConverter { Serializer = this },
-                new TypeConverter { Serializer = this },
-                new DateConverter { Serializer = this },
-                new EnumConverter { Serializer = this },
-                new PrimitiveConverter { Serializer = this },
-                new ArrayConverter { Serializer = this },
-                new DictionaryConverter { Serializer = this },
-                new IEnumerableConverter { Serializer = this },
-                new KeyValuePairConverter { Serializer = this },
-                new WeakReferenceConverter { Serializer = this },
-                new ReflectedConverter { Serializer = this }
-            };
+            _availableConverters = new List<Converter>();
             _availableDirectConverters = new Dictionary<Type, DirectConverter>();
 
             _processors = new List<ObjectProcessor>() {
@@ -412,12 +396,6 @@ namespace UMS
 
             Context = new Context();
             Config = new Config();
-
-            // Register the converters from the registrar
-            foreach (var converterType in ConverterRegistrar.Converters)
-            {
-                AddConverter((BaseConverter)Activator.CreateInstance(converterType));
-            }
         }
 
         /// <summary>
@@ -625,14 +603,8 @@ namespace UMS
                 }
                 else
                 {
-                    for (int i = 0; i < _availableConverters.Count; ++i)
-                    {
-                        if (_availableConverters[i].CanProcess(type))
-                        {
-                            converter = _availableConverters[i];
-                            return _cachedConverters[type] = converter;
-                        }
-                    }
+                    converter = TypeInheritanceTree.GetClosestType(_availableConverters, type, x => x.ModelType);
+                    return _cachedConverters[type] = converter;
                 }
             }
 
@@ -857,7 +829,7 @@ namespace UMS
         {
             Type instanceType = instance.GetType();
             BaseConverter converter = GetConverter(instanceType, overrideConverterType);
-            
+                        
             return converter.TrySerialize(instance, out data, instanceType);
         }
 

@@ -6,15 +6,8 @@ namespace UMS.Converters
     /// The reflected converter will properly serialize nullable types. However,
     /// we do it here instead as we can emit less serialization data.
     /// </summary>
-    public class NullableConverter : Converter
+    public sealed class NullableConverter<T> : Converter<T?> where T : struct
     {
-        public override bool CanProcess(Type type)
-        {
-            return
-                type.Resolve().IsGenericType &&
-                type.GetGenericTypeDefinition() == typeof(Nullable<>);
-        }
-
         public override Result TrySerialize(object instance, out Data serialized, Type storageType)
         {
             // null is automatically serialized

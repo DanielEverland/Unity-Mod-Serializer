@@ -8,13 +8,8 @@ using System.Reflection;
 
 namespace UMS.Converters
 {
-    public class TypeConverter : Converter
+    public sealed class TypeConverter : DirectConverter<Type>
     {
-        public override bool CanProcess(Type type)
-        {
-            return typeof(Type).IsAssignableFrom(type);
-        }
-
         public override bool RequestCycleSupport(Type type)
         {
             return false;

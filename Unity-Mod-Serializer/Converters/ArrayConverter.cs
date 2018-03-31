@@ -4,13 +4,8 @@ using UMS.Reflection;
 
 namespace UMS.Converters
 {
-    public class ArrayConverter : Converter
+    public sealed class ArrayConverter : Converter<Array>
     {
-        public override bool CanProcess(Type type)
-        {
-            return type.IsArray;
-        }
-
         public override bool RequestCycleSupport(Type storageType)
         {
             return false;
@@ -37,10 +32,8 @@ namespace UMS.Converters
             for (int i = 0; i < arr.Count; ++i)
             {
                 object item = arr[i];
-
-                Data serializedItem;
-
-                var itemResult = Serializer.TrySerialize(elementType, item, out serializedItem);
+                
+                var itemResult = Serializer.TrySerialize(elementType, item, out Data serializedItem);
                 result.AddMessages(itemResult);
                 if (itemResult.Failed) continue;
 

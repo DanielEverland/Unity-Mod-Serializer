@@ -8,17 +8,8 @@ using UMS.ConverterHelpers;
 
 namespace UMS.Converters
 {
-    partial class ConverterRegistrar
+    public sealed class GameObjectConverter : DirectConverter<GameObject>
     {
-        public static GameObjectConverter Register_GameObjectConverter;
-    }
-    public class GameObjectConverter : Converter
-    {
-        public override bool CanProcess(Type type)
-        {
-            return type == typeof(GameObject);
-        }
-
         public override object CreateInstance(Data input, Type storageType)
         {
             return new GameObject();
@@ -26,17 +17,11 @@ namespace UMS.Converters
 
         private const string COMPONENT_KEY = "components";
         private const string CHILDREN_KEY = "children";
-        
-        public override Result TryDeserialize(Data data, ref object instance, Type storageType)
+
+        protected override Result DoDeserialize(Dictionary<string, Data> dictionary, ref GameObject gameObject)
         {
-            if (!data.IsDictionary)
-                return Result.Fail("Input data is not dictionary");
-            
-            Dictionary<string, Data> dictionary = data.AsDictionary;
             List<Data> componentList = dictionary[COMPONENT_KEY].AsList;
-
-            GameObject gameObject = (GameObject)instance;
-
+            
             Result objResult = UnityEngineObjectHelper.TryDeserialize(dictionary, gameObject);
             if (!objResult.Succeeded)
                 return objResult;
@@ -48,7 +33,7 @@ namespace UMS.Converters
 
                 //Actual data for the component. Grabbed from the manifest using ID
                 Data componentData = ObjectContainer.GetData(id);
-                                
+
                 //Assign the current component, since ComponentConverter can't create a new instance without a GameObject to add it to.
                 ComponentConverter.CurrentComponent = GetComponent(componentData, gameObject);
 
@@ -84,20 +69,14 @@ namespace UMS.Converters
                 return obj.AddComponent(type);
             }
         }
-        public override Result TrySerialize(object instance, out Data serialized, Type storageType)
+        protected override Result DoSerialize(GameObject gameObject, Dictionary<string, Data> serialized)
         {
-            serialized = null;
-            Dictionary<string, Data> _data = new Dictionary<string, Data>();
-            GameObject obj = (GameObject)instance;
-
-            Result objResult = UnityEngineObjectHelper.TrySerialize(_data, obj);
+            Result objResult = UnityEngineObjectHelper.TrySerialize(serialized, gameObject);
             if (!objResult.Succeeded)
                 return objResult;
-            
-            _data.Add(CHILDREN_KEY, new Data(GetChildren(obj)));
-            _data.Add(COMPONENT_KEY, new Data(GetComponents(obj)));
 
-            serialized = new Data(_data);
+            serialized.Add(CHILDREN_KEY, new Data(GetChildren(gameObject)));
+            serialized.Add(COMPONENT_KEY, new Data(GetComponents(gameObject)));
 
             return Result.Success;
         }

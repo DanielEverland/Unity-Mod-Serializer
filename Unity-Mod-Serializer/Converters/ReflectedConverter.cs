@@ -9,19 +9,8 @@ using System.Reflection;
 
 namespace UMS.Converters
 {
-    public class ReflectedConverter : Converter
+    public class ReflectedConverter : Converter<ICollection>
     {
-        public override bool CanProcess(Type type)
-        {
-            if (type.Resolve().IsArray ||
-                typeof(ICollection).IsAssignableFrom(type))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         public override Result TrySerialize(object instance, out Data serialized, Type storageType)
         {
             serialized = Data.CreateDictionary();

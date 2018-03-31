@@ -4,15 +4,8 @@ using System.Reflection;
 
 namespace UMS.Converters
 {
-    public class KeyValuePairConverter : Converter
+    public sealed class KeyValuePairConverter<TKey, TValue> : DirectConverter<KeyValuePair<TKey, TValue>>
     {
-        public override bool CanProcess(Type type)
-        {
-            return
-                type.Resolve().IsGenericType &&
-                type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>);
-        }
-
         public override bool RequestCycleSupport(Type storageType)
         {
             return false;

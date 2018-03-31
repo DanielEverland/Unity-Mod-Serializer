@@ -5,13 +5,8 @@ namespace UMS.Converters
     /// <summary>
     /// Serializes and deserializes WeakReferences.
     /// </summary>
-    public class WeakReferenceConverter : Converter
+    public sealed class WeakReferenceConverter : DirectConverter<WeakReference>
     {
-        public override bool CanProcess(Type type)
-        {
-            return type == typeof(WeakReference);
-        }
-
         public override bool RequestCycleSupport(Type storageType)
         {
             return false;

@@ -4,13 +4,7 @@ using UnityEngine;
 
 namespace UMS.Converters
 {
-    partial class ConverterRegistrar
-    {
-#pragma warning disable 0649
-        public static Rect_DirectConverter Register_Rect_DirectConverter;
-#pragma warning restore
-    }
-    public class Rect_DirectConverter : DirectConverter<Rect>
+    public sealed class Rect_DirectConverter : DirectConverter<Rect>
     {
         protected override Result DoSerialize(Rect model, Dictionary<string, Data> serialized)
         {

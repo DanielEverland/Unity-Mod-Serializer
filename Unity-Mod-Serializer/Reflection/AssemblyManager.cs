@@ -135,12 +135,20 @@ namespace UMS.Reflection
         {
             foreach (MethodInfo method in type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
             {
-                if (method.GetCustomAttributes().Any(x => x is LoadTypeAttribute))
+                if (method.GetCustomAttributes(false).Any(x => x.GetType() == typeof(LoadTypesAttribute)))
                 {
-                    if (LoadTypeAttribute.IsValid(method))
+                    Result result = LoadTypesAttribute.IsValid(method);
+
+                    if (result.Succeeded)
                     {
                         //We cache the function as a delegate because it's much faster than calling MethodInfo.Invoke
                         _typeAnalysers += (Action<Type>)Delegate.CreateDelegate(typeof(Action<Type>), method);
+                    }
+                    else
+                    {
+#if DEBUG
+                        UnityEngine.Debug.LogWarning("Couldn't load " + method + "\n" + result.FormattedMessages);
+#endif
                     }
                 }
             }
@@ -148,7 +156,10 @@ namespace UMS.Reflection
         private static void ExecuteReflection()
         {
             if (_typeAnalysers == null)
+            {
+                UnityEngine.Debug.LogWarning("No analysers loaded");
                 return;
+            }                
 
             foreach (Type type in _loadedTypes)
             {

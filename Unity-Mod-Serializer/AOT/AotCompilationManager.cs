@@ -116,12 +116,6 @@ namespace UMS.AOT
             sb.AppendLine("using System;");
             sb.AppendLine("using System.Collections.Generic;");
             sb.AppendLine();
-            sb.AppendLine("namespace UMS {");
-            sb.AppendLine("    partial class ConverterRegistrar {");
-            sb.AppendLine("        public static Speedup." + typeNameSafeDecl + "_DirectConverter " + "Register_" + typeNameSafeDecl + ";");
-            sb.AppendLine("    }");
-            sb.AppendLine("}");
-            sb.AppendLine();
             sb.AppendLine("namespace UMS.Speedup {");
             sb.AppendLine("    public class " + typeNameSafeDecl + "_DirectConverter : DirectConverter<" + typeName + ">, IAOTConverter {");
             sb.AppendLine("        private AOTVersionInfo _versionInfo = " + EmitVersionInfo("        ", type, members, isConstructorPublic) + ";");

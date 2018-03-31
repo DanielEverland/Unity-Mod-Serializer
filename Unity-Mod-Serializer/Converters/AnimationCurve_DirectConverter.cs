@@ -4,13 +4,7 @@ using UnityEngine;
 
 namespace UMS.Converters
 {
-    partial class ConverterRegistrar
-    {
-#pragma warning disable 0649
-        public static AnimationCurve_DirectConverter Register_AnimationCurve_DirectConverter;
-#pragma warning restore
-    }
-    public class AnimationCurve_DirectConverter : DirectConverter<AnimationCurve>
+    public sealed class AnimationCurve_DirectConverter : DirectConverter<AnimationCurve>
     {
         protected override Result DoSerialize(AnimationCurve model, Dictionary<string, Data> serialized)
         {

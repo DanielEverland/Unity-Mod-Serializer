@@ -7,13 +7,8 @@ namespace UMS.Converters
     /// <summary>
     /// Serializes and deserializes enums by their current name.
     /// </summary>
-    public class EnumConverter : Converter
+    public sealed class EnumConverter : Converter<Enum>
     {
-        public override bool CanProcess(Type type)
-        {
-            return type.Resolve().IsEnum;
-        }
-
         public override bool RequestCycleSupport(Type storageType)
         {
             return false;

@@ -9,19 +9,10 @@ using UnityEngine;
 
 namespace UMS.Converters
 {
-    public partial class ConverterRegistrar
-    {
-        public static ComponentConverter Register_ComponentConverter;
-    }
-    public class ComponentConverter : Converter
+    public class ComponentConverter : Converter<Component>
     {
         public static Component CurrentComponent { get; set; }
-
-        public override bool CanProcess(Type type)
-        {
-            return typeof(Component).IsAssignableFrom(type);
-        }
-
+        
         public override object CreateInstance(Data data, Type storageType)
         {
             return CurrentComponent;

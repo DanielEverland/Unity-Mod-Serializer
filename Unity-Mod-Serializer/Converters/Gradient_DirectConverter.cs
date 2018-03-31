@@ -4,13 +4,7 @@ using UnityEngine;
 
 namespace UMS.Converters
 {
-    partial class ConverterRegistrar
-    {
-#pragma warning disable 0649
-        public static Gradient_DirectConverter Register_Gradient_DirectConverter;
-#pragma warning restore
-    }
-    public class Gradient_DirectConverter : DirectConverter<Gradient>
+    public sealed class Gradient_DirectConverter : DirectConverter<Gradient>
     {
         protected override Result DoSerialize(Gradient model, Dictionary<string, Data> serialized)
         {
