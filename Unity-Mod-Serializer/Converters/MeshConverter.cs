@@ -112,7 +112,7 @@ namespace UMS.Converters
 
             result += UnityEngineObjectHelper.TrySerialize(serialized, mesh);
 
-            return Result.Success;
+            return result;
         }
     }
 }
