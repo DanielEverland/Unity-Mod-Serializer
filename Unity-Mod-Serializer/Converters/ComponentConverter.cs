@@ -32,7 +32,7 @@ namespace UMS.Converters
             Dictionary<string, Data> dictionary = new Dictionary<string, Data>();
             Component component = (Component)instance;
 
-            foreach (MemberInfo member in instance.GetType().GetMembers(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Public))
+            foreach (MemberInfo member in instance.GetType().GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public))
             {
                 if (MemberBlockerAttribute.IsBlocked(member))
                     continue;
