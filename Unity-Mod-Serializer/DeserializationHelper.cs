@@ -12,7 +12,7 @@ namespace UMS
     /// </summary>
     public static class DeserializationHelper
     {
-        private static readonly BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Public;
+        private static readonly BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
         /// <summary>
         /// Deserializes a dictionary into an object using reflection
