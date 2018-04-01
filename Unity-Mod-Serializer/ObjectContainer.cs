@@ -134,7 +134,9 @@ namespace UMS
 
             if(deserialized is GameObject gameObject)
             {
-                gameObject.SetActive(false);
+                if(!Application.isEditor || Settings.SimulateBuildLoading)
+                    gameObject.SetActive(false);
+
                 gameObject.transform.SetParent(GameObjectContainer);
             }
             
