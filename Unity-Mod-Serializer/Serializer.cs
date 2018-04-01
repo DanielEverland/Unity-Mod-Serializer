@@ -377,7 +377,7 @@ namespace UMS
 
             _references = new CyclicReferenceManager();
             _lazyReferenceWriter = new LazyCycleDefinitionWriter();
-
+            
             _availableConverters = new List<Converter>();
             _availableDirectConverters = new Dictionary<Type, DirectConverter>();
 
@@ -505,33 +505,33 @@ namespace UMS
         /// Adds a new converter that can be used to customize how an object is
         /// serialized and deserialized.
         /// </summary>
-        public void AddConverter(BaseConverter converter)
+        public void AddConverter(BaseConverter baseConverter)
         {
-            if (converter.Serializer != null)
+            if (baseConverter.Serializer != null)
             {
                 throw new InvalidOperationException("Cannot add a single converter instance to " +
-                    "multiple Converters -- please construct a new instance for " + converter);
+                    "multiple Converters -- please construct a new instance for " + baseConverter);
             }
 
             // TODO: wrap inside of a ConverterManager so we can control
             //       _converters and _cachedConverters lifetime
-            if (converter is DirectConverter)
+            if (baseConverter is DirectConverter directConverter)
             {
-                var directConverter = (DirectConverter)converter;
                 _availableDirectConverters[directConverter.ModelType] = directConverter;
             }
-            else if (converter is Converter)
+            else if (baseConverter is Converter converter)
             {
-                _availableConverters.Insert(0, (Converter)converter);
+                if(!_availableConverters.Contains(converter))
+                    _availableConverters.Add(converter);
             }
             else
             {
-                throw new InvalidOperationException("Unable to add converter " + converter +
+                throw new InvalidOperationException("Unable to add converter " + baseConverter +
                     "; the type association strategy is unknown. Please use either " +
                     "DirectConverter or fsConverter as your base type.");
             }
 
-            converter.Serializer = this;
+            baseConverter.Serializer = this;
 
             // We need to reset our cached converter set, as it could be invalid
             // with the new converter. Ideally, _cachedConverters should be empty
@@ -604,6 +604,13 @@ namespace UMS
                 else
                 {
                     converter = TypeInheritanceTree.GetClosestType(_availableConverters, type, x => x.ModelType);
+
+                    if (converter == null)
+                    {
+                        _availableConverters.Output();
+                        throw new NullReferenceException("Couldn't find converter for type " + type);
+                    }                        
+
                     return _cachedConverters[type] = converter;
                 }
             }

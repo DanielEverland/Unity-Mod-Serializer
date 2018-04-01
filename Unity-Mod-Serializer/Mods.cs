@@ -13,12 +13,6 @@ namespace UMS
     /// </summary>
     public static class Mods
     {
-        static Mods()
-        {
-            Serializer = new Serializer();
-            AssemblyManager.Initialize();
-        }
-
         public static bool SessionInitiated { get; private set; } = false;
         public static Serializer Serializer { get; private set; }
 
@@ -26,6 +20,8 @@ namespace UMS
         {
             ObjectContainer.Initialize();
             Serializer = new Serializer();
+
+            AssemblyManager.Initialize();
 
             SessionInitiated = true;
         }

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace UMS.Converters
 {
-    public sealed class TransformConverter : DirectConverter<Transform>
+    public sealed class TransformConverter : ComponentConverter
     {
         private const string PARENT_KEY = "parent";
         

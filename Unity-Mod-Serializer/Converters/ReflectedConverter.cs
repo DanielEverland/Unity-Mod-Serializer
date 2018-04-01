@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace UMS.Converters
 {
-    public class ReflectedConverter : Converter<ICollection>
+    public class ReflectedConverter : Converter<object>
     {
         public override Result TrySerialize(object instance, out Data serialized, Type storageType)
         {

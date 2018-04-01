@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,26 @@ namespace UMS
 {
     public static class Extensions
     {
+        private const int MAX_OUTPUT_LENGTH = 100;
+
+        public static void Output(this ICollection collection)
+        {
+            UnityEngine.Debug.Log("Outputting collection " + collection + "(" + collection.Count + ")");
+
+            int i = 0;
+
+            foreach (object obj in collection)
+            {
+                UnityEngine.Debug.Log(obj);
+
+                i++;
+
+                if(i >= MAX_OUTPUT_LENGTH)
+                {
+                    UnityEngine.Debug.LogWarning("Stopping output of collection. Too long");
+                }
+            }
+        }
         public static string ToCamelCase(this string value)
         {
             if (value.Length == 1)

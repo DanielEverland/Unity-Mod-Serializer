@@ -41,7 +41,7 @@ namespace UMS
             return result;
         }
 
-        protected virtual Result DoSerialize(TModel model, Dictionary<string, Data> serialized) { throw new System.NotImplementedException(); }
-        protected virtual Result DoDeserialize(Dictionary<string, Data> data, ref TModel model) { throw new System.NotImplementedException(); }
+        protected virtual Result DoSerialize(TModel model, Dictionary<string, Data> serialized) { throw new System.NotImplementedException(ModelType.ToString()); }
+        protected virtual Result DoDeserialize(Dictionary<string, Data> data, ref TModel model) { throw new System.NotImplementedException(ModelType.ToString()); }
     }
 }
