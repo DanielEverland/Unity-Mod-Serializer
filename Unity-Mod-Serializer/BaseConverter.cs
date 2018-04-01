@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Reflection;
 using System.Linq;
+using System.Collections.Generic;
 using UMS.Converters;
 
 namespace UMS
@@ -16,6 +17,8 @@ namespace UMS
     /// </remarks>
     public abstract class BaseConverter
     {
+        private readonly BindingFlags _memberBindingFlags = BindingFlags.Public | BindingFlags.Instance;
+
         /// <summary>
         /// The serializer that was owns this converter.
         /// </summary>
@@ -129,11 +132,129 @@ namespace UMS
             return Result.Success;
         }
 
+        protected Result SerializeMembers(Dictionary<string, Data> data, object instance, IEnumerable<string> memberNames)
+        {
+            Result result = Result.Success;
+
+            Type instanceType = instance.GetType();
+
+            foreach (string memberName in memberNames)
+            {
+                MemberInfo[] members = instanceType.GetMember(memberName, _memberBindingFlags);
+
+                foreach (MemberInfo member in members)
+                {
+                    switch (member.MemberType)
+                    {
+                        case MemberTypes.Field:
+                            result += SerializeField(data, instance, member as FieldInfo);
+                            break;
+                        case MemberTypes.Property:
+                            result += SerializeProperty(data, instance, member as PropertyInfo);
+                            break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private Result SerializeField(Dictionary<string, Data> data, object instance, FieldInfo field)
+        {
+            object fieldValue = field.GetValue(instance);
+            
+            Result result = Serializer.TrySerialize(field.FieldType, null, fieldValue, out Data memberData);
+            data.Set(field.Name, memberData);
+
+            return result;
+        }
+
+        private Result SerializeProperty(Dictionary<string, Data> data, object instance, PropertyInfo property)
+        {
+            if (property.GetMethod == null)
+            {
+#if DEBUG
+                return Result.Warn("No get method for " + property + " - skipping!");
+#else
+                return Result.Success;
+#endif
+            }
+
+            object fieldValue = property.GetValue(instance);
+
+            Result result = Serializer.TrySerialize(property.PropertyType, null, fieldValue, out Data memberData);
+            data.Set(property.Name, memberData);
+
+            return result;
+        }
+        
         protected Result SerializeMember<T>(Dictionary<string, Data> data, Type overrideConverterType, string name, T value)
         {
             Data memberData;
             var result = Serializer.TrySerialize(typeof(T), overrideConverterType, value, out memberData);
             if (result.Succeeded) data[name] = memberData;
+            return result;
+        }
+
+        protected Result DeserializeMembers(Dictionary<string, Data> data, object instance)
+        {
+            Result result = Result.Success;
+
+            Type instanceType = instance.GetType();
+
+            foreach (KeyValuePair<string, Data> keyValuePair in data)
+            {
+                MemberInfo[] members = instanceType.GetMember(keyValuePair.Key, _memberBindingFlags);
+
+                foreach (MemberInfo member in members)
+                {
+                    switch (member.MemberType)
+                    {
+                        case MemberTypes.Field:
+                            result += DeserializeField(keyValuePair.Value, instance, member as FieldInfo);
+                            break;
+                        case MemberTypes.Property:
+                            result += DeserializeProperty(keyValuePair.Value, instance, member as PropertyInfo);
+                            break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private Result DeserializeField(Data data, object instance, FieldInfo field)
+        {
+            object deserialized = null;
+            Result result = Serializer.TryDeserialize(data, field.FieldType, null, ref deserialized);
+            
+            if(deserialized != null)
+            {
+                field.SetValue(instance, deserialized);
+            }
+
+            return result;
+        }
+
+        private Result DeserializeProperty(Data data, object instance, PropertyInfo property)
+        {
+            if (property.SetMethod == null)
+            {
+#if DEBUG
+                return Result.Warn("No set method for " + property + " - skipping!");
+#else
+                return Result.Success;
+#endif
+            }
+
+            object deserialized = null;
+            Result result = Serializer.TryDeserialize(data, property.PropertyType, null, ref deserialized);
+
+            if (deserialized != null)
+            {
+                property.SetValue(instance, deserialized);
+            }
+
             return result;
         }
 
