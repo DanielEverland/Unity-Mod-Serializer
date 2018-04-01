@@ -14,7 +14,8 @@ namespace UMS.MemberBlockers
             //Shared mesh/material stuff
             "MeshFilter.mesh",
             "Renderer.material",
-            "Renderer.materials"
+            "Renderer.materials",
+            "Renderer.sharedMaterial", //We want to serialize the entire list of materials, not just the first index
         };
     }
 }
