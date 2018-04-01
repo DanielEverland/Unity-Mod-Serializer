@@ -119,6 +119,9 @@
     <Compile Include="JsonParser.cs" />
     <Compile Include="JsonPrinter.cs" />
     <Compile Include="Manifest.cs" />
+    <Compile Include="MemberBlockers\BlockedMembers.cs" />
+    <Compile Include="MemberBlockers\MemberBlockerAttribute.cs" />
+    <Compile Include="Reflection\MemberBlockerLoader.cs" />
     <Compile Include="MemberSerialization.cs" />
     <Compile Include="MetaData.cs" />
     <Compile Include="Mods.cs" />

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Threading.Tasks;
-using UMS.Reflection;
+using UMS.MemberBlockers;
 using UnityEngine;
 
 namespace UMS.Converters
@@ -34,6 +34,9 @@ namespace UMS.Converters
 
             foreach (MemberInfo member in instance.GetType().GetMembers(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Public))
             {
+                if (MemberBlockerAttribute.IsBlocked(member))
+                    continue;
+
                 Data memberData = null;
 
                 switch (member.MemberType)
