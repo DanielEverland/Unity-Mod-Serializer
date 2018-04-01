@@ -36,7 +36,7 @@ namespace UMS.Converters
         {
             Result result = Result.Success;
 
-            result += DeserializeMembers(data, _members);
+            result += DeserializeMembers(data, model, _members);
 
             model.RecalculateBounds();
 

@@ -177,7 +177,7 @@ namespace UMS
             if (property.GetMethod == null)
             {
 #if DEBUG
-                return Result.Warn("No get method for " + property + " - skipping!");
+                return Result.Warn("No get method for " + property + " on " + instance.GetType() + " - skipping!");
 #else
                 return Result.Success;
 #endif
@@ -199,25 +199,35 @@ namespace UMS
             return result;
         }
 
-        protected Result DeserializeMembers(Dictionary<string, Data> data, object instance)
+        protected Result DeserializeMembers(Dictionary<string, Data> data, object instance, IEnumerable<string> memberNames)
         {
             Result result = Result.Success;
 
             Type instanceType = instance.GetType();
 
-            foreach (KeyValuePair<string, Data> keyValuePair in data)
+            foreach (string memberName in memberNames)
             {
-                MemberInfo[] members = instanceType.GetMember(keyValuePair.Key, _memberBindingFlags);
+                if (!data.ContainsKey(memberName))
+                {
+                    return Result.Fail("Data doesn't contain " + memberName);
+                }
+
+                Data memberData = data[memberName];
+
+                MemberInfo[] members = instanceType.GetMember(memberName, _memberBindingFlags);
+
+                if (members.Length == 0)
+                    return Result.Fail("Cannot find member " + memberName + " on " + instanceType);
 
                 foreach (MemberInfo member in members)
                 {
                     switch (member.MemberType)
                     {
                         case MemberTypes.Field:
-                            result += DeserializeField(keyValuePair.Value, instance, member as FieldInfo);
+                            result += DeserializeField(memberData, instance, member as FieldInfo);
                             break;
                         case MemberTypes.Property:
-                            result += DeserializeProperty(keyValuePair.Value, instance, member as PropertyInfo);
+                            result += DeserializeProperty(memberData, instance, member as PropertyInfo);
                             break;
                     }
                 }
@@ -244,7 +254,7 @@ namespace UMS
             if (property.SetMethod == null)
             {
 #if DEBUG
-                return Result.Warn("No set method for " + property + " - skipping!");
+                return Result.Warn("No set method for " + property + " on " + instance.GetType() + " - skipping!");
 #else
                 return Result.Success;
 #endif

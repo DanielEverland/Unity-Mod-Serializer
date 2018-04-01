@@ -18,7 +18,6 @@ namespace UMS.Converters
             "globalIlluminationFlags",
             "shaderKeywords",
             "renderQueue",
-            "passCount",
             "mainTextureScale",
             "mainTextureOffset",
             "mainTexture",
@@ -56,7 +55,7 @@ namespace UMS.Converters
         {
             Result result = Result.Success;
 
-            result += DeserializeMembers(data, _members);
+            result += DeserializeMembers(data, material, _members);
             result += UnityEngineObjectHelper.TryDeserialize(data, material);
 
             return result;
