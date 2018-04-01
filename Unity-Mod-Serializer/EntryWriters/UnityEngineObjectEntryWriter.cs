@@ -7,11 +7,11 @@ using UnityEngine;
 
 namespace UMS.EntryWriters
 {
-    public partial class EntryWriterRegistrar
+    public class BaseObjectWriter : UnityEngineObjectEntryWriter<UnityEngine.Object>
     {
-        public UnityEngineObjectEntryWriter<UnityEngine.Object> Register_UnityEngineObjectEntryWriter;
+
     }
-    public class UnityEngineObjectEntryWriter<T> : DefaultEntryWriter<T> where T : UnityEngine.Object
+    public abstract class UnityEngineObjectEntryWriter<T> : DefaultEntryWriter<T> where T : UnityEngine.Object
     {
         protected override string GetExtension(T obj)
         {

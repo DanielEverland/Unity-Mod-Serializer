@@ -7,10 +7,6 @@ using UnityEngine;
 
 namespace UMS.EntryWriters
 {
-    public partial class EntryWriterRegistrar
-    {
-        public MeshEntryWriter Register_MeshEntryWriter;
-    }
     public class MeshEntryWriter : UnityEngineObjectEntryWriter<Mesh>
     {
         protected override string GetExtension(Mesh obj)

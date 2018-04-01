@@ -7,10 +7,6 @@ using UnityEngine;
 
 namespace UMS.EntryWriters
 {
-    public partial class EntryWriterRegistrar
-    {
-        public ComponentEntryWriter Register_ComponentEntryWriter;
-    }
     public class ComponentEntryWriter : UnityEngineObjectEntryWriter<Component>
     {
         protected override string GetFileName(Component component)

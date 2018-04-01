@@ -9,13 +9,25 @@ namespace UMS.EntryWriters
     public abstract class EntryWriter
     {
         #region Static
+        static EntryWriter()
+        {
+            _writers = new List<EntryWriter>();
+        }
+
+        private static List<EntryWriter> _writers;
+
+        public static void AddWriter(EntryWriter writer)
+        {
+            if (!_writers.Contains(writer))
+                _writers.Add(writer);
+        }
         public static bool IsWritable(Type type)
         {
             return GetWriter(type) != null;
         }
         public static EntryWriter GetWriter(Type type)
         {
-            return TypeInheritanceTree.GetClosestType(EntryWriterRegistrar.Writers, type, x => x.WriterType);
+            return TypeInheritanceTree.GetClosestType(_writers, type, x => x.WriterType);
         }
         #endregion
 

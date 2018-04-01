@@ -107,7 +107,6 @@
     <Compile Include="EntryWriters\ComponentEntryWriter.cs" />
     <Compile Include="EntryWriters\DefaultEntryWriter.cs" />
     <Compile Include="EntryWriters\EntryWriter.cs" />
-    <Compile Include="EntryWriters\EntryWriterRegistrar.cs" />
     <Compile Include="EntryWriters\GameObjectEntryWriter.cs" />
     <Compile Include="EntryWriters\MeshEntryWriter.cs" />
     <Compile Include="EntryWriters\UnityEngineObjectEntryWriter.cs" />
@@ -129,6 +128,7 @@
     <Compile Include="PropertyAttribute.cs" />
     <Compile Include="Reflection\AssemblyManager.cs" />
     <Compile Include="Reflection\ConverterLoader.cs" />
+    <Compile Include="Reflection\EntryWriterLoader.cs" />
     <Compile Include="Reflection\LoadTypesAttribute.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="SerializationQueue.cs" />

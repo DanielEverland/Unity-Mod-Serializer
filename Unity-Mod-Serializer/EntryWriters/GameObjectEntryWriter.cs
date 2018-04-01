@@ -7,10 +7,6 @@ using UnityEngine;
 
 namespace UMS.EntryWriters
 {
-    public partial class EntryWriterRegistrar
-    {
-        public GameObjectEntryWriter Register_GameObjectEntryWriter;
-    }
     public class GameObjectEntryWriter : UnityEngineObjectEntryWriter<GameObject>
     {
         public static string GetGameObjectFolder(GameObject obj)
