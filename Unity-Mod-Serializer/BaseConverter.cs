@@ -142,6 +142,9 @@ namespace UMS
             {
                 MemberInfo[] members = instanceType.GetMember(memberName, _memberBindingFlags);
 
+                if (members.Length == 0)
+                    return Result.Fail("Cannot find member " + memberName + " on " + instanceType);
+
                 foreach (MemberInfo member in members)
                 {
                     switch (member.MemberType)
