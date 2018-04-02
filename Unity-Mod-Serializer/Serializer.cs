@@ -715,7 +715,7 @@ namespace UMS
 
                 // This type does not need cycle support.
                 var converter = GetConverter(instance.GetType(), overrideConverterType);
-                if (converter.RequestCycleSupport(instance.GetType()) == false || !IDManager.CanGetID(instance))
+                if (converter.RequestCycleSupport(instance.GetType()) == false)
                 {
                     return InternalSerialize_2_Inheritance(storageType, overrideConverterType, instance, out data);
                 }
@@ -725,7 +725,7 @@ namespace UMS
                 //currently serializing, we should simply write its ID instead,
                 //and then add it to the serialization queue so we can serialize
                 //its definition properly later
-                if (IDManager.CanGetID(instance) && ActiveObject != instance)
+                if (ActiveObject != instance)
                 {
                     string id = IDManager.GetID(instance);
 
@@ -758,14 +758,12 @@ namespace UMS
 
                 //Save the object definition in the manifest. Every object defintion
                 //will eventually be written into an entry in the .mod zip file.
-                if(IDManager.CanGetID(instance))
-                {
-                    //Add the $type metadata
-                    data.AsDictionary[_instanceTypeKey] = new Data(instance.GetType().FullName);
 
-                    ObjectContainer.AddData(IDManager.GetID(instance), data);
-                }                    
-                
+                //Add the $type metadata
+                data.AsDictionary[_instanceTypeKey] = new Data(instance.GetType().FullName);
+
+                ObjectContainer.AddData(IDManager.GetID(instance), data);
+
                 return result;
             }
             finally

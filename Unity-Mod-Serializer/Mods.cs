@@ -18,6 +18,7 @@ namespace UMS
 
         public static void CreateNewSession()
         {
+            IDManager.Initialize();
             ObjectContainer.Initialize();
             Serializer = new Serializer();
 

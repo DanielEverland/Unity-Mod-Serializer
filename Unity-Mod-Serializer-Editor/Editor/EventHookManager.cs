@@ -14,19 +14,7 @@ namespace UMS.Editor
         [DidReloadScripts]
         private static void CreateHook()
         {
-            IDManager.EventHook hook = new IDManager.EventHook()
-            {
-                GetID = obj =>
-                {
-                    return EditorUtilities.GetID(obj);
-                },
-                CanGetID = obj =>
-                {
-                    return EditorUtilities.CanGetID(obj);
-                }
-            };
-
-            IDManager.AssignHook(hook);
+            //Currently not using any hooks
         }
     }
 }

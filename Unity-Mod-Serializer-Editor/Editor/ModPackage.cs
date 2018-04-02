@@ -71,7 +71,7 @@ namespace UMS.Editor
                 {
                     EntryWriter writer = EntryWriter.GetWriter(objectType);
                     Manifest.Entry entry = writer.Write(toSerialize);
-
+                                        
                     content.Add(entry.id, json);
                     manifest.AddEntry(entry);
                 }
@@ -83,6 +83,11 @@ namespace UMS.Editor
 
             foreach (Manifest.Entry manifestEntry in manifest.Entries)
             {
+                if (file.ContainsEntry(manifestEntry.path))
+                {
+                    throw new System.ArgumentException("Zip-file already contains " + manifestEntry.path);
+                }
+
                 file.AddEntry(manifestEntry.path, content[manifestEntry.id]);
             }
                         

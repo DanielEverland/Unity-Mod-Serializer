@@ -10,24 +10,26 @@ namespace UMS
     {
         public SerializationQueue()
         {
-            _usedObjects = new HashSet<T>();
+            _usedObjects = new HashSet<string>();
         }
 
-        private HashSet<T> _usedObjects;
+        private HashSet<string> _usedObjects;
 
         public new void Enqueue(T item)
         {
-            if(_usedObjects.Contains(item))
+            string id = IDManager.GetID(item);
+
+            if(_usedObjects.Contains(id))
                 throw new ArgumentException("Object " + item + " has already been added to the queue");
 
-            _usedObjects.Add(item);
+            _usedObjects.Add(id);
 
             base.Enqueue(item);
 
         }
         public bool HasBeenEnqueued(T item)
         {
-            return _usedObjects.Contains(item);
+            return _usedObjects.Contains(IDManager.GetID(item));
         }
     }
 }
