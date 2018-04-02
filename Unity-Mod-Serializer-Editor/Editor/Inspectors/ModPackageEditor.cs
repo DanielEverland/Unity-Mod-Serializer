@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace UMS.Editor
+namespace UMS.Editor.Inspectors
 {
     [CustomEditor(typeof(ModPackage))]
     [CanEditMultipleObjects()]
