@@ -231,6 +231,11 @@ namespace UMS
         public SerializationQueue<object> SerializationQueue { get; set; }
 
         /// <summary>
+        /// Manages binary data that has to be added to a mod
+        /// </summary>
+        public BinarySerializer BinarySerializer { get; private set; }
+        
+        /// <summary>
         /// The object that we're currently doing work for. This is only
         /// used by the serializer to determine whether we should write
         /// definitions or reference ids for a given object
@@ -371,6 +376,7 @@ namespace UMS
         public Serializer()
         {
             SerializationQueue = new SerializationQueue<object>();
+            BinarySerializer = new BinarySerializer();
 
             _cachedConverterTypeInstances = new Dictionary<Type, BaseConverter>();
             _cachedConverters = new Dictionary<Type, BaseConverter>();
@@ -721,7 +727,10 @@ namespace UMS
 
                 // This type does not need cycle support.
                 var converter = GetConverter(instance.GetType(), overrideConverterType);
-                
+
+                if (converter.RequestCycleSupport(instance.GetType()))
+                    UnityEngine.Debug.Log(converter);
+
                 if (converter.RequestCycleSupport(instance.GetType()) == false || !IDManager.CanGetID(instance))
                 {
                     return InternalSerialize_2_Inheritance(storageType, overrideConverterType, instance, out data);

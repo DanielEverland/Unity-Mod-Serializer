@@ -52,9 +52,11 @@
     <Compile Include="AOT\AOTConfiguration.cs" />
     <Compile Include="AOT\AOTVersionInfo.cs" />
     <Compile Include="AOT\AOTConverter.cs" />
+    <Compile Include="BinarySerializer.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="ConverterHelpers\UnityEngineObjectHelper.cs" />
     <Compile Include="Converters\ArrayConverter.cs" />
+    <Compile Include="Converters\BinaryConverter.cs" />
     <Compile Include="Converters\ComponentConverter.cs" />
     <Compile Include="Converters\DateConverter.cs" />
     <Compile Include="Converters\DateTimeConverter.cs" />

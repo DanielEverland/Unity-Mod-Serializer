@@ -43,7 +43,8 @@ namespace UMS.Editor
         public void Serialize(ZipFile file)
         {
             Manifest manifest = new Manifest();
-            Dictionary<string, string> content = new Dictionary<string, string>();
+            Dictionary<string, string> jsonContent = new Dictionary<string, string>();
+            Dictionary<string, byte[]> binaryContent = new Dictionary<string, byte[]>();
 
             foreach (ObjectEntry entry in _objectEntries)
             {
@@ -72,12 +73,30 @@ namespace UMS.Editor
                     EntryWriter writer = EntryWriter.GetWriter(objectType);
                     Manifest.Entry entry = writer.Write(toSerialize);
                                         
-                    content.Add(entry.id, json);
+                    jsonContent.Add(entry.id, json);
                     manifest.AddEntry(entry);
                 }
                 else
                 {
                     Debug.LogWarning("Omitting serializing " + toSerialize + " because it doesn't have a writer");
+                }
+            }
+
+            foreach (BinarySerializer.Entry binaryEntry in Serializer.BinarySerializer.Entries)
+            {
+                Type type = binaryEntry.instance.GetType();
+
+                if (EntryWriter.IsWritable(type))
+                {
+                    EntryWriter writer = EntryWriter.GetWriter(type);
+                    Manifest.Entry entry = writer.Write(binaryEntry.instance);
+                    
+                    binaryContent.Add(entry.id, binaryEntry.data);
+                    manifest.AddEntry(entry);
+                }
+                else
+                {
+                    Debug.LogWarning("Omitting serializing " + binaryEntry.instance + " because it doesn't have a writer");
                 }
             }
 
@@ -88,7 +107,18 @@ namespace UMS.Editor
                     throw new System.ArgumentException("Zip-file already contains " + manifestEntry.path);
                 }
 
-                file.AddEntry(manifestEntry.path, content[manifestEntry.id]);
+                if (jsonContent.ContainsKey(manifestEntry.id))
+                {
+                    file.AddEntry(manifestEntry.path, jsonContent[manifestEntry.id]);
+                }
+                else if (binaryContent.ContainsKey(manifestEntry.id))
+                {
+                    file.AddEntry(manifestEntry.path, binaryContent[manifestEntry.id]);
+                }
+                else
+                {
+                    throw new NullReferenceException("No content found for ID " + manifestEntry.id);
+                }                
             }
                         
             file.AddEntry(Utility.MANIFEST_NAME, Mods.Serialize(manifest));
