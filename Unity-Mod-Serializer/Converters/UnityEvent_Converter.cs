@@ -18,11 +18,6 @@ namespace UMS.Converters
     // add an [Ignore] attribute to the class
     public class UnityEvent_Converter : Converter<UnityEvent>
     {
-        public override bool RequestCycleSupport(Type storageType)
-        {
-            return false;
-        }
-
         public override Result TryDeserialize(Data data, ref object instance, Type storageType)
         {
             Type objectType = (Type)instance;

@@ -7,12 +7,7 @@ namespace UMS.Converters
     public sealed class KeyValuePairConverter : DirectConverter
     {
         public override Type ModelType => typeof(KeyValuePair<,>);
-
-        public override bool RequestCycleSupport(Type storageType)
-        {
-            return false;
-        }
-
+        
         public override bool RequestInheritanceSupport(Type storageType)
         {
             return false;

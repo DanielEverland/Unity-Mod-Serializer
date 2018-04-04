@@ -9,11 +9,6 @@ namespace UMS.Converters
     /// </summary>
     public sealed class EnumConverter : Converter<Enum>
     {
-        public override bool RequestCycleSupport(Type storageType)
-        {
-            return false;
-        }
-
         public override bool RequestInheritanceSupport(Type storageType)
         {
             return false;

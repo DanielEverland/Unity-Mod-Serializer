@@ -6,11 +6,6 @@ namespace UMS.Converters
 {
     public sealed class ArrayConverter : Converter<Array>
     {
-        public override bool RequestCycleSupport(Type storageType)
-        {
-            return false;
-        }
-
         public override bool RequestInheritanceSupport(Type storageType)
         {
             return false;

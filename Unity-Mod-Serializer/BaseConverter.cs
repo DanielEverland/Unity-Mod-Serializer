@@ -35,7 +35,7 @@ namespace UMS
         /// <returns>An object instance</returns>
         public virtual object CreateInstance(Data data, Type storageType)
         {
-            if (RequestCycleSupport(storageType))
+            if (IDManager.CanGetID(storageType))
             {
                 throw new InvalidOperationException("Please override CreateInstance for " +
                     GetType().FullName + "; the object graph for " + storageType +
@@ -45,22 +45,7 @@ namespace UMS
 
             return storageType;
         }
-
-        /// <summary>
-        /// If true, then the serializer will support cyclic references with the
-        /// given converted type.
-        /// </summary>
-        /// <param name="storageType">
-        /// The field/property type that is currently storing the object that is
-        /// being serialized.
-        /// </param>
-        public virtual bool RequestCycleSupport(Type storageType)
-        {
-            if (storageType == typeof(string)) return false;
-
-            return storageType.Resolve().IsClass || storageType.Resolve().IsInterface;
-        }
-
+        
         /// <summary>
         /// If true, then the serializer will include inheritance data for the
         /// given converter.

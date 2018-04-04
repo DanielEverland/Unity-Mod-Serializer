@@ -7,11 +7,6 @@ namespace UMS.Converters
     /// </summary>
     public sealed class GuidConverter : DirectConverter<Guid>
     {
-        public override bool RequestCycleSupport(Type storageType)
-        {
-            return false;
-        }
-
         public override bool RequestInheritanceSupport(Type storageType)
         {
             return false;

@@ -18,6 +18,10 @@ namespace UMS
             { MetaDataType.Content, Serializer.ContentKey },
         };
 
+        public static void WriteReference(string id, Dictionary<string, Data> data)
+        {
+            data[Serializer.ObjectReferenceKey] = new Data(id.ToString());
+        }
         public static bool ContainsMetaData(Data data, MetaDataType type)
         {
             if (!data.IsDictionary)

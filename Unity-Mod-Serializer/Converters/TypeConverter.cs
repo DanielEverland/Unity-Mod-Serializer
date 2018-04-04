@@ -10,11 +10,6 @@ namespace UMS.Converters
 {
     public sealed class TypeConverter : DirectConverter<Type>
     {
-        public override bool RequestCycleSupport(Type type)
-        {
-            return false;
-        }
-
         public override bool RequestInheritanceSupport(Type type)
         {
             return false;

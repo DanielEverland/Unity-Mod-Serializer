@@ -248,58 +248,7 @@ namespace UMS
         /// metadata token instead.
         /// </summary>
         public object ActiveObject { get; set; }
-
-        /// <summary>
-        /// This manages instance writing so that we do not write unnecessary $id
-        /// fields. We only need to write out an $id field when there is a
-        /// corresponding $ref field. This is able to write $id references lazily
-        /// because the Data instance is not actually written out to text until
-        /// we have entirely finished serializing it.
-        /// </summary>
-        internal class LazyCycleDefinitionWriter
-        {
-            private Dictionary<string, Data> _pendingDefinitions = new Dictionary<string, Data>();
-            private HashSet<string> _references = new HashSet<string>();
-
-            public void WriteDefinition(string id, Data data)
-            {
-                if (_references.Contains(id))
-                {
-                    EnsureDictionary(data);
-                    data.AsDictionary[_objectDefinitionKey] = new Data(id.ToString());
-                }
-                else
-                {
-                    _pendingDefinitions[id] = data;
-                }
-            }
-
-            public void WriteReference(string id, Dictionary<string, Data> dict)
-            {
-                // Write the actual definition if necessary
-                if (_pendingDefinitions.ContainsKey(id))
-                {
-                    var data = _pendingDefinitions[id];
-                    EnsureDictionary(data);
-                    data.AsDictionary[_objectDefinitionKey] = new Data(id.ToString());
-                    _pendingDefinitions.Remove(id);
-                }
-                else
-                {
-                    _references.Add(id);
-                }
                 
-                // Write the reference
-                dict[_objectReferenceKey] = new Data(id.ToString());
-            }
-
-            public void Clear()
-            {
-                _pendingDefinitions.Clear();
-                _references.Clear();
-            }
-        }
-        
         /// <summary> Converter type to converter instance lookup table. This
         /// could likely be stored inside
         // of _cachedConverters, but there is a semantic difference because
@@ -339,7 +288,6 @@ namespace UMS
         /// Reference manager for cycle detection.
         /// </summary>
         private readonly CyclicReferenceManager _references;
-        private readonly LazyCycleDefinitionWriter _lazyReferenceWriter;
 
         /// <summary>
         /// Allow the user to provide default storage types for interfaces and abstract
@@ -383,7 +331,6 @@ namespace UMS
             _cachedProcessors = new Dictionary<Type, List<ObjectProcessor>>();
 
             _references = new CyclicReferenceManager();
-            _lazyReferenceWriter = new LazyCycleDefinitionWriter();
             
             _availableConverters = new List<Converter>();
             _availableDirectConverters = new Dictionary<Type, DirectConverter>();
@@ -728,10 +675,7 @@ namespace UMS
                 // This type does not need cycle support.
                 var converter = GetConverter(instance.GetType(), overrideConverterType);
 
-                if (converter.RequestCycleSupport(instance.GetType()))
-                    UnityEngine.Debug.Log(converter);
-
-                if (converter.RequestCycleSupport(instance.GetType()) == false || !IDManager.CanGetID(instance))
+                if (!IDManager.CanGetID(instance))
                 {
                     return InternalSerialize_2_Inheritance(storageType, overrideConverterType, instance, out data);
                 }
@@ -753,7 +697,8 @@ namespace UMS
                     }
 
                     data = Data.CreateDictionary();
-                    _lazyReferenceWriter.WriteReference(IDManager.GetID(instance), data.AsDictionary);
+                    MetaData.WriteReference(IDManager.GetID(instance), data.AsDictionary);
+                    //_lazyReferenceWriter.WriteReference(IDManager.GetID(instance), data.AsDictionary);
                     return Result.Success;
                 }
                 
@@ -772,9 +717,7 @@ namespace UMS
 
                 if (!IDManager.CanGetID(instance))
                     throw new ArgumentException("Cannot get ID from " + instance);
-
-                _lazyReferenceWriter.WriteDefinition(_references.GetReferenceId(instance), data);
-
+                
                 //Save the object definition in the manifest. Every object defintion
                 //will eventually be written into an entry in the .mod zip file.
 
@@ -789,7 +732,6 @@ namespace UMS
             {
                 if (_references.Exit())
                 {
-                    _lazyReferenceWriter.Clear();
                 }
             }
         }
