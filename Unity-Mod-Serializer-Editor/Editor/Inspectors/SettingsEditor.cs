@@ -18,6 +18,7 @@ namespace UMS.Editor.Inspectors
         private bool SimulateBuildLoading { get { return (bool)_simulateBuildLoading.GetValue(target); } set { _simulateBuildLoading.SetValue(target, value); } }
         private string PredefinedAssembliesFolderName { get { return (string)_predefinedAssembliesFolderName.GetValue(target); } set { _predefinedAssembliesFolderName.SetValue(target, value); } }
         private List<string> PredefinedAssemblies { get { return (List<string>)_predefinedAssemblies.GetValue(target); } set { _predefinedAssemblies.SetValue(target, value); } }
+        private DebuggingFlags DebuggingFlags { get { return (DebuggingFlags)_debuggingFlags.GetValue(target); } set { _debuggingFlags.SetValue(target, value); } }
 
         private BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
@@ -26,6 +27,7 @@ namespace UMS.Editor.Inspectors
         private FieldInfo _simulateBuildLoading;
         private FieldInfo _predefinedAssembliesFolderName;
         private FieldInfo _predefinedAssemblies;
+        private FieldInfo _debuggingFlags;
 
         private ReorderableList _predefinedAssembliesList;
 
@@ -59,6 +61,7 @@ namespace UMS.Editor.Inspectors
             _simulateBuildLoading = typeof(Settings).GetField("_simulateBuildLoading", _bindingFlags);
             _predefinedAssembliesFolderName = typeof(Settings).GetField("_predefinedAssembliesFolderName", _bindingFlags);
             _predefinedAssemblies = typeof(Settings).GetField("_predefinedAssemblies", _bindingFlags);
+            _debuggingFlags = typeof(Settings).GetField("_debuggingFlags", _bindingFlags);
         }
         public override void OnInspectorGUI()
         {
@@ -102,9 +105,11 @@ namespace UMS.Editor.Inspectors
         {
             EditorGUILayout.LabelField("Advanced Settings", EditorStyles.boldLabel);
 
+            EditorGUILayout.EnumFlagsField(new GUIContent("Debugging Flags", "Specifies which aspects of UMS you want debug info from"), DebuggingFlags);
+
             EditorGUILayout.Space();
 
-            _predefinedAssembliesList.DoLayoutList();
+            _predefinedAssembliesList.DoLayoutList();           
         }
     }
 }

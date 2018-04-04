@@ -43,6 +43,8 @@ namespace UMS
         [SerializeField]
         [Tooltip("Name of assemblies to include in the core bundle. Any assembly you want to be included in UMS' reflection scheme should be included here")]
         private List<string> _predefinedAssemblies = new List<string>() { "Assembly-CSharp", "Unity-Mod-Serializer", };
+        [SerializeField]
+        private DebuggingFlags _debuggingFlags;
 
         public static IEnumerable<Assembly> GetPredefinedAssemblies()
         {
