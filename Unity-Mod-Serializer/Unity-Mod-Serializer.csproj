@@ -147,7 +147,6 @@
     <Compile Include="Result.cs" />
     <Compile Include="SerializationQueue.cs" />
     <Compile Include="Serializer.cs" />
-    <Compile Include="CyclicReferenceManager.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="PortableReflection.cs" />
     <Compile Include="Settings.cs" />

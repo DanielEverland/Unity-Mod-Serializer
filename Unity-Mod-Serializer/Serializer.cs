@@ -283,12 +283,7 @@ namespace UMS
         /// Processors that are available.
         /// </summary>
         private readonly List<ObjectProcessor> _processors;
-
-        /// <summary>
-        /// Reference manager for cycle detection.
-        /// </summary>
-        private readonly CyclicReferenceManager _references;
-
+        
         /// <summary>
         /// Allow the user to provide default storage types for interfaces and abstract
         /// classes. For example, a model could have IList{int} as a parameter, but the
@@ -330,8 +325,6 @@ namespace UMS
             _cachedConverters = new Dictionary<Type, BaseConverter>();
             _cachedProcessors = new Dictionary<Type, List<ObjectProcessor>>();
 
-            _references = new CyclicReferenceManager();
-            
             _availableConverters = new List<Converter>();
             _availableDirectConverters = new Dictionary<Type, DirectConverter>();
 
@@ -662,78 +655,52 @@ namespace UMS
 
         private Result InternalSerialize_1_ProcessCycles(Type storageType, Type overrideConverterType, object instance, out Data data)
         {
-            // We have an object definition to serialize.
-            try
+            // This type does not need cycle support.
+            var converter = GetConverter(instance.GetType(), overrideConverterType);
+
+            if (!IDManager.CanGetID(instance))
             {
-                // Note that we enter the reference group at the beginning of
-                // serialization so that we support references that are at equal
-                // serialization levels, not just nested serialization levels,
-                // within the given subobject. A prime example is serialization a
-                // list of references.
-                _references.Enter();
-
-                // This type does not need cycle support.
-                var converter = GetConverter(instance.GetType(), overrideConverterType);
-
-                if (!IDManager.CanGetID(instance))
-                {
-                    return InternalSerialize_2_Inheritance(storageType, overrideConverterType, instance, out data);
-                }
-                
-                //We've found an object that needs to be serialized into its
-                //own file in the .mod zip file. Since it's not the object we're
-                //currently serializing, we should simply write its ID instead,
-                //and then add it to the serialization queue so we can serialize
-                //its definition properly later
-                if (ActiveObject != instance && IDManager.CanGetID(instance))
-                {
-                    string id = IDManager.GetID(instance);
-
-                    //If we haven't already added the object to the serialization
-                    //queue, do so.
-                    if (!SerializationQueue.HasBeenEnqueued(instance))
-                    {
-                        SerializationQueue.Enqueue(instance);
-                    }
-
-                    data = Data.CreateDictionary();
-                    MetaData.WriteReference(IDManager.GetID(instance), data.AsDictionary);
-                    //_lazyReferenceWriter.WriteReference(IDManager.GetID(instance), data.AsDictionary);
-                    return Result.Success;
-                }
-                
-                // Mark inside the object graph that we've serialized the
-                // instance. We do this *before* serialization so that if we get
-                // back into this function recursively, it'll already be marked
-                // and we can handle the cycle properly without going into an
-                // infinite loop.
-                //_references.MarkSerialized(instance);
-
-                // We've created the cycle metadata, so we can now serialize the
-                // actual object. InternalSerialize will handle inheritance
-                // correctly for us.
-                var result = InternalSerialize_2_Inheritance(storageType, overrideConverterType, instance, out data);
-                if (result.Failed) return result;
-
-                if (!IDManager.CanGetID(instance))
-                    throw new ArgumentException("Cannot get ID from " + instance);
-                
-                //Save the object definition in the manifest. Every object defintion
-                //will eventually be written into an entry in the .mod zip file.
-
-                //Add the $type metadata
-                data.AsDictionary[_instanceTypeKey] = new Data(instance.GetType().FullName);
-
-                ObjectContainer.AddData(IDManager.GetID(instance), data);
-
-                return result;
+                return InternalSerialize_2_Inheritance(storageType, overrideConverterType, instance, out data);
             }
-            finally
+
+            //We've found an object that needs to be serialized into its
+            //own file in the .mod zip file. Since it's not the object we're
+            //currently serializing, we should simply write its ID instead,
+            //and then add it to the serialization queue so we can serialize
+            //its definition properly later
+            if (ActiveObject != instance && IDManager.CanGetID(instance))
             {
-                if (_references.Exit())
+                string id = IDManager.GetID(instance);
+
+                //If we haven't already added the object to the serialization
+                //queue, do so.
+                if (!SerializationQueue.HasBeenEnqueued(instance))
                 {
+                    SerializationQueue.Enqueue(instance);
                 }
+
+                data = Data.CreateDictionary();
+                MetaData.WriteReference(IDManager.GetID(instance), data.AsDictionary);
+                //_lazyReferenceWriter.WriteReference(IDManager.GetID(instance), data.AsDictionary);
+                return Result.Success;
             }
+
+            // Serialize the data
+            var result = InternalSerialize_2_Inheritance(storageType, overrideConverterType, instance, out data);
+            if (result.Failed) return result;
+
+            if (!IDManager.CanGetID(instance))
+                throw new ArgumentException("Cannot get ID from " + instance);
+
+            //Save the object definition in the manifest. Every object defintion
+            //will eventually be written into an entry in the .mod zip file.
+
+            //Add the $type metadata
+            data.AsDictionary[_instanceTypeKey] = new Data(instance.GetType().FullName);
+
+            ObjectContainer.AddData(IDManager.GetID(instance), data);
+
+            return result;
         }
         private Result InternalSerialize_2_Inheritance(Type storageType, Type overrideConverterType, object instance, out Data data)
         {
@@ -812,43 +779,32 @@ namespace UMS
         /// </summary>
         public Result TryDeserialize(Data data, Type storageType, Type overrideConverterType, ref object result)
         {
+            List<ObjectProcessor> processors;
+
             if (data.IsNull)
             {
                 result = null;
-                var processors = GetProcessors(storageType);
+                processors = GetProcessors(storageType);
                 Invoke_OnBeforeDeserialize(processors, storageType, ref data);
                 Invoke_OnAfterDeserialize(processors, storageType, null);
+
                 return Result.Success;
             }
 
             // Convert legacy data into modern style data
             ConvertLegacyData(ref data);
-
-            try
+            
+            var r = InternalDeserialize_1_CycleReference(overrideConverterType, data, storageType, ref result, out processors);
+            if (r.Succeeded)
             {
-                // We wrap the entire deserialize call in a reference group so
-                // that we can properly deserialize a "parallel" set of
-                // references, ie, a list of objects that are cyclic w.r.t. the
-                // list
-                _references.Enter();
-
-                List<ObjectProcessor> processors;
-                var r = InternalDeserialize_1_CycleReference(overrideConverterType, data, storageType, ref result, out processors);
-                if (r.Succeeded)
-                {
-                    Invoke_OnAfterDeserialize(processors, storageType, result);
-                }
+                Invoke_OnAfterDeserialize(processors, storageType, result);
+            }
 
 #if DEBUG
-                r.AssertSuccessWithoutWarnings();
+            r.AssertSuccessWithoutWarnings();
 #endif
 
-                return r;
-            }
-            finally
-            {
-                _references.Exit();
-            }
+            return r;
         }
 
         private Result InternalDeserialize_1_CycleReference(Type overrideConverterType, Data data, Type storageType, ref object result, out List<ObjectProcessor> processors)
@@ -909,12 +865,7 @@ namespace UMS
                     {
                         result = path[i].Migrate(result);
                     }
-
-                    // Our data contained an object definition ($id) that was
-                    // added to _references in step 4. However, in case we are
-                    // doing versioning, it will contain the old version. To make
-                    // sure future references to this object end up referencing
-                    // the migrated version, we must update the reference.
+                    
                     if (IsObjectDefinition(data))
                     {
                         string sourceId = data.AsDictionary[_objectDefinitionKey].AsString;
