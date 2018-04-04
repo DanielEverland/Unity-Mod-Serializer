@@ -46,10 +46,21 @@ namespace UMS
 
         private readonly static BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
+        public static bool CanGetID(Type type)
+        {
+            return EntryWriters.EntryWriter.IsWritable(type);
+        }
+        public static bool CanGetID(object obj)
+        {
+            return EntryWriters.EntryWriter.IsWritable(obj.GetType());
+        }
         public static string GetID(object obj)
         {
             if (obj == null)
                 throw new ArgumentException("Cannot return ID for null object");
+
+            if (!CanGetID(obj))
+                throw new ArgumentException("Object " + obj + " isn't allowed to get an ID. Implement an EntryWriter for it");
             
             if (!_cachedIDs.ContainsKey(obj))
             {

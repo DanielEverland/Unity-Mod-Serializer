@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UMS.Converters;
+using UMS.EntryWriters;
 using UMS.Reflection;
 
 #if !UNITY_EDITOR && UNITY_WSA
@@ -599,6 +600,9 @@ namespace UMS
                 if (_availableDirectConverters.ContainsKey(type))
                 {
                     converter = _availableDirectConverters[type];
+
+                    Debugging.Info(DebuggingFlags.Serializer, "Getting direct converter " + converter + " for " + type);
+
                     return _cachedConverters[type] = converter;
                 }
                 else
@@ -609,7 +613,9 @@ namespace UMS
                     {
                         _availableConverters.Output();
                         throw new NullReferenceException("Couldn't find converter for type " + type);
-                    }                        
+                    }
+
+                    Debugging.Info(DebuggingFlags.Serializer, "Getting converter " + converter + " for " + type);
 
                     return _cachedConverters[type] = converter;
                 }
@@ -715,7 +721,8 @@ namespace UMS
 
                 // This type does not need cycle support.
                 var converter = GetConverter(instance.GetType(), overrideConverterType);
-                if (converter.RequestCycleSupport(instance.GetType()) == false)
+                
+                if (converter.RequestCycleSupport(instance.GetType()) == false || !IDManager.CanGetID(instance))
                 {
                     return InternalSerialize_2_Inheritance(storageType, overrideConverterType, instance, out data);
                 }
@@ -725,7 +732,7 @@ namespace UMS
                 //currently serializing, we should simply write its ID instead,
                 //and then add it to the serialization queue so we can serialize
                 //its definition properly later
-                if (ActiveObject != instance)
+                if (ActiveObject != instance && IDManager.CanGetID(instance))
                 {
                     string id = IDManager.GetID(instance);
 
@@ -753,6 +760,9 @@ namespace UMS
                 // correctly for us.
                 var result = InternalSerialize_2_Inheritance(storageType, overrideConverterType, instance, out data);
                 if (result.Failed) return result;
+
+                if (!IDManager.CanGetID(instance))
+                    throw new ArgumentException("Cannot get ID from " + instance);
 
                 _lazyReferenceWriter.WriteDefinition(_references.GetReferenceId(instance), data);
 

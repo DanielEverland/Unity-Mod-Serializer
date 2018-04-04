@@ -14,5 +14,6 @@ namespace UMS
         IDManager                           = 1 << 0,
         IDManagerDeepComparer               = 1 << 1,
         IDManagerIEquatableComparer         = 1 << 2,
+        Serializer                          = 1 << 3,
     }
 }

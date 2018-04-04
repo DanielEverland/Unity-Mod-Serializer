@@ -12,9 +12,11 @@ namespace UMS.EntryWriters
         static EntryWriter()
         {
             _writers = new List<EntryWriter>();
+            _isWritableCache = new Dictionary<Type, bool>();
         }
 
         private static List<EntryWriter> _writers;
+        private static Dictionary<Type, bool> _isWritableCache;
 
         public static void AddWriter(EntryWriter writer)
         {
@@ -23,7 +25,12 @@ namespace UMS.EntryWriters
         }
         public static bool IsWritable(Type type)
         {
-            return GetWriter(type) != null;
+            if(!_isWritableCache.ContainsKey(type))
+            {
+                _isWritableCache.Add(type, GetWriter(type) != null);
+            }
+
+            return _isWritableCache[type];
         }
         public static EntryWriter GetWriter(Type type)
         {
