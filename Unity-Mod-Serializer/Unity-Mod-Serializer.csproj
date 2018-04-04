@@ -105,6 +105,7 @@
     <Compile Include="Context.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="DebuggingFlags.cs" />
+    <Compile Include="DebuggingLevels.cs" />
     <Compile Include="DeserializationHelper.cs" />
     <Compile Include="DirectConverter.cs" />
     <Compile Include="Editor\Hooks.cs" />

@@ -45,6 +45,8 @@ namespace UMS
         private List<string> _predefinedAssemblies = new List<string>() { "Assembly-CSharp", "Unity-Mod-Serializer", };
         [SerializeField]
         private DebuggingFlags _debuggingFlags;
+        [SerializeField]
+        private DebuggingLevels _debuggingLevel;
 
         public static IEnumerable<Assembly> GetPredefinedAssemblies()
         {

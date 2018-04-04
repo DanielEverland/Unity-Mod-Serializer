@@ -19,6 +19,7 @@ namespace UMS.Editor.Inspectors
         private string PredefinedAssembliesFolderName { get { return (string)_predefinedAssembliesFolderName.GetValue(target); } set { _predefinedAssembliesFolderName.SetValue(target, value); } }
         private List<string> PredefinedAssemblies { get { return (List<string>)_predefinedAssemblies.GetValue(target); } set { _predefinedAssemblies.SetValue(target, value); } }
         private DebuggingFlags DebuggingFlags { get { return (DebuggingFlags)_debuggingFlags.GetValue(target); } set { _debuggingFlags.SetValue(target, value); } }
+        private DebuggingLevels DebuggingLevel { get { return (DebuggingLevels)_debuggingLevel.GetValue(target); } set { _debuggingLevel.SetValue(target, value); } }
 
         private BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
@@ -28,6 +29,7 @@ namespace UMS.Editor.Inspectors
         private FieldInfo _predefinedAssembliesFolderName;
         private FieldInfo _predefinedAssemblies;
         private FieldInfo _debuggingFlags;
+        private FieldInfo _debuggingLevel;
 
         private ReorderableList _predefinedAssembliesList;
 
@@ -62,6 +64,7 @@ namespace UMS.Editor.Inspectors
             _predefinedAssembliesFolderName = typeof(Settings).GetField("_predefinedAssembliesFolderName", _bindingFlags);
             _predefinedAssemblies = typeof(Settings).GetField("_predefinedAssemblies", _bindingFlags);
             _debuggingFlags = typeof(Settings).GetField("_debuggingFlags", _bindingFlags);
+            _debuggingLevel = typeof(Settings).GetField("_debuggingLevel", _bindingFlags);
         }
         public override void OnInspectorGUI()
         {
@@ -94,6 +97,9 @@ namespace UMS.Editor.Inspectors
         {
             EditorGUILayout.LabelField("Debugging Settings", EditorStyles.boldLabel);
 
+            DebuggingLevel = (DebuggingLevels)EditorGUILayout.EnumFlagsField(new GUIContent("Debugging Levels", "Specifies which types of messages you wish to receive"), DebuggingLevel);
+            DebuggingFlags = (DebuggingFlags)EditorGUILayout.EnumFlagsField(new GUIContent("Debugging Flags", "Specifies which aspects of UMS you want debug info from"), DebuggingFlags);
+
             GUIContent simulateBuildLoadingContent = new GUIContent("Simulate Build Loading",
                 "Only affects edit mode. We usually just load the object references directly from the mod packages," +
                 "this setting changes that, so we start by serializing all the packages to a temp folder, and then we" +
@@ -104,9 +110,7 @@ namespace UMS.Editor.Inspectors
         private void DrawAdvancedSettings()
         {
             EditorGUILayout.LabelField("Advanced Settings", EditorStyles.boldLabel);
-
-            EditorGUILayout.EnumFlagsField(new GUIContent("Debugging Flags", "Specifies which aspects of UMS you want debug info from"), DebuggingFlags);
-
+            
             EditorGUILayout.Space();
 
             _predefinedAssembliesList.DoLayoutList();           
