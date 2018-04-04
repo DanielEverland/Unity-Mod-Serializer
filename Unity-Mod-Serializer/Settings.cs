@@ -14,8 +14,9 @@ namespace UMS
 
         public static DebuggingLevels DebuggingLevels { get { return Instance._debuggingLevels; } }
         public static DebuggingFlags DebuggingFlags { get { return Instance._debuggingFlags; } }
+        public static bool DebugInBuiltVersion { get { return Instance._debugInBuiltVersion; } }
         public static bool SimulateBuildLoading { get { return Instance._simulateBuildLoading; } }
-
+        
         public static IEnumerable<string> PredefinedAssemblies { get { return Instance._predefinedAssemblies; } }
 
         public static Settings Instance
@@ -46,6 +47,8 @@ namespace UMS
         private DebuggingFlags _debuggingFlags;
         [SerializeField]
         private DebuggingLevels _debuggingLevels;
+        [SerializeField]
+        private bool _debugInBuiltVersion;
 
         public static IEnumerable<Assembly> GetPredefinedAssemblies()
         {

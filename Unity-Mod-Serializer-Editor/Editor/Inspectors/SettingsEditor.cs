@@ -20,6 +20,7 @@ namespace UMS.Editor.Inspectors
         private List<string> PredefinedAssemblies { get { return (List<string>)_predefinedAssemblies.GetValue(target); } set { _predefinedAssemblies.SetValue(target, value); } }
         private DebuggingFlags DebuggingFlags { get { return (DebuggingFlags)_debuggingFlags.GetValue(target); } set { _debuggingFlags.SetValue(target, value); } }
         private DebuggingLevels DebuggingLevel { get { return (DebuggingLevels)_debuggingLevel.GetValue(target); } set { _debuggingLevel.SetValue(target, value); } }
+        public bool DebugInBuiltVersion { get { return (bool)_debugInBuiltVersion.GetValue(target); } set { _debugInBuiltVersion.SetValue(target, value); } }
 
         private BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
@@ -30,6 +31,7 @@ namespace UMS.Editor.Inspectors
         private FieldInfo _predefinedAssemblies;
         private FieldInfo _debuggingFlags;
         private FieldInfo _debuggingLevel;
+        private FieldInfo _debugInBuiltVersion;
 
         private ReorderableList _predefinedAssembliesList;
 
@@ -65,6 +67,7 @@ namespace UMS.Editor.Inspectors
             _predefinedAssemblies = typeof(Settings).GetField("_predefinedAssemblies", _bindingFlags);
             _debuggingFlags = typeof(Settings).GetField("_debuggingFlags", _bindingFlags);
             _debuggingLevel = typeof(Settings).GetField("_debuggingLevels", _bindingFlags);
+            _debugInBuiltVersion = typeof(Settings).GetField("_debugInBuiltVersion", _bindingFlags);
         }
         public override void OnInspectorGUI()
         {
@@ -99,6 +102,8 @@ namespace UMS.Editor.Inspectors
 
             DebuggingLevel = (DebuggingLevels)EditorGUILayout.EnumFlagsField(new GUIContent("Debugging Levels", "Specifies which types of messages you wish to receive"), DebuggingLevel);
             DebuggingFlags = (DebuggingFlags)EditorGUILayout.EnumFlagsField(new GUIContent("Debugging Flags", "Specifies which aspects of UMS you want debug info from"), DebuggingFlags);
+
+            DebugInBuiltVersion = EditorGUILayout.Toggle(new GUIContent("Debug In Built Version", "Specifies whether or not debug messages should be included in the built version of your game"), DebugInBuiltVersion);
 
             GUIContent simulateBuildLoadingContent = new GUIContent("Simulate Build Loading",
                 "Only affects edit mode. We usually just load the object references directly from the mod packages," +
