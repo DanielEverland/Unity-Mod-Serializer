@@ -64,7 +64,7 @@ namespace UMS.Editor.Inspectors
             _predefinedAssembliesFolderName = typeof(Settings).GetField("_predefinedAssembliesFolderName", _bindingFlags);
             _predefinedAssemblies = typeof(Settings).GetField("_predefinedAssemblies", _bindingFlags);
             _debuggingFlags = typeof(Settings).GetField("_debuggingFlags", _bindingFlags);
-            _debuggingLevel = typeof(Settings).GetField("_debuggingLevel", _bindingFlags);
+            _debuggingLevel = typeof(Settings).GetField("_debuggingLevels", _bindingFlags);
         }
         public override void OnInspectorGUI()
         {
