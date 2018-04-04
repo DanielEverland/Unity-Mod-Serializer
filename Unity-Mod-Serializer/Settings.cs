@@ -11,7 +11,11 @@ namespace UMS
         public static string ModsDirectory { get { return Instance._folderName; } }
         public static string CoreFolderName { get { return Instance._coreFolderName; } }
         public static string PredefinedAssembliesFolderName { get { return Instance._predefinedAssembliesFolderName; } }
+
+        public static DebuggingLevels DebuggingLevels { get { return Instance._debuggingLevels; } }
+        public static DebuggingFlags DebuggingFlags { get { return Instance._debuggingFlags; } }
         public static bool SimulateBuildLoading { get { return Instance._simulateBuildLoading; } }
+
         public static IEnumerable<string> PredefinedAssemblies { get { return Instance._predefinedAssemblies; } }
 
         public static Settings Instance
@@ -46,7 +50,7 @@ namespace UMS
         [SerializeField]
         private DebuggingFlags _debuggingFlags;
         [SerializeField]
-        private DebuggingLevels _debuggingLevel;
+        private DebuggingLevels _debuggingLevels;
 
         public static IEnumerable<Assembly> GetPredefinedAssemblies()
         {
