@@ -36,7 +36,7 @@ namespace UMS.Editor.Inspectors
         }
         private void CreateReorderableList()
         {
-            _predefinedAssembliesList = new ReorderableList(serializedObject, serializedObject.FindProperty("_predefinedAssemblies"));
+            _predefinedAssembliesList = new ReorderableList(serializedObject, serializedObject.FindProperty("_predefinedAssemblies"), true, true, true, true);
 
             _predefinedAssembliesList.drawHeaderCallback += (Rect rect) =>
             {
@@ -45,9 +45,11 @@ namespace UMS.Editor.Inspectors
 
             _predefinedAssembliesList.drawElementCallback += (Rect rect, int index, bool isActive, bool isFocused) =>
             {
-                Rect fixedRect = new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight);
+                Rect fixedRect = new Rect(rect.x, rect.y + 1, rect.width, EditorGUIUtility.singleLineHeight);
 
-                PredefinedAssemblies[index] = EditorGUI.TextField(fixedRect, PredefinedAssemblies[index]);
+                SerializedProperty property = _predefinedAssembliesList.serializedProperty.GetArrayElementAtIndex(index);
+
+                EditorGUI.PropertyField(fixedRect, property);
             };
         }
         private void SetupFieldHooks()
@@ -60,6 +62,8 @@ namespace UMS.Editor.Inspectors
         }
         public override void OnInspectorGUI()
         {
+            GUI.changed = false;
+
             DrawBuildSettings();
 
             EditorGUILayout.Space();
@@ -69,6 +73,11 @@ namespace UMS.Editor.Inspectors
             EditorGUILayout.Space();
 
             DrawAdvancedSettings();
+
+            if (GUI.changed)
+            {
+                serializedObject.ApplyModifiedProperties();
+            }
         }
         private void DrawBuildSettings()
         {
