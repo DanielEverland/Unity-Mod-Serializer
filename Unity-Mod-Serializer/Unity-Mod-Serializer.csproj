@@ -88,6 +88,7 @@
     <Compile Include="Converters\Primitives\UnsignedShortConverter.cs" />
     <Compile Include="Converters\ReflectedConverter.cs" />
     <Compile Include="Converters\ShaderConverter.cs" />
+    <Compile Include="Converters\Texture2DConverter.cs" />
     <Compile Include="Converters\TimeSpanConverter.cs" />
     <Compile Include="Converters\TransformConverter.cs" />
     <Compile Include="Converters\TypeConverter.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="EntryWriters\MeshEntryWriter.cs" />
     <Compile Include="EntryWriters\PhysicMaterialEntryWriter.cs" />
     <Compile Include="EntryWriters\ShaderEntryWriter.cs" />
+    <Compile Include="EntryWriters\Texture2DEntryWriter.cs" />
     <Compile Include="EntryWriters\UnityEngineObjectEntryWriter.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions.cs" />

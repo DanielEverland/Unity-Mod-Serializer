@@ -659,7 +659,14 @@ namespace UMS
             {
                 return InternalSerialize_2_Inheritance(storageType, overrideConverterType, instance, out data);
             }
+            else if (BinarySerializer.CanConvert(instance.GetType()))
+            {
+                IBinaryConverter converter = BinarySerializer.GetConverter(instance.GetType());
 
+                data = Data.Null;
+                return converter.TrySerialize(instance);
+            }
+            
             //We've found an object that needs to be serialized into its
             //own file in the .mod zip file. Since it's not the object we're
             //currently serializing, we should simply write its ID instead,

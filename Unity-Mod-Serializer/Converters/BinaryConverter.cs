@@ -6,18 +6,29 @@ using System.Threading.Tasks;
 
 namespace UMS.Converters
 {
+    public interface IBinaryConverter
+    {
+        Type ModelType { get; }
+        BinarySerializer Serializer { get; set; }
+
+        Result TrySerialize(object obj);
+    }
+
     /// <summary>
     /// Binary converters override regular converters, and allows you to serialize
     /// binary objects into a mod
+    /// 
+    /// IMPORTANT: Your converter will be ignored if the type you're trying to serialize
+    /// doesn't have an entry writer
     /// </summary>
-    public abstract class BinaryConverter<T>
+    public abstract class BinaryConverter<T> : IBinaryConverter
     {
         /// <summary>
         /// The type this converter can seriailize. Supports inheritance
         /// </summary>
         public Type ModelType { get { return typeof(T); } }
 
-        public BinarySerializer Serializer;
+        public BinarySerializer Serializer { get; set; }
 
         public Result TrySerialize(object obj)
         {
@@ -28,7 +39,7 @@ namespace UMS.Converters
 
             if (result.Succeeded)
             {
-                Serializer.AddObject(ModelType, data);
+                Serializer.AddObject(obj, data);
             }
             
             return result;

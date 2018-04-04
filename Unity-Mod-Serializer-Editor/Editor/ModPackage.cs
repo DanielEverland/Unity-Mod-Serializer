@@ -78,14 +78,14 @@ namespace UMS.Editor
                 }
                 else
                 {
-                    Debug.LogWarning("Omitting serializing " + toSerialize + " because it doesn't have a writer");
+                    Debug.LogWarning("Omitting serializing " + toSerialize + " to json because it doesn't have a writer");
                 }
             }
 
             foreach (BinarySerializer.Entry binaryEntry in Serializer.BinarySerializer.Entries)
             {
                 Type type = binaryEntry.instance.GetType();
-
+                
                 if (EntryWriter.IsWritable(type))
                 {
                     EntryWriter writer = EntryWriter.GetWriter(type);
@@ -96,7 +96,7 @@ namespace UMS.Editor
                 }
                 else
                 {
-                    Debug.LogWarning("Omitting serializing " + binaryEntry.instance + " because it doesn't have a writer");
+                    Debug.LogWarning("Omitting serializing " + type + " to binary because it doesn't have a writer");
                 }
             }
 

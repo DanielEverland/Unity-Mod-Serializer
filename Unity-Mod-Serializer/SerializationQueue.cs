@@ -15,8 +15,15 @@ namespace UMS
 
         private HashSet<string> _usedObjects;
 
+        public void AddID(string id)
+        {
+            _usedObjects.Add(id);
+        }
         public new void Enqueue(T item)
         {
+            if (HasBeenEnqueued(item))
+                throw new ArgumentException("Item " + item + " has already been enqeued");
+
             string id = IDManager.GetID(item);
 
             if(_usedObjects.Contains(id))
@@ -29,7 +36,7 @@ namespace UMS
         }
         public bool HasBeenEnqueued(T item)
         {
-            return _usedObjects.Contains(IDManager.GetID(item));
+            return _usedObjects.Contains(IDManager.GetID(item)) || Mods.Serializer.BinarySerializer.CanConvert(item.GetType());
         }
     }
 }
