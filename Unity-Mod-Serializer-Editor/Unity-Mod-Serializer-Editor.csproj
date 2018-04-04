@@ -59,9 +59,9 @@
     <Compile Include="Editor\EditorUtilities.cs" />
     <Compile Include="Editor\EventHookManager.cs" />
     <Compile Include="Editor\HookCreator.cs" />
+    <Compile Include="Editor\Inspectors\ModPackageEditor.cs" />
     <Compile Include="Editor\MenuItems.cs" />
     <Compile Include="Editor\ModPackage.cs" />
-    <Compile Include="Editor\ModPackageEditor.cs" />
     <Compile Include="Editor\ModPackageReorderableList.cs" />
     <Compile Include="Editor\SettingsHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
