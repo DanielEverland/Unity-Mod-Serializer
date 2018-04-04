@@ -104,6 +104,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Data.cs" />
+    <Compile Include="Debugging.cs" />
     <Compile Include="DebuggingFlags.cs" />
     <Compile Include="DebuggingLevels.cs" />
     <Compile Include="DeserializationHelper.cs" />
