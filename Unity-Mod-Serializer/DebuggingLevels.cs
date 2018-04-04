@@ -10,8 +10,9 @@ namespace UMS
     {
         None = 0,
 
-        Info = 1 << 0,
-        Warning = 1 << 1,
-        Error = 1 << 2,
+        Verbose =   1 << 0,
+        Info =      1 << 1,
+        Warning =   1 << 2,
+        Error =     1 << 3,
     }
 }

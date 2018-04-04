@@ -50,9 +50,11 @@ namespace UMS
         {
             if (obj == null)
                 throw new ArgumentException("Cannot return ID for null object");
-
+            
             if (!_cachedIDs.ContainsKey(obj))
             {
+                Debugging.Info(DebuggingFlags.IDManager, "_____________Requesting ID for " + obj + "_____________");
+
                 AddToCachingLayer(obj);
             }
 
@@ -66,6 +68,8 @@ namespace UMS
             {
                 if (id == 0)
                     throw new ArgumentException("We found an ID but it's somehow 0");
+
+                Debugging.Info(DebuggingFlags.IDManager, "Found existing ID " + id + " for " + obj);
 
                 _cachedIDs.Add(obj, id);
             }
@@ -82,6 +86,8 @@ namespace UMS
             match = IEquatablePass(encounteredObjects, obj);
             if(match != null)
             {
+                Debugging.Verbose(DebuggingFlags.IDManager, "IEquatable pass matched for " + obj);
+
                 id = _cachedIDs[match];
                 return true;
             }
@@ -89,6 +95,8 @@ namespace UMS
             match = DeepCompare(encounteredObjects, obj);
             if (match != null)
             {
+                Debugging.Verbose(DebuggingFlags.IDManager, "Deep compare pass matched for " + obj);
+
                 id = _cachedIDs[match];
                 return true;
             }
@@ -98,42 +106,79 @@ namespace UMS
         }
         private static object IEquatablePass(IEnumerable<object> objects, object target)
         {
+            Debugging.Info(DebuggingFlags.IDManagerIEquatableComparer, "--------IEQUATABLE COMPARISON FOR " + target + "--------");
+
             foreach (object existingObject in objects)
             {
+                Debugging.Info(DebuggingFlags.IDManagerIEquatableComparer, "Comparing to " + existingObject);
+
                 if (existingObject == null)
+                {
+                    Debugging.Info(DebuggingFlags.IDManagerIEquatableComparer, "Quitting due to null");
                     continue;
+                }                    
 
                 if (existingObject.GetType().GetInterfaces().Any(x => x.GetType() == typeof(IEquatable<>)))
                 {
+                    Debugging.Verbose(DebuggingFlags.IDManagerIEquatableComparer, "Implements IEquatable");
+
                     if (existingObject.Equals(target))
                     {
+                        Debugging.Info(DebuggingFlags.IDManagerIEquatableComparer, "Equals() call is true");
+                        Debugging.Info(DebuggingFlags.IDManagerIEquatableComparer, "Returning");
+
                         return existingObject;
                     }
-                }
-
-                if(existingObject.GetType() == target.GetType())
-                {
-                    Type type = existingObject.GetType();
-
-                    if(CompareProperties(existingObject, target, type))
+                    else
                     {
-                        if(CompareFields(existingObject, target, type))
-                        {
-                            return existingObject;
-                        }
+                        Debugging.Verbose(DebuggingFlags.IDManagerIEquatableComparer, "Equals() call is false");
                     }
                 }
             }
+
+            Debugging.Info(DebuggingFlags.IDManagerIEquatableComparer, "--------IEQUATABLE END--------");
 
             return null;
         }
         private static object DeepCompare(IEnumerable<object> objects, object target)
         {
+            Debugging.Info(DebuggingFlags.IDManagerDeepComparer, "Running deep compare for " + target + " (" + objects.Count() + ")");
+
             foreach (object existingObject in objects)
             {
                 if(ReferenceEquals(existingObject, target))
                 {
+                    Debugging.Info(DebuggingFlags.IDManagerDeepComparer, "Reference equals true");
+                    Debugging.Info(DebuggingFlags.IDManagerDeepComparer, "Returns");
                     return existingObject;
+                }
+
+                if (existingObject.GetType() == target.GetType())
+                {
+                    Debugging.Verbose(DebuggingFlags.IDManagerDeepComparer, "Matching types");
+
+                    Type type = existingObject.GetType();
+
+                    if (CompareProperties(existingObject, target, type))
+                    {
+                        Debugging.Verbose(DebuggingFlags.IDManagerDeepComparer, "Property compare succeeded");
+
+                        if (CompareFields(existingObject, target, type))
+                        {
+                            Debugging.Verbose(DebuggingFlags.IDManagerDeepComparer, "Field compare succeeded");
+                            Debugging.Verbose(DebuggingFlags.IDManagerDeepComparer, "Returning");
+
+                            return existingObject;
+                        }
+                        else
+                        {
+                            Debugging.Verbose(DebuggingFlags.IDManagerDeepComparer, "Field compare failed");
+                        }
+                    }
+                    else
+                    {
+                        Debugging.Verbose(DebuggingFlags.IDManagerDeepComparer, "Property compare failed");
+                    }
                 }
             }
 
@@ -141,34 +186,64 @@ namespace UMS
         }
         private static bool CompareProperties(object firstObject, object secondObject, Type type)
         {
+            Debugging.Info(DebuggingFlags.IDManagerDeepComparer, "///Comparing " + firstObject + " to " + secondObject + "///");
+            
             foreach (PropertyInfo property in type.GetProperties(_bindingFlags))
             {
-                if (property.GetMethod == null)
-                    continue;
+                Debugging.Verbose(DebuggingFlags.IDManagerDeepComparer, "Comparing " + property);
 
-                if (!CompareValues(firstObject, secondObject))
+                if (property.GetMethod == null)
+                {
+                    Debugging.Verbose(DebuggingFlags.IDManagerDeepComparer, "No getter for " + property + ". Returning");
+                    continue;
+                }                    
+
+                if (!CompareValues(property.GetValue(firstObject), property.GetValue(secondObject)))
+                {
+                    Debugging.Info(DebuggingFlags.IDManagerDeepComparer, "///Returning False Due To " + property + "///\n" + property.GetValue(firstObject) + ", " + property.GetValue(secondObject));
+
                     return false;
+                }                    
             }
+
+            Debugging.Info(DebuggingFlags.IDManagerDeepComparer, "///Returning True///");
 
             return true;
         }
-        private static bool CompareFields(object firstOjbect, object secondObject, Type type)
+        private static bool CompareFields(object firstObject, object secondObject, Type type)
         {
+            Debugging.Info(DebuggingFlags.IDManagerDeepComparer, "//Comparing " + firstObject + " to " + secondObject + "//");
+
             foreach (FieldInfo field in type.GetFields(_bindingFlags))
             {
-                if (!CompareValues(firstOjbect, secondObject))
+                Debugging.Verbose(DebuggingFlags.IDManagerDeepComparer, "Comparing " + field);
+
+                if (!CompareValues(field.GetValue(firstObject), field.GetValue(secondObject)))
+                {
+                    Debugging.Info(DebuggingFlags.IDManagerDeepComparer, "//Returning False Due To " + field + "//\n" + field.GetValue(firstObject) + ", " + field.GetValue(secondObject));
+
                     return false;
+                }                    
             }
+
+            Debugging.Info(DebuggingFlags.IDManagerDeepComparer, "///Returning True///");
 
             return true;
         }
         private static bool CompareValues(object a, object b)
         {
+            if (a == null && b == null)
+                return true;
+            
+            //This is valid since we just checked if both are null. If either of them are null now, the other one is not
+            if (a == null || b == null)
+                return false;
+
             if(a is IEnumerable aEnumerable && b is IEnumerable bEnumerable)
             {
                 return SequenceEqual(aEnumerable, bEnumerable);
             }
-
+            
             return a.Equals(b);
         }
         private static bool SequenceEqual(IEnumerable a, IEnumerable b)
@@ -195,6 +270,8 @@ namespace UMS
             {
                 id = Utility.GetRandomID();
             }
+
+            Debugging.Info(DebuggingFlags.IDManager, "Creating new ID " + id + " for " + obj);
             
             _allIDs.Add(id);
             _cachedIDs.Add(obj, id);

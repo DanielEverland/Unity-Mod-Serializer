@@ -13,6 +13,9 @@ namespace UMS
         {
             switch (level)
             {
+                case DebuggingLevels.Verbose:
+                    Debug.Log(message);
+                    break;
                 case DebuggingLevels.Info:
                     Debug.Log(message);
                     break;
@@ -25,6 +28,10 @@ namespace UMS
                 default:
                     throw new ArgumentException("Unexpected level");
             }
+        }
+        public static void Verbose(DebuggingFlags flags, string message)
+        {
+            Output(flags, DebuggingLevels.Verbose, message, Debug.Log);
         }
         public static void Info(DebuggingFlags flags, string message)
         {
@@ -40,6 +47,9 @@ namespace UMS
         }
         private static void Output(DebuggingFlags flags, DebuggingLevels levels, string message, Action<string> action)
         {
+            if (flags == DebuggingFlags.None || levels == DebuggingLevels.None)
+                return;
+
 #if !DEBUG
             if (!Application.isEditor && !Settings.DebugInBuiltVersion)
                 return;

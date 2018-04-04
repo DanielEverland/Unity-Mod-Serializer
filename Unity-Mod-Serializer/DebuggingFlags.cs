@@ -11,6 +11,8 @@ namespace UMS
     {
         None = 0,
 
-        IDManager = 1 << 0,
+        IDManager                           = 1 << 0,
+        IDManagerDeepComparer               = 1 << 1,
+        IDManagerIEquatableComparer         = 1 << 2,
     }
 }
