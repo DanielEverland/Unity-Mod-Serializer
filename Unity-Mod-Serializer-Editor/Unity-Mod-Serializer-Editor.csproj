@@ -60,6 +60,7 @@
     <Compile Include="Editor\EventHookManager.cs" />
     <Compile Include="Editor\HookCreator.cs" />
     <Compile Include="Editor\Inspectors\ModPackageEditor.cs" />
+    <Compile Include="Editor\Inspectors\SettingsEditor.cs" />
     <Compile Include="Editor\MenuItems.cs" />
     <Compile Include="Editor\ModPackage.cs" />
     <Compile Include="Editor\ModPackageReorderableList.cs" />
