@@ -655,9 +655,6 @@ namespace UMS
 
         private Result InternalSerialize_1_ProcessCycles(Type storageType, Type overrideConverterType, object instance, out Data data)
         {
-            // This type does not need cycle support.
-            var converter = GetConverter(instance.GetType(), overrideConverterType);
-
             if (!IDManager.CanGetID(instance))
             {
                 return InternalSerialize_2_Inheritance(storageType, overrideConverterType, instance, out data);
