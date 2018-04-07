@@ -646,6 +646,8 @@ namespace UMS
             var result = InternalSerialize_1_ProcessCycles(storageType, overrideConverterType, instance, out data);
             Invoke_OnAfterSerialize(processors, storageType, instance, ref data);
 
+            Debugging.Verbose(DebuggingFlags.Serializer, string.Format("From {0} ({1}) to {2}", instance, instance.GetType(), data));
+
 #if DEBUG
             result.AssertSuccessWithoutWarnings();
 #endif
@@ -766,6 +768,8 @@ namespace UMS
         {
             Type instanceType = instance.GetType();
             BaseConverter converter = GetConverter(instanceType, overrideConverterType);
+
+            Debugging.Verbose(DebuggingFlags.Serializer, "Selected converter " + converter);
                         
             return converter.TrySerialize(instance, out data, instanceType);
         }
