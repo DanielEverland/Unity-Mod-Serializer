@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="AOT\AOTConfigurationEditor.cs" />
     <Compile Include="Editor\BuildHandler.cs" />
+    <Compile Include="Editor\CloneManager.cs" />
     <Compile Include="Editor\EditorSession.cs" />
     <Compile Include="Editor\EditorUtilities.cs" />
     <Compile Include="Editor\EventHookManager.cs" />

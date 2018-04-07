@@ -42,6 +42,21 @@ namespace UMS.Editor
 
         public void Serialize(ZipFile file)
         {
+            try
+            {
+                DoSerialize(file);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                CloneManager.Clear();
+            }
+        }
+        private void DoSerialize(ZipFile file)
+        {
             Manifest manifest = new Manifest();
             Dictionary<string, string> jsonContent = new Dictionary<string, string>();
             Dictionary<string, byte[]> binaryContent = new Dictionary<string, byte[]>();
@@ -54,14 +69,20 @@ namespace UMS.Editor
 
                     Manifest.Instance.AddKey(id, entry.Key);
                 }
-                
-                if(!Serializer.SerializationQueue.HasBeenEnqueued(entry.Object))
+
+                if (!Serializer.SerializationQueue.HasBeenEnqueued(entry.Object))
                     Serializer.SerializationQueue.Enqueue(entry.Object);
             }
 
             while (Serializer.SerializationQueue.Count > 0)
             {
                 object toSerialize = Serializer.SerializationQueue.Dequeue();
+
+                if(toSerialize is GameObject)
+                {
+                    toSerialize = CloneManager.GetClone(toSerialize as GameObject);
+                }
+
                 Type objectType = toSerialize.GetType();
 
                 string json = Mods.Serialize(toSerialize);
@@ -72,7 +93,7 @@ namespace UMS.Editor
                 {
                     EntryWriter writer = EntryWriter.GetWriter(objectType);
                     Manifest.Entry entry = writer.Write(toSerialize);
-                                        
+
                     jsonContent.Add(entry.id, json);
                     manifest.AddEntry(entry);
                 }
@@ -85,13 +106,13 @@ namespace UMS.Editor
             foreach (BinarySerializer.Entry binaryEntry in Serializer.BinarySerializer.Entries)
             {
                 Type type = binaryEntry.instance.GetType();
-                
+
                 if (EntryWriter.IsWritable(type))
                 {
                     EntryWriter writer = EntryWriter.GetWriter(type);
                     Manifest.Entry entry = writer.Write(binaryEntry.instance);
                     entry.type = type;
-                    
+
                     binaryContent.Add(entry.id, binaryEntry.data);
                     manifest.AddEntry(entry);
                 }
@@ -119,9 +140,9 @@ namespace UMS.Editor
                 else
                 {
                     throw new NullReferenceException("No content found for ID " + manifestEntry.id);
-                }                
+                }
             }
-                        
+
             file.AddEntry(Utility.MANIFEST_NAME, Mods.Serialize(manifest));
         }
         
