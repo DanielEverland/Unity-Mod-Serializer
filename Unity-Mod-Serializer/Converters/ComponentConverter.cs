@@ -9,6 +9,11 @@ using UnityEngine;
 
 namespace UMS.Converters
 {
+    /// <summary>
+    /// You should almost never inherit this class. UMS is built to
+    /// serialize components properly, you just have to implement
+    /// their base members, then UMS will take care of the rest
+    /// </summary>
     public class ComponentConverter : Converter<Component>
     {
         public static Component CurrentComponent { get; set; }
