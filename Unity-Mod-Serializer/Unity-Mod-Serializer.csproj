@@ -63,6 +63,7 @@
     <Compile Include="Converters\DateTimeOffsetConverter.cs" />
     <Compile Include="Converters\DictionaryConverter.cs" />
     <Compile Include="Converters\EnumConverter.cs" />
+    <Compile Include="Converters\FontConverter.cs" />
     <Compile Include="Converters\ForwardConverter.cs" />
     <Compile Include="Converters\GameObjectConverter.cs" />
     <Compile Include="Converters\GuidConverter.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="EntryWriters\ComponentEntryWriter.cs" />
     <Compile Include="EntryWriters\DefaultEntryWriter.cs" />
     <Compile Include="EntryWriters\EntryWriter.cs" />
+    <Compile Include="EntryWriters\FontEntryWriter.cs" />
     <Compile Include="EntryWriters\GameObjectEntryWriter.cs" />
     <Compile Include="EntryWriters\MaterialEntryWriter.cs" />
     <Compile Include="EntryWriters\MeshEntryWriter.cs" />
