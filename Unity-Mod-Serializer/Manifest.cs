@@ -82,6 +82,8 @@ namespace UMS
             public string path;
             [Property]
             public List<string> keys;
+            [Property]
+            public Type type;
         }
     }
 }

@@ -90,6 +90,7 @@ namespace UMS.Editor
                 {
                     EntryWriter writer = EntryWriter.GetWriter(type);
                     Manifest.Entry entry = writer.Write(binaryEntry.instance);
+                    entry.type = type;
                     
                     binaryContent.Add(entry.id, binaryEntry.data);
                     manifest.AddEntry(entry);
