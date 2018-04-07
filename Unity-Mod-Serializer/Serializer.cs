@@ -665,7 +665,9 @@ namespace UMS
             {
                 IBinaryConverter converter = BinarySerializer.GetConverter(instance.GetType());
 
-                data = Data.Null;
+                data = Data.CreateDictionary();
+                MetaData.WriteReference(IDManager.GetID(instance), data.AsDictionary);
+
                 return converter.TrySerialize(instance);
             }
             

@@ -4,6 +4,7 @@ using UMS.Zip;
 using UMS.Reflection;
 using UMS.Converters;
 using Ionic.Zip;
+using System.Collections.Generic;
 
 namespace UMS
 {
@@ -46,20 +47,26 @@ namespace UMS
                     throw new System.NullReferenceException();
 
                 Manifest manifest = file[Utility.MANIFEST_NAME].ToObject<Manifest>();
+                Dictionary<string, Data> toDeserializeAsJSON = new Dictionary<string, Data>();
                 
                 foreach (Manifest.Entry entry in manifest.Entries)
                 {
-                    string json = file[entry.path].ZipToJson();
+                    string text = file[entry.path].ZipToText();
 
-                    if(JsonParser.TryParse(json, out Data data).Succeeded)
+                    if(JsonParser.TryParse(text, out Data data).Succeeded)
                     {
                         ObjectContainer.AddData(entry.id, data);
-                        ObjectContainer.CreateObjectInstance(data, entry.id, entry.keys);
+
+                        //JSON objects can have dependencies, so we load all the data
+                        //into memory and deserialize afterwards. Binary objects do
+                        //not share this restriction
+                        toDeserializeAsJSON.Add(entry.id, data);
                     }
                     else if(entry.type != null)
                     {
                         byte[] byteArray = file[entry.path].ZipToByteArray();
 
+                        ObjectContainer.AddData(entry.id, new Data(text));
                         ObjectContainer.CreateObjectInstance(byteArray, entry.type, entry.id, entry.keys);
                     }
                     else
@@ -67,7 +74,17 @@ namespace UMS
                         Debug.LogError("Couldn't deserialize " + entry.path);
                     }
                 }
-                
+
+                //Create instances	
+                foreach (Manifest.Entry entry in manifest.Entries)
+                {
+                    if (toDeserializeAsJSON.ContainsKey(entry.id))
+                    {
+                        Data data = toDeserializeAsJSON[entry.id];
+                        ObjectContainer.CreateObjectInstance(data, entry.id, entry.keys);
+                    }                    
+                }
+
                 Debug.Log("Deserialized " + fullPath);
             }
         }

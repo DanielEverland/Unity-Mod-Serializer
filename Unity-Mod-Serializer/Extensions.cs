@@ -56,7 +56,7 @@ namespace UMS
         }
         public static object ToObject(this ZipEntry entry, System.Type type)
         {
-            return Mods.DeserializeString(ZipToJson(entry), type);
+            return Mods.DeserializeString(ZipToText(entry), type);
         }
         public static byte[] ZipToByteArray(this ZipEntry entry)
         {
@@ -67,7 +67,7 @@ namespace UMS
                 return stream.ToArray();
             }
         }
-        public static string ZipToJson(this ZipEntry entry)
+        public static string ZipToText(this ZipEntry entry)
         {
             string toReturn = "";
 
