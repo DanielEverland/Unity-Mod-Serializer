@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace UMS.Converters
 {
-    public sealed class TypeConverter : DirectConverter<Type>
+    public sealed class TypeConverter : Converter<Type>
     {
         public override bool RequestInheritanceSupport(Type type)
         {
