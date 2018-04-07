@@ -26,6 +26,7 @@ namespace UMS.Editor
         public static GameObject GetClone(GameObject obj)
         {
             GameObject clone = GameObject.Instantiate(obj);
+            clone.name = obj.name;
 
             _clones.Add(clone);
 
