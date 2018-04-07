@@ -29,23 +29,23 @@ namespace UMS
                     throw new ArgumentException("Unexpected level");
             }
         }
-        public static void Verbose(DebuggingFlags flags, string message)
+        public static void Verbose(DebuggingFlags flags, object message)
         {
             Output(flags, DebuggingLevels.Verbose, message, Debug.Log);
         }
-        public static void Info(DebuggingFlags flags, string message)
+        public static void Info(DebuggingFlags flags, object message)
         {
             Output(flags, DebuggingLevels.Info, message, Debug.Log);
         }
-        public static void Warning(DebuggingFlags flags, string message)
+        public static void Warning(DebuggingFlags flags, object message)
         {
             Output(flags, DebuggingLevels.Warning, message, Debug.LogWarning);
         }
-        public static void Error(DebuggingFlags flags, string message)
+        public static void Error(DebuggingFlags flags, object message)
         {
             Output(flags, DebuggingLevels.Error, message, Debug.LogError);
         }
-        private static void Output(DebuggingFlags flags, DebuggingLevels levels, string message, Action<string> action)
+        private static void Output(DebuggingFlags flags, DebuggingLevels levels, object message, Action<object> action)
         {
             if (flags == DebuggingFlags.None || levels == DebuggingLevels.None)
                 return;
