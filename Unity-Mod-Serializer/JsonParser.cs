@@ -564,6 +564,11 @@ namespace UMS
             var context = new JsonParser(input);
             return context.RunParse(out data);
         }
+        
+        public static Result TryParse(string input, out Data data)
+        {
+            return Parse(input, out data);
+        }
 
         /// <summary>
         /// Helper method for Parse that does not allow the error information to
