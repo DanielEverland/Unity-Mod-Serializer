@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.IO;
-using System.Linq;
-using UMS;
 using UMS.Zip;
 using UMS.Reflection;
+using UMS.Converters;
 using Ionic.Zip;
 
 namespace UMS
@@ -47,22 +46,28 @@ namespace UMS
                     throw new System.NullReferenceException();
 
                 Manifest manifest = file[Utility.MANIFEST_NAME].ToObject<Manifest>();
-
-                //Deserialize all the data into memory, but don't try to create objects yet
+                
                 foreach (Manifest.Entry entry in manifest.Entries)
                 {
                     string json = file[entry.path].ZipToJson();
-                    Data data = JsonParser.Parse(json);
 
-                    ObjectContainer.AddData(entry.id, data);
+                    if(JsonParser.TryParse(json, out Data data).Succeeded)
+                    {
+                        ObjectContainer.AddData(entry.id, data);
+                        ObjectContainer.CreateObjectInstance(data, entry.id, entry.keys);
+                    }
+                    else if(entry.type != null)
+                    {
+                        byte[] byteArray = file[entry.path].ZipToByteArray();
+
+                        ObjectContainer.CreateObjectInstance(byteArray, entry.type, entry.id, entry.keys);
+                    }
+                    else
+                    {
+                        Debug.LogError("Couldn't deserialize " + entry.path);
+                    }
                 }
-
-                //Create instances
-                foreach (Manifest.Entry entry in manifest.Entries)
-                {
-                    ObjectContainer.CreateObjectInstance(entry.id, entry.keys);
-                }
-
+                
                 Debug.Log("Deserialized " + fullPath);
             }
         }
@@ -134,6 +139,18 @@ namespace UMS
             Debug.Log("Serialized " + type + " to " + fullPath);
         }
 
+        public static object Deserialize(byte[] data, System.Type type)
+        {
+            IBinaryConverter converter = Serializer.BinarySerializer.GetConverter(type);
+
+#if DEBUG
+            converter.TryDeserialize(data, out object deserialized).AssertSuccessWithoutWarnings();
+#else
+            converter.TryDeserialize(data, out object deserialized);
+#endif
+
+            return deserialized;
+        }
         public static object Deserialize(System.Type type, string fullPath)
         {
             string json = File.ReadAllText(fullPath);

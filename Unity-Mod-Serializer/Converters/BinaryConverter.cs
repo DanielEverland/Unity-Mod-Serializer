@@ -12,6 +12,7 @@ namespace UMS.Converters
         BinarySerializer Serializer { get; set; }
 
         Result TrySerialize(object obj);
+        Result TryDeserialize(byte[] data, out object obj);
     }
 
     /// <summary>
@@ -44,8 +45,12 @@ namespace UMS.Converters
             
             return result;
         }
+        public Result TryDeserialize(byte[] data, out object obj)
+        {
+            return DoDeserialize(data, out obj);
+        }
 
         public abstract Result DoSerialize(T obj, out byte[] data);
-        //public abstract Result DoDeserialize()
+        public abstract Result DoDeserialize(byte[] data, out object obj);
     }
 }

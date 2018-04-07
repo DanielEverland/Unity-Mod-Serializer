@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -123,33 +124,44 @@ namespace UMS
 
             return _idToData[id];
         }
-        public static void CreateObjectInstance(string id, IEnumerable<string> keys)
+        public static void CreateObjectInstance(byte[] data, Type type, string id, IEnumerable<string> keys)
+        {
+            if(id == null)
+                throw new System.ArgumentException("ID is null " + id);
+
+            object deserialized = Mods.Deserialize(data, type);
+
+            Add(deserialized, id, keys);
+        }
+        public static void CreateObjectInstance(Data data, string id, IEnumerable<string> keys)
         {
             if (id == null)
                 throw new System.ArgumentException("ID is null " + id);
-
-            Data data = GetData(id);
-
+            
             object deserialized = Mods.DeserializeData(data, MetaData.GetMetaDataType(data));
 
-            if(deserialized is GameObject gameObject)
+            Add(deserialized, id, keys);
+        }
+        private static void Add(object obj, string id, IEnumerable<string> keys)
+        {
+            if (obj is GameObject gameObject)
             {
-                if(!Application.isEditor || Settings.SimulateBuildLoading)
+                if (!Application.isEditor || Settings.SimulateBuildLoading)
                     gameObject.SetActive(false);
 
                 gameObject.transform.SetParent(GameObjectContainer);
             }
-            
-            _idToObjects.Set(id, deserialized);
-            
-            if(keys != null)
+
+            _idToObjects.Set(id, obj);
+
+            if (keys != null)
             {
                 foreach (string key in keys)
                 {
                     if (key != null)
-                        _keyToObjects.Set(key, deserialized);
+                        _keyToObjects.Set(key, obj);
                 }
-            }                     
+            }
         }
         public static void AddData(string id, Data data)
         {

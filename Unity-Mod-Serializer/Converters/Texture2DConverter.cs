@@ -14,5 +14,13 @@ namespace UMS.Converters
             data = Utility.EncodeToPNG(obj);
             return Result.Success;
         }
+        public override Result DoDeserialize(byte[] data, out object obj)
+        {
+            Texture2D texture = new Texture2D(0, 0);
+            texture.LoadImage(data);
+
+            obj = texture;
+            return Result.Success;
+        }
     }
 }
