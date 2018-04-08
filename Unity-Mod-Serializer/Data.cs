@@ -9,6 +9,7 @@ namespace UMS
     /// </summary>
     public enum DataType
     {
+        List,
         Array,
         Object,
         Double,
@@ -122,6 +123,14 @@ namespace UMS
         }
 
         /// <summary>
+        /// Creates a Data instance that holds an array of values.
+        /// </summary>
+        public Data(Array array)
+        {
+            _value = array;
+        }
+
+        /// <summary>
         /// Helper method to create a Data instance that holds a dictionary.
         /// </summary>
         public static Data CreateDictionary()
@@ -183,7 +192,8 @@ namespace UMS
                 if (_value is bool) return DataType.Boolean;
                 if (_value is string) return DataType.String;
                 if (_value is Dictionary<string, Data>) return DataType.Object;
-                if (_value is List<Data>) return DataType.Array;
+                if (_value is List<Data>) return DataType.List;
+                if (_value is Array) return DataType.Array;
 
                 throw new InvalidOperationException("unknown JSON data type");
             }
@@ -263,6 +273,17 @@ namespace UMS
             get
             {
                 return _value is List<Data>;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if this Data instance maps back to an array.
+        /// </summary>
+        public bool IsArray
+        {
+            get
+            {
+                return _value is Array;
             }
         }
         #endregion Casting Predicates
@@ -346,6 +367,18 @@ namespace UMS
         }
 
         /// <summary>
+        /// Casts this Data to an Array. Throws an exception if it is not an Array.
+        /// </summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Array AsArray
+        {
+            get
+            {
+                return Cast<Array>();
+            }
+        }
+
+        /// <summary>
         /// Internal helper method to cast the underlying storage to the given
         /// type or throw a pretty printed exception on failure.
         /// </summary>
@@ -406,42 +439,62 @@ namespace UMS
                 case DataType.String:
                     return AsString == other.AsString;
 
+                case DataType.List:
+                    {
+                        var thisList = AsList;
+                        var otherList = other.AsList;
+
+                        if (thisList.Count != otherList.Count) return false;
+
+                        for (int i = 0; i < thisList.Count; ++i)
+                        {
+                            if (thisList[i].Equals(otherList[i]) == false)
+                            {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    }
                 case DataType.Array:
-                    var thisList = AsList;
-                    var otherList = other.AsList;
-
-                    if (thisList.Count != otherList.Count) return false;
-
-                    for (int i = 0; i < thisList.Count; ++i)
                     {
-                        if (thisList[i].Equals(otherList[i]) == false)
+                        Array thisArray = AsArray;
+                        Array otherArray = other.AsArray;
+
+                        if (thisArray.Length != otherArray.Length) return false;
+
+                        for (int i = 0; i < thisArray.Length; ++i)
                         {
-                            return false;
+                            if (thisArray.GetValue(i).Equals(otherArray.GetValue(i)) == false)
+                            {
+                                return false;
+                            }
                         }
+
+                        return true;
                     }
-
-                    return true;
-
                 case DataType.Object:
-                    var thisDict = AsDictionary;
-                    var otherDict = other.AsDictionary;
-
-                    if (thisDict.Count != otherDict.Count) return false;
-
-                    foreach (string key in thisDict.Keys)
                     {
-                        if (otherDict.ContainsKey(key) == false)
+                        var thisDict = AsDictionary;
+                        var otherDict = other.AsDictionary;
+
+                        if (thisDict.Count != otherDict.Count) return false;
+
+                        foreach (string key in thisDict.Keys)
                         {
-                            return false;
+                            if (otherDict.ContainsKey(key) == false)
+                            {
+                                return false;
+                            }
+
+                            if (thisDict[key].Equals(otherDict[key]) == false)
+                            {
+                                return false;
+                            }
                         }
 
-                        if (thisDict[key].Equals(otherDict[key]) == false)
-                        {
-                            return false;
-                        }
-                    }
-
-                    return true;
+                        return true;
+                    }                    
             }
 
             throw new Exception("Unknown data type");
