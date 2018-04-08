@@ -218,6 +218,36 @@ namespace UMS
                         break;
                     }
 
+                case DataType.List:
+                    // special case for empty lists; we don't put an empty line
+                    // between the brackets
+                    if (data.AsList.Count == 0)
+                    {
+                        stream.Write("[]");
+                    }
+                    else
+                    {
+                        bool comma = false;
+
+                        stream.Write('[');
+                        stream.WriteLine();
+                        foreach (var entry in data.AsList)
+                        {
+                            if (comma)
+                            {
+                                stream.Write(',');
+                                stream.WriteLine();
+                            }
+                            comma = true;
+                            InsertSpacing(stream, depth + 1);
+                            BuildPrettyString(entry, stream, depth + 1);
+                        }
+                        stream.WriteLine();
+                        InsertSpacing(stream, depth);
+                        stream.Write(']');
+                    }
+                    break;
+
                 case DataType.Array:
                     // special case for empty lists; we don't put an empty line
                     // between the brackets
@@ -247,6 +277,8 @@ namespace UMS
                         stream.Write(']');
                     }
                     break;
+                default:
+                    throw new NotImplementedException("Data type " + data.Type + " is not recognized");
             }
         }
 
