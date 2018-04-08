@@ -66,6 +66,7 @@
     <Compile Include="Editor\ModPackage.cs" />
     <Compile Include="Editor\ModPackageReorderableList.cs" />
     <Compile Include="Editor\SettingsHandler.cs" />
+    <Compile Include="Editor\TestingMenuItems.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
