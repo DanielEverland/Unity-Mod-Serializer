@@ -13,28 +13,32 @@ namespace UMS.Converters
 
         public override Result TrySerialize(object instance, out Data serialized, Type storageType)
         {
-            // note: IList[index] is **significantly** faster than Array.Get, so
-            //       make sure we use that instead.
-
-            IList arr = (Array)instance;
+            Array array = (Array)instance;
             Type elementType = storageType.GetElementType();
 
-            var result = Result.Success;
+            Result result = Result.Success;
 
-            serialized = Data.CreateList(arr.Count);
-            var serializedList = serialized.AsList;
+            serialized = Data.CreateArray(array.GetLengths());
 
-            for (int i = 0; i < arr.Count; ++i)
+            int[] indexes = new int[array.Rank];
+            for (int d = 0; d < array.Rank; d++)
             {
-                object item = arr[i];
-                
-                var itemResult = Serializer.TrySerialize(elementType, item, out Data serializedItem);
-                result.AddMessages(itemResult);
-                if (itemResult.Failed) continue;
+                for (int i = d == 0 ? 0 : 1; i < array.GetLength(d); i++)
+                {
+                    indexes[d] = i;
 
-                serializedList.Add(serializedItem);
+                    object obj = array.GetValue(indexes);
+
+                    Result itemResult = Serializer.TrySerialize(elementType, obj, out Data serializedItem);
+                    result.AddMessages(itemResult);
+
+                    if (itemResult.Failed)
+                        continue;
+
+                    serialized.SetValue(serializedItem, indexes);
+                }                                
             }
-
+            
             return result;
         }
 

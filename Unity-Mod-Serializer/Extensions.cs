@@ -13,7 +13,18 @@ namespace UMS
     public static class Extensions
     {
         private const int MAX_OUTPUT_LENGTH = 100;
+        
+        public static int[] GetLengths(this Array array)
+        {
+            int[] lengths = new int[array.Rank];
 
+            for (int d = 0; d < array.Rank; d++)
+            {
+                lengths[d] = array.GetLength(d);
+            }
+
+            return lengths;
+        }
         public static void Output(this ICollection collection)
         {
             UnityEngine.Debug.Log("Outputting collection " + collection + "(" + collection.Count + ")");

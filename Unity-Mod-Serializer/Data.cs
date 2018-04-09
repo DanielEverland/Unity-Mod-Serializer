@@ -65,6 +65,20 @@ namespace UMS
             }
         }
 
+        #region Public Functions
+        /// <summary>
+        /// Helper method for assigning values from a
+        /// multidimensional array.
+        /// </summary>
+        public void SetValue(Data data, int[] indexes)
+        {
+            if (!IsArray)
+                throw new ArgumentException("Data isn't array!");
+
+            AsArray.SetValue(data, indexes);
+        }
+        #endregion 
+
         #region Constructors
         /// <summary>
         /// Creates a Data instance that holds null.
@@ -127,6 +141,9 @@ namespace UMS
         /// </summary>
         public Data(Array array)
         {
+            if (array.GetType().GetElementType() != typeof(Data))
+                throw new ArgumentException("Cannot create a data instance using an array that doesn't contain data types. Element type is " + array.GetType().GetElementType());
+
             _value = array;
         }
 
@@ -156,6 +173,14 @@ namespace UMS
             return new Data(new List<Data>(capacity));
         }
 
+        /// <summary>
+        /// Helper method to create a Data instance that hold an array
+        /// </summary>
+        public static Data CreateArray(int[] lengths)
+        {
+            return new Data(Array.CreateInstance(typeof(Data), lengths));
+        }
+        
         public readonly static Data True = new Data(true);
         public readonly static Data False = new Data(false);
         public readonly static Data Null = new Data();
@@ -192,8 +217,8 @@ namespace UMS
                 if (_value is bool) return DataType.Boolean;
                 if (_value is string) return DataType.String;
                 if (_value is Dictionary<string, Data>) return DataType.Object;
-                if (_value is List<Data>) return DataType.List;
                 if (_value is Array) return DataType.Array;
+                if (_value is List<Data>) return DataType.List;
 
                 throw new InvalidOperationException("unknown JSON data type");
             }
@@ -362,6 +387,12 @@ namespace UMS
         {
             get
             {
+                if (IsArray)
+                {
+                    if (AsArray.Rank != 1)
+                        throw new InvalidCastException("Array is multi-dimensional, so we can't cast to List");
+                }
+
                 return Cast<List<Data>>();
             }
         }

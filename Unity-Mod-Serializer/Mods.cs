@@ -130,7 +130,7 @@ namespace UMS
         {
             Serializer.ActiveObject = obj;
             Serializer.TrySerialize(obj.GetType(), obj, out Data data);
-
+            
             return JsonPrinter.PrettyJson(data);
         }
         public static void Create(object obj, string fullPath)

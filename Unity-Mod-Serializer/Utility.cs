@@ -17,7 +17,7 @@ namespace UMS
         public const string MANIFEST_NAME = ".manifest";
 
         private static System.Random _random;
-
+        
         public static byte[] EncodeToPNG(Texture2D texture)
         {
             // Create a temporary RenderTexture of the same size as the texture

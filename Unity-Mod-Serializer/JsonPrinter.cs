@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace UMS
 {
@@ -146,7 +147,7 @@ namespace UMS
                         break;
                     }
 
-                case DataType.Array:
+                case DataType.List:
                     {
                         stream.Write('[');
                         bool comma = false;
@@ -159,6 +160,38 @@ namespace UMS
                         stream.Write(']');
                         break;
                     }
+
+                case DataType.Array:
+                    {
+                        Array array = data.AsArray;
+                        int dimensions = array.Rank;
+
+                        stream.Write('[');
+
+                        if (dimensions > 1)
+                            stream.Write('[');
+
+                        for (int i = 0; i < array.GetLength(0); i++)
+                        {
+                            int[] index = new int[dimensions];
+                            index[0] = i;
+
+                            for (int d = 1; d < dimensions; d++)
+                            {
+                                index[d] = d;
+                            }
+
+                            Data obj = array.GetValue(index) as Data;
+                            BuildCompressedString(obj, stream);
+                        }
+
+                        if (dimensions > 1)
+                            stream.Write(']');
+
+                        break;
+                    }
+                default:
+                    throw new NotImplementedException("Data type " + data.Type + " is not recognized");
             }
         }
 
@@ -249,37 +282,101 @@ namespace UMS
                     break;
 
                 case DataType.Array:
-                    // special case for empty lists; we don't put an empty line
-                    // between the brackets
-                    if (data.AsList.Count == 0)
                     {
-                        stream.Write("[]");
-                    }
-                    else
-                    {
-                        bool comma = false;
+                        Array array = data.AsArray;
+                        int dimensions = array.Rank;
 
-                        stream.Write('[');
-                        stream.WriteLine();
-                        foreach (var entry in data.AsList)
+                        if(array.Length == 0)
                         {
-                            if (comma)
-                            {
-                                stream.Write(',');
-                                stream.WriteLine();
-                            }
-                            comma = true;
-                            InsertSpacing(stream, depth + 1);
-                            BuildPrettyString(entry, stream, depth + 1);
+                            stream.Write("[]");
+                            break;
                         }
-                        stream.WriteLine();
-                        InsertSpacing(stream, depth);
-                        stream.Write(']');
+
+                        if(dimensions == 1)
+                        {
+                            BuildPrettySingleDimensionalArray(data, stream, depth);
+                        }
+                        else
+                        {
+                            BuildPrettyMultiDimensionalArray(data, stream, depth);
+                        }
+                        break;
                     }
-                    break;
                 default:
                     throw new NotImplementedException("Data type " + data.Type + " is not recognized");
             }
+        }
+
+        private static void BuildPrettySingleDimensionalArray(Data data, TextWriter stream, int depth)
+        {
+            bool comma = false;
+
+            stream.Write('[');
+            stream.WriteLine();
+            foreach (var entry in data.AsArray)
+            {
+                if (comma)
+                {
+                    stream.Write(',');
+                    stream.WriteLine();
+                }
+                comma = true;
+                InsertSpacing(stream, depth + 1);
+
+                Data dataEntry = entry as Data;
+                if (dataEntry == null)
+                    throw new ArgumentException("Found a non-data entry in array");
+
+                BuildPrettyString(dataEntry, stream, depth + 1);
+            }
+            stream.WriteLine();
+            InsertSpacing(stream, depth);
+            stream.Write(']');
+        }
+        private static void BuildPrettyMultiDimensionalArray(Data data, TextWriter stream, int depth)
+        {
+            Array array = data.AsArray;
+            int dimensions = array.Rank;
+
+            stream.Write('[');
+            stream.WriteLine();
+
+            InsertSpacing(stream, depth + 1);
+            stream.Write('[');
+
+            //Indexing is done incorrectly. We're currently getting the last elements in every object at i
+            //Scratch the last scentence. This is Daniel on drugs, I'm pretty sure I found a way to iterate
+            //over the array. As you can tell it's quite simple, so you should find a stackoverflow answer
+            //and make sure the implementation doesn't have any errors. In particular the ?: expression in 
+            //the second for loops is scetchy as shit.
+            int[] indexes = new int[array.Rank];
+            for (int d = 0; d < array.Rank; d++)
+            {
+                for (int i = d == 0 ? 0 : 1; i < array.GetLength(d); i++)
+                {
+                    indexes[d] = i;
+
+                    Data obj = array.GetValue(indexes) as Data;
+
+                    if (obj == null)
+                        throw new NullReferenceException("Null data - " + array.GetValue(indexes));
+
+                    stream.Write(' ');
+                    BuildPrettyString(obj, stream, depth + 1);
+
+                    if (i == array.GetLength(0) - 1)
+                        stream.Write(' ');
+                    else
+                        stream.Write(',');
+                }
+            }
+
+            stream.Write(']');
+            stream.Write(',');
+            stream.WriteLine();
+
+            InsertSpacing(stream, depth);
+            stream.Write(']');
         }
 
         /// <summary>
