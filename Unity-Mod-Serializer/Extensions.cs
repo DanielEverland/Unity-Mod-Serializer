@@ -25,6 +25,17 @@ namespace UMS
 
             return lengths;
         }
+        public static string CollectionToString(this ICollection collection)
+        {
+            StringWriter writer = new StringWriter();
+
+            foreach (object obj in collection)
+            {
+                writer.Write(obj.ToString());
+            }
+
+            return writer.ToString();
+        }
         public static void Output(this ICollection collection)
         {
             UnityEngine.Debug.Log("Outputting collection " + collection + "(" + collection.Count + ")");
