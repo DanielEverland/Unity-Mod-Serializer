@@ -62,9 +62,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /y "$(TargetPath)" "D:\Dead Air\Assets\Plugins\UMS\$(TargetName)$(TargetExt)"
-copy /y "$(TargetDir)/$(TargetName).pdb" "D:\Dead Air\Assets\Plugins\UMS\$(TargetName).pdb"
+    <PostBuildEvent>copy /y "$(TargetPath)" "D:\UMS Test Project\Assets\Plugins\$(TargetName)$(TargetExt)"
+copy /y "$(TargetDir)/$(TargetName).pdb" "D:\UMS Test Project\Assets\Plugins\$(TargetName).pdb"
 
-copy /y "$(TargetDir)/protobuf-net.dll" "D:\Dead Air\Assets\Plugins\UMS\protobuf-net.dll"</PostBuildEvent>
+copy /y "$(TargetDir)/protobuf-net.dll" "D:\UMS Test Project\Assets\Plugins\protobuf-net.dll"</PostBuildEvent>
   </PropertyGroup>
 </Project>
