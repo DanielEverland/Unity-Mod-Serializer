@@ -45,6 +45,10 @@ namespace UMS
         {
             _value = value;
         }
+        public Data(byte[] value)
+        {
+            _value = value;
+        }
         public Data(Dictionary<string, Data> dictionary)
         {
             _value = dictionary;
@@ -61,6 +65,7 @@ namespace UMS
         public bool IsDouble { get { return _value is double; } }
         public bool IsLong { get { return _value is long; } }
         public bool IsString { get { return _value is string; } }
+        public bool IsBytes { get { return _value is byte[]; } }
         public bool IsDictioanry { get { return _value is Dictionary<string, Data>; } }
         public bool IsList { get { return _value is List<Data>; } }
         #endregion
@@ -70,6 +75,7 @@ namespace UMS
         public double AsDouble { get { return Cast<double>(); } }
         public long AsLong { get { return Cast<long>(); } }
         public string AsString { get { return Cast<string>(); } }
+        public byte[] AsBytes { get { return Cast<byte[]>(); } }
         public Dictionary<string, Data> AsDictionary { get { return Cast<Dictionary<string, Data>>(); } }
         public List<Data> AsList { get { return Cast<List<Data>>(); } }
         #endregion
