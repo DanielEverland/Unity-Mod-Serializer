@@ -16,6 +16,7 @@ namespace UMS
         #region Static Declarations
         public static readonly Result Success = new Result(true);
         public static readonly Result Failed = new Result(false);
+        public static readonly Result Null = new Result();
         #endregion
 
         #region Static Functions
