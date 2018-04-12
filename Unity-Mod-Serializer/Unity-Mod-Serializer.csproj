@@ -54,8 +54,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\BaseConverter.cs" />
+    <Compile Include="Converters\DirectConverter.cs" />
+    <Compile Include="Converters\IBaseConverter.cs" />
+    <Compile Include="Converters\IDirectConverter.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reflection\AssemblyManager.cs" />
+    <Compile Include="Reflection\ConverterLoader.cs" />
+    <Compile Include="Reflection\IgnoreAttribute.cs" />
+    <Compile Include="Reflection\LoadTypesAttribute.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="Utility.cs" />

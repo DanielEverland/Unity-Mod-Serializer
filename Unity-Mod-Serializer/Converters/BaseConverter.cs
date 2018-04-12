@@ -7,7 +7,7 @@ namespace UMS.Converters
     /// <summary>
     /// Converters converts object from memory into a serializable data format.
     /// </summary>
-    public abstract class BaseConverter<T>
+    public abstract class BaseConverter<T> : IBaseConverter<T>
     {
         /// <summary>
         /// The type this converter supports

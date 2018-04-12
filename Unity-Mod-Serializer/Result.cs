@@ -15,7 +15,7 @@ namespace UMS
 
         #region Static Declarations
         public static readonly Result Success = new Result(true);
-        public static readonly Result Failed = new Result(false);
+        public static readonly Result Fail = new Result(false);
         public static readonly Result Null = new Result();
         #endregion
 
@@ -82,6 +82,8 @@ namespace UMS
         }
         #endregion
 
+        public bool Succeeded { get { return _succeeded; } }
+        public bool Failed { get { return !Succeeded; } }
 
         private bool _succeeded;
         private List<Message> _messages;
