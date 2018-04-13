@@ -8,7 +8,7 @@ using System.IO;
 namespace UMS.Editor
 {
     #region DEBUG
-    public static class Tests
+    public static class TestingFunctions
     {
         private const string ROOT = "Modding/Tests/";
 
