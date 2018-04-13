@@ -16,6 +16,40 @@ namespace UMS
         /// </summary>
         private object _value;
 
+        #region Indexers
+        public Data this[string index]
+        {
+            get
+            {
+                if (!IsDictioanry)
+                    throw new System.InvalidOperationException("Tried to index a non-dictionary Data object " + this);
+
+                return AsDictionary[index];
+            }
+            set
+            {
+                if (!IsDictioanry)
+                    throw new System.InvalidOperationException("Tried to index a non-dictionary Data object " + this);
+
+                AsDictionary.Set(index, value);
+            }
+        }
+        public Data this[int index]
+        {
+            get
+            {
+                if (!IsList)
+                    throw new System.InvalidOperationException("Tried to index a non-list Data object " + this);
+
+                return AsList[index];
+            }
+            set
+            {
+                AsList[index] = value;
+            }
+        }
+        #endregion
+
         #region Static Definitions
         public static readonly Data True = new Data(true);
         public static readonly Data False = new Data(false);
