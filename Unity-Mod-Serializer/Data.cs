@@ -45,6 +45,10 @@ namespace UMS
         {
             _value = value;
         }
+        public Data(ulong value)
+        {
+            _value = value;
+        }
         public Data(string value)
         {
             _value = value;
@@ -69,6 +73,7 @@ namespace UMS
         public bool IsDouble { get { return _value is double; } }
         public bool IsDecimal { get { return _value is decimal; } }
         public bool IsLong { get { return _value is long; } }
+        public bool IsULong { get { return _value is ulong; } }
         public bool IsString { get { return _value is string; } }
         public bool IsBytes { get { return _value is byte[]; } }
         public bool IsDictioanry { get { return _value is Dictionary<string, Data>; } }
@@ -80,6 +85,7 @@ namespace UMS
         public double AsDouble { get { return Cast<double>(); } }
         public decimal AsDecimal { get { return Cast<decimal>(); } }
         public long AsLong { get { return Cast<long>(); } }
+        public ulong AsULong { get { return Cast<ulong>(); } }
         public string AsString { get { return Cast<string>(); } }
         public byte[] AsBytes { get { return Cast<byte[]>(); } }
         public Dictionary<string, Data> AsDictionary { get { return Cast<Dictionary<string, Data>>(); } }
