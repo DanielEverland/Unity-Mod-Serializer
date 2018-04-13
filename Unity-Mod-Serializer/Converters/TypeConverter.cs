@@ -15,7 +15,7 @@ namespace UMS.Converters
         public override Result DoDeserialize(Data data, ref Type obj)
         {
             if (!data.IsString)
-                return Result.Error("Type mismatch. Expected string");
+                return Result.Error("Type mismatch. Expected string", data);
 
             obj = Type.GetType(data.AsString);
             return Result.Success;
