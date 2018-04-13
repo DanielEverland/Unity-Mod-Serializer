@@ -59,6 +59,7 @@
     <Compile Include="Converters\IDirectConverter.cs" />
     <Compile Include="Converters\Primitives\BooleanConverter.cs" />
     <Compile Include="Converters\Primitives\ByteConverter.cs" />
+    <Compile Include="Converters\Primitives\CharacterConverter.cs" />
     <Compile Include="Converters\Primitives\SignedByteConverter.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Debugging.cs" />
