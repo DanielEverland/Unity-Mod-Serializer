@@ -15,6 +15,7 @@ namespace UMS.Converters
             Result result = Result.Success;
 
             result += ReflectionHelper.SerializeObject(obj, out data);
+            result += MetaData.AddType(data, obj.GetType());
 
             return result;
         }
@@ -22,7 +23,10 @@ namespace UMS.Converters
         {
             Result result = Result.Success;
 
-            result += ReflectionHelper.DeserializeObject(data, ref obj);
+            System.Type objType = null;
+
+            result += MetaData.GetType(data, out objType);
+            result += ReflectionHelper.DeserializeObject(data, objType, ref obj);
 
             return result;
         }

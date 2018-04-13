@@ -151,8 +151,11 @@ namespace UMS.Reflection
 
             return result;
         }
-        public static Result DeserializeObject(Data data, ref object deserializedObject)
+        public static Result DeserializeObject(Data data, System.Type type, ref object deserializedObject)
         {
+            if (type == null)
+                return Result.Error("Type is null!");
+
             if (!data.IsDictioanry)
                 return Result.Error("Type mismatch. Expected dictionary", data);
 
@@ -162,15 +165,18 @@ namespace UMS.Reflection
 
             foreach (KeyValuePair<string, Data> keyValuePair in data.AsDictionary)
             {
-                result += DeserializeMember(keyValuePair.Key, keyValuePair.Value, ref deserializedObject);
+                MemberInfo member = GetMember(keyValuePair.Key, type);
+
+                if (member == null)
+                    continue;
+
+                result += DeserializeMember(member, keyValuePair.Value, type, ref deserializedObject);
             }
 
             return result;
         }
-        public static Result DeserializeMember(string memberName, Data data, ref object deserializedObject)
+        public static Result DeserializeMember(MemberInfo member, Data data, System.Type type, ref object deserializedObject)
         {
-            MemberInfo member = GetMember(memberName, deserializedObject.GetType());
-
             switch (member.MemberType)
             {
                 case MemberTypes.Field:
@@ -246,6 +252,9 @@ namespace UMS.Reflection
         /// <returns></returns>
         public static MemberInfo GetMember(string memberName, System.Type type)
         {
+            if (type == null)
+                throw new System.NullReferenceException("Type is null!");
+
             MemberInfo[] members = type.GetMember(memberName).Where(x => x.MemberType == MemberTypes.Field || x.MemberType == MemberTypes.Property).ToArray();
             if (members.Length > 1)
             {
