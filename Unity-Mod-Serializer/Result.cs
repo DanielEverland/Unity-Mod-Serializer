@@ -12,6 +12,38 @@ namespace UMS
             _succeeded = succeeded;
             _messages = new List<Message>();
         }
+        public Result(object message, MessageType type)
+        {
+            _succeeded = type != MessageType.Exception && type != MessageType.Error;
+            _messages = new List<Message>()
+            {
+                new Message()
+                {
+                    message = message,
+                    type = type,
+                },
+            };
+
+#if DEBUG
+            Output();
+#endif
+        }
+        public Result(object message, Data data, MessageType type)
+        {
+            _succeeded = type != MessageType.Exception && type != MessageType.Error;
+            _messages = new List<Message>()
+            {
+                new Message()
+                {
+                    message = message + System.Environment.NewLine + data,
+                    type = type,
+                },
+            };
+
+#if DEBUG
+            Output();
+#endif
+        }
 
         #region Static Declarations
         public static readonly Result Success = new Result(true);
@@ -22,123 +54,35 @@ namespace UMS
         #region Static Functions
         public static Result Info(string message)
         {
-            return new Result()
-            {
-                _succeeded = true,
-                _messages = new List<Message>()
-                {
-                    new Message()
-                    {
-                        message = message,
-                        type = MessageTypes.Info,
-                    },
-                }
-            };
+            return new Result(message, MessageType.Info);
         }
         public static Result Info(string message, Data data)
         {
-            return new Result()
-            {
-                _succeeded = true,
-                _messages = new List<Message>()
-                {
-                    new Message()
-                    {
-                        message = message + "\n" + data,
-                        type = MessageTypes.Info,
-                    },
-                }
-            };
+            return new Result(message, data, MessageType.Info);
         }
         public static Result Warn(string message)
         {
-            return new Result()
-            {
-                _succeeded = true,
-                _messages = new List<Message>()
-                {
-                    new Message()
-                    {
-                        message = message,
-                        type = MessageTypes.Warning,
-                    },
-                }
-            };
+            return new Result(message, MessageType.Warning);
         }
         public static Result Warn(string message, Data data)
         {
-            return new Result()
-            {
-                _succeeded = true,
-                _messages = new List<Message>()
-                {
-                    new Message()
-                    {
-                        message = message + "\n" + data,
-                        type = MessageTypes.Warning,
-                    },
-                }
-            };
+            return new Result(message, data, MessageType.Warning);
         }
         public static Result Error(string message)
         {
-            return new Result()
-            {
-                _succeeded = false,
-                _messages = new List<Message>()
-                {
-                    new Message()
-                    {
-                        message = message,
-                        type = MessageTypes.Error,
-                    },
-                }
-            };
+            return new Result(message, MessageType.Error);
         }
         public static Result Error(string message, Data data)
         {
-            return new Result()
-            {
-                _succeeded = false,
-                _messages = new List<Message>()
-                {
-                    new Message()
-                    {
-                        message = message + "\n" + data,
-                        type = MessageTypes.Error,
-                    },
-                }
-            };
+            return new Result(message, data, MessageType.Error);
         }
         public static Result Exception(System.Exception exception)
         {
-            return new Result()
-            {
-                _succeeded = false,
-                _messages = new List<Message>()
-                {
-                    new Message()
-                    {
-                        message = exception,
-                        type = MessageTypes.Exception,
-                    },
-                }
-            };
+            return new Result(exception, MessageType.Exception);
         }
         public static Result Exception(System.Exception exception, Data data)
         {
-            return new Result()
-            {
-                _succeeded = false,
-                _messages = new List<Message>()
-                {
-                    new Message()
-                    {
-                        message = exception + "\n" + data,
-                        type = MessageTypes.Exception,
-                    },
-                }
-            };
+            return new Result(exception, data, MessageType.Exception);
         }
         #endregion
 
@@ -152,19 +96,19 @@ namespace UMS
         
         public void AddInfo(object message)
         {
-            _messages.Add(new Message(message, MessageTypes.Info));
+            _messages.Add(new Message(message, MessageType.Info));
         }
         public void AddWarning(object message)
         {
-            _messages.Add(new Message(message, MessageTypes.Warning));
+            _messages.Add(new Message(message, MessageType.Warning));
         }
         public void AddError(object message)
         {
-            _messages.Add(new Message(message, MessageTypes.Error));
+            _messages.Add(new Message(message, MessageType.Error));
         }
         public void AddException(System.Exception exception)
         {
-            _messages.Add(new Message(exception, MessageTypes.Exception));
+            _messages.Add(new Message(exception, MessageType.Exception));
         }
         public void Output()
         {
@@ -173,6 +117,7 @@ namespace UMS
                 message.Output();
             }
         }
+
         /// <summary>
         /// Asserts that no errors occured
         /// Throws an exception if there did
@@ -190,7 +135,7 @@ namespace UMS
         {
             Assert();
 
-            if (_messages.Any(x => x.type == MessageTypes.Warning))
+            if (_messages.Any(x => x.type == MessageType.Warning))
                 throw new System.Exception(FormattedMessage);
         }
 
@@ -210,29 +155,29 @@ namespace UMS
         #region Subdefintions
         private struct Message
         {
-            public Message(object message, MessageTypes type = MessageTypes.Info)
+            public Message(object message, MessageType type = MessageType.Info)
             {
                 this.message = message;
                 this.type = type;
             }
 
             public object message;
-            public MessageTypes type;
+            public MessageType type;
 
             public void Output()
             {
                 switch (type)
                 {
-                    case MessageTypes.Info:
+                    case MessageType.Info:
                         Debug.Log(message);
                         break;
-                    case MessageTypes.Warning:
+                    case MessageType.Warning:
                         Debug.LogWarning(message);
                         break;
-                    case MessageTypes.Error:
+                    case MessageType.Error:
                         Debug.LogError(message);
                         break;
-                    case MessageTypes.Exception:
+                    case MessageType.Exception:
                         Debug.LogException(message as System.Exception);
                         break;
                     default:
@@ -244,7 +189,7 @@ namespace UMS
                 return message.ToString();
             }
         }
-        private enum MessageTypes
+        public enum MessageType
         {
             None = 0,
 
