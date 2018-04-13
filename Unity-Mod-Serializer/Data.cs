@@ -55,7 +55,7 @@ namespace UMS
         public static readonly Data False = new Data(false);
         public static readonly Data Null = new Data();
         #endregion
-
+                
         #region Constructors
         public Data()
         {

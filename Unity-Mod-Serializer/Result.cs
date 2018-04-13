@@ -173,6 +173,26 @@ namespace UMS
                 message.Output();
             }
         }
+        /// <summary>
+        /// Asserts that no errors occured
+        /// Throws an exception if there did
+        /// </summary>
+        public void Assert()
+        {
+            if (!Succeeded)
+                throw new System.Exception(FormattedMessage);
+        }
+        /// <summary>
+        /// Asserts that no errors or warning occured
+        /// Throws an exception if there did
+        /// </summary>
+        public void AssertWithoutWarnings()
+        {
+            Assert();
+
+            if (_messages.Any(x => x.type == MessageTypes.Warning))
+                throw new System.Exception(FormattedMessage);
+        }
 
         public override string ToString()
         {
