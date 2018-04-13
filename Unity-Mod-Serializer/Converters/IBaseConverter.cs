@@ -7,10 +7,8 @@ namespace UMS.Converters
     public interface IBaseConverter
     {
         System.Type ModelType { get; }
-    }
-    public interface IBaseConverter<T> : IBaseConverter
-    {
-        Result Serialize(T value, out Data data);
-        Result Deserialize(Data data, out T obj);
+
+        Result Serialize(object obj, out Data data);
+        Result Deserialize(Data data, out object obj);
     }
 }

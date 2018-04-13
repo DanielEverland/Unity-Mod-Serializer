@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace UMS.Converters
 {
-    public abstract class DirectConverter<T> : BaseConverter<T>, IDirectConverter<T>
+    public abstract class DirectConverter<T> : BaseConverter<T>, IDirectConverter
     {
     }
 }

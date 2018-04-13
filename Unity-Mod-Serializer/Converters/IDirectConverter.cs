@@ -10,9 +10,5 @@ namespace UMS.Converters
     /// </summary>
     public interface IDirectConverter : IBaseConverter
     {
-
-    }
-    public interface IDirectConverter<T> : IBaseConverter<T>, IDirectConverter
-    {
     }
 }

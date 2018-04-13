@@ -20,9 +20,23 @@ namespace UMS
         {
             Result result = Result.Success;
 
-            data = Data.Null;
+            System.Type objType = value.GetType();
+            IBaseConverter converter = GetConverter(objType);
+
+            result += converter.Serialize(value, out data);
 
             return result;
+        }
+        private static IBaseConverter GetConverter(System.Type type)
+        {
+            if (_directConverters.ContainsKey(type))
+            {
+                return _directConverters[type];
+            }
+            else
+            {
+                return TypeInheritanceTree.GetClosestType(_converters, type, x => x.ModelType);
+            }
         }
         public static void AddConverter(IBaseConverter converter)
         {
