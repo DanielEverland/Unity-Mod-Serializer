@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Editor\Inspectors\ModPackageEditor.cs" />
     <Compile Include="Editor\ModPackageReorderableList.cs" />
+    <Compile Include="Editor\Tests.cs" />
     <Compile Include="ModPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
