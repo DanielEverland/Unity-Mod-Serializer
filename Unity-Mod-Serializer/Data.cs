@@ -145,6 +145,9 @@ namespace UMS
         #region Overrides
         public override string ToString()
         {
+            if (_value == null)
+                return "null";
+
             return _value.ToString();
         }
         #endregion
