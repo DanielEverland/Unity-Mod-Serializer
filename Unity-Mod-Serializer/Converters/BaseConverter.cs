@@ -13,9 +13,16 @@
         public abstract Result DoSerialize(T obj, out Data data);
         public abstract Result DoDeserialize(Data data, ref T obj);
 
-        public object CreateInstance(System.Type type)
+        public virtual object CreateInstance(System.Type type)
         {
-            throw new System.NotImplementedException("Please implement CreateInstance");
+            try
+            {
+                return System.Activator.CreateInstance(type);
+            }
+            catch (System.Exception)
+            {
+                throw new System.NotImplementedException("Please implement CreateInstance on " + GetType().Name);
+            };
         }
         public Result Serialize(object obj, out Data data)
         {

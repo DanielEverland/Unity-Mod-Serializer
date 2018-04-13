@@ -7,6 +7,10 @@ namespace UMS.Converters
 {
     public class TypeConverter : BaseConverter<Type>
     {
+        public override object CreateInstance(Type type)
+        {
+            return type;
+        }
         public override Result DoSerialize(Type obj, out Data data)
         {
             data = new Data(obj.AssemblyQualifiedName);
