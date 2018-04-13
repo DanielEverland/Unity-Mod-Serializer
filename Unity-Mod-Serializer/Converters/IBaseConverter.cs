@@ -9,6 +9,6 @@ namespace UMS.Converters
         System.Type ModelType { get; }
 
         Result Serialize(object obj, out Data data);
-        Result Deserialize(Data data, out object obj);
+        Result Deserialize(Data data, ref object obj);
     }
 }

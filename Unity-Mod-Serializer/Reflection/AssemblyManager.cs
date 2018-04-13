@@ -37,10 +37,6 @@ namespace UMS.Reflection
          * 4) Run cleanup to de-allocate memory
          */
         
-        static AssemblyManager()
-        {
-            Initialize();
-        }
         public static void Initialize()
         {
 #if DEBUG
@@ -56,9 +52,12 @@ namespace UMS.Reflection
             stopWatch.Stop();
             UnityEngine.Debug.Log("Reflection flow elapsed: " + stopWatch.Elapsed);
 #endif
+
+            HasInitialized = true;
         }
 
         public static IEnumerable<Assembly> LoadedAssemblies { get { return _loadedAssemblies; } }
+        public static bool HasInitialized { get; private set; }
 
         /// <summary>
         /// Quick overview of the order in which functions are called

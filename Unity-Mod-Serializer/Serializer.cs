@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UMS.Converters;
+using UMS.Reflection;
 
 namespace UMS
 {
@@ -29,6 +30,9 @@ namespace UMS
         }
         private static IBaseConverter GetConverter(System.Type type)
         {
+            if (!AssemblyManager.HasInitialized)
+                AssemblyManager.Initialize();
+
             IBaseConverter converter = null;
 
             if (_directConverters.ContainsKey(type))

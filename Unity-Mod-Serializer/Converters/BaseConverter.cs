@@ -14,17 +14,17 @@ namespace UMS.Converters
         /// </summary>
         public System.Type ModelType { get { return typeof(T); } }
         
-        public abstract Result Serialize(T value, out Data data);
-        public abstract Result Deserialize(Data data, out T obj);
+        public abstract Result Serialize(T obj, out Data data);
+        public abstract Result Deserialize(Data data, ref T obj);
 
         public Result Serialize(object obj, out Data data)
         {
             return Serialize((T)obj, out data);
         }
-        public Result Deserialize(Data data, out object obj)
+        public Result Deserialize(Data data, ref object obj)
         {
             T outObject = default(T);
-            Result result = Deserialize(data, out outObject);
+            Result result = Deserialize(data, ref outObject);
 
             obj = outObject;
             return result;

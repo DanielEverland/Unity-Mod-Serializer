@@ -35,6 +35,21 @@ namespace UMS
                 }
             };
         }
+        public static Result Info(string message, Data data)
+        {
+            return new Result()
+            {
+                _succeeded = true,
+                _messages = new List<Message>()
+                {
+                    new Message()
+                    {
+                        message = message + "\n" + data,
+                        type = MessageTypes.Info,
+                    },
+                }
+            };
+        }
         public static Result Warn(string message)
         {
             return new Result()
@@ -45,6 +60,21 @@ namespace UMS
                     new Message()
                     {
                         message = message,
+                        type = MessageTypes.Warning,
+                    },
+                }
+            };
+        }
+        public static Result Warn(string message, Data data)
+        {
+            return new Result()
+            {
+                _succeeded = true,
+                _messages = new List<Message>()
+                {
+                    new Message()
+                    {
+                        message = message + "\n" + data,
                         type = MessageTypes.Warning,
                     },
                 }
@@ -65,6 +95,21 @@ namespace UMS
                 }
             };
         }
+        public static Result Error(string message, Data data)
+        {
+            return new Result()
+            {
+                _succeeded = false,
+                _messages = new List<Message>()
+                {
+                    new Message()
+                    {
+                        message = message + "\n" + data,
+                        type = MessageTypes.Error,
+                    },
+                }
+            };
+        }
         public static Result Exception(System.Exception exception)
         {
             return new Result()
@@ -75,7 +120,22 @@ namespace UMS
                     new Message()
                     {
                         message = exception,
-                        type = MessageTypes.Info,
+                        type = MessageTypes.Exception,
+                    },
+                }
+            };
+        }
+        public static Result Exception(System.Exception exception, Data data)
+        {
+            return new Result()
+            {
+                _succeeded = false,
+                _messages = new List<Message>()
+                {
+                    new Message()
+                    {
+                        message = exception + "\n" + data,
+                        type = MessageTypes.Exception,
                     },
                 }
             };
