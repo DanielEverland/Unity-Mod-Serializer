@@ -37,6 +37,10 @@ namespace UMS
         {
             _value = value;
         }
+        public Data(decimal value)
+        {
+            _value = value;
+        }
         public Data(long value)
         {
             _value = value;
@@ -63,6 +67,7 @@ namespace UMS
         public bool IsNull { get { return _value == null; } }
         public bool IsBool { get { return _value is bool; } }
         public bool IsDouble { get { return _value is double; } }
+        public bool IsDecimal { get { return _value is decimal; } }
         public bool IsLong { get { return _value is long; } }
         public bool IsString { get { return _value is string; } }
         public bool IsBytes { get { return _value is byte[]; } }
@@ -73,6 +78,7 @@ namespace UMS
         #region Cast Properties
         public bool AsBool { get { return Cast<bool>(); } }
         public double AsDouble { get { return Cast<double>(); } }
+        public decimal AsDecimal { get { return Cast<decimal>(); } }
         public long AsLong { get { return Cast<long>(); } }
         public string AsString { get { return Cast<string>(); } }
         public byte[] AsBytes { get { return Cast<byte[]>(); } }
