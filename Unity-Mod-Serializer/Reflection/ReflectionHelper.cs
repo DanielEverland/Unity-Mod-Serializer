@@ -43,6 +43,8 @@ namespace UMS.Reflection
         {
             Result result = Result.Success;
 
+            Debugging.Info(DebuggingFlags.Reflection, "Serializing " + obj + " using reflection");
+
             data = new Data(new Dictionary<string, Data>());            
             foreach (MemberInfo member in obj.GetType().GetMembers(_memberFlags))
             {
@@ -102,6 +104,8 @@ namespace UMS.Reflection
             if (IsIgnored(property))
                 return Result.Error("Tried to serialize a property with the Ignore attribute " + property);
 
+            Debugging.Verbose(DebuggingFlags.Reflection, "Serializing property " + property + " on " + obj + "\n" + data);
+
             result += Serializer.Serialize(property.GetValue(obj), out data);
 
             return result;
@@ -140,6 +144,8 @@ namespace UMS.Reflection
             if(IsIgnored(field))
                 return Result.Error("Tried to serialize a field with the Ignore attribute " + field);
 
+            Debugging.Verbose(DebuggingFlags.Reflection, "Serializing field " + field + " on " + obj + "\n" + data);
+
             result += Serializer.Serialize(field.GetValue(obj), out data);
 
             return result;
@@ -148,6 +154,8 @@ namespace UMS.Reflection
         {
             if (!data.IsDictioanry)
                 return Result.Error("Type mismatch. Expected dictionary", data);
+
+            Debugging.Warning(DebuggingFlags.Reflection, "Deserializing " + data + " using reflection!");
 
             Result result = Result.Success;
 
@@ -198,6 +206,8 @@ namespace UMS.Reflection
             if (deserializedData == null)
                 return Result.Error("Deserialized data is null!");
 
+            Debugging.Verbose(DebuggingFlags.Reflection, string.Format("Deserializing {0} as property {1} into {2} from {3}", deserializedData, property, deserializedObject, data));
+
             property.SetValue(deserializedObject, deserializedData);
 
             return result;
@@ -220,6 +230,8 @@ namespace UMS.Reflection
 
             if (deserializedData == null)
                 return Result.Error("Deserialized data is null!");
+
+            Debugging.Verbose(DebuggingFlags.Reflection, string.Format("Deserializing {0} as field {1} into {2} from {3}", deserializedData, field, deserializedObject, data));
 
             field.SetValue(deserializedObject, deserializedData);
 
