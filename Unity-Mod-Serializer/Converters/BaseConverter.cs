@@ -13,6 +13,10 @@
         public abstract Result DoSerialize(T obj, out Data data);
         public abstract Result DoDeserialize(Data data, ref T obj);
 
+        public object CreateInstance(System.Type type)
+        {
+            throw new System.NotImplementedException("Please implement CreateInstance");
+        }
         public Result Serialize(object obj, out Data data)
         {
             return DoSerialize((T)obj, out data);

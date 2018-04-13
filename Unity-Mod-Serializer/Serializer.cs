@@ -17,106 +17,77 @@ namespace UMS
         private static Dictionary<System.Type, IDirectConverter> _directConverters;
         private static List<IBaseConverter> _converters;
 
+        #region Public Deserialize Functions
         /// <summary>
         /// Deserializes a byte array into memory
         /// </summary>
         public static Result Deserialize<T>(byte[] array, ref T obj)
         {
-            Result result = Result.Success;
-
-            System.Type objType = typeof(T);
-            IBaseConverter converter = GetConverter(objType);
-
-            object boxedObject = null;
-            result += converter.Deserialize(array.Deserialize<Data>(), ref boxedObject);
-
-            obj = (T)boxedObject;
-
-            return result;
+            return InternalDeserialize(array.Deserialize<Data>(), ref obj);
         }
         /// <summary>
         /// Deserializes a byte array into memory
         /// </summary>
         public static Result Deserialize(byte[] array, System.Type objType, ref object obj)
         {
-            Result result = Result.Success;
-
-            Data data = array.Deserialize<Data>();
-            result += Deserialize(data, objType, ref obj);
-
-            return result;
+            return InternalDeserialize(array.Deserialize<Data>(), objType, ref obj);
         }
         /// <summary>
         /// Deserializes a Data object into memory
         /// </summary>
         public static Result Deserialize<T>(Data data, ref T obj)
         {
-            Result result = Result.Success;
-
-            System.Type objType = typeof(T);
-            IBaseConverter converter = GetConverter(objType);
-
-            object boxedObject = null;
-            result += converter.Deserialize(data, ref boxedObject);
-
-            obj = (T)boxedObject;
-
-            return result;
+            return InternalDeserialize(data, ref obj);
         }
         /// <summary>
         /// Deserializes a Data object into memory
         /// </summary>
         public static Result Deserialize(Data data, System.Type objType, ref object obj)
         {
-            Result result = Result.Success;
-            
-            IBaseConverter converter = GetConverter(objType);
-            result += converter.Deserialize(data, ref obj);
-
-            return result;
+            return InternalDeserialize(data, objType, ref obj);
         }
+        #endregion
+
+        #region Public Serialize Functions
         /// <summary>
         /// Serializes an object into a byte array
         /// </summary>
         public static Result Serialize<T>(T value, out byte[] array)
         {
-            Result result = Result.Success;
-
-            result += Serialize(value, out Data data);
-            array = data.SerializeToBytes();
-
-            return result;
+            return InternalSerialize(value, out array);
         }
         /// <summary>
         /// Serializes an object into a byte array
         /// </summary>
         public static Result Serialize(object value, out byte[] array)
         {
-            Result result = Result.Success;
-
-            result += Serialize(value, out Data data);
-            array = data.SerializeToBytes();
-
-            return result;
+            return InternalSerialize(value, out array);
         }
         /// <summary>
         /// Serializes an object into a Data object
         /// </summary>
         public static Result Serialize<T>(T value, out Data data)
         {
-            Result result = Result.Success;
-
-            System.Type objType = value.GetType();
-            IBaseConverter converter = GetConverter(objType);
-
-            result += converter.Serialize(value, out data);
-
-            return result;
+            return InternalSerialize(value, out data);
         }
         /// <summary>
         /// Serializes an object into a Data object
         /// </summary>
         public static Result Serialize(object value, out Data data)
+        {
+            return InternalSerialize(value, out data);
+        }
+        #endregion
+
+        #region Internal Serialize Functions
+        internal static Result InternalSerialize(object value, out byte[] array)
+        {
+            Result result = InternalSerialize(value, out Data data);
+            array = data.SerializeToBytes();
+
+            return result;
+        }
+        internal static Result InternalSerialize(object value, out Data data)
         {
             Result result = Result.Success;
 
@@ -127,6 +98,37 @@ namespace UMS
 
             return result;
         }
+        #endregion
+
+        #region Internal Deserialize Functions
+        internal static Result InternalDeserialize<T>(Data data, ref T instance)
+        {
+            object boxedObject = instance;
+            Result result = InternalDeserialize(data, typeof(T), ref boxedObject);
+
+            instance = (T)boxedObject;
+            return result;
+        }
+        internal static Result InternalDeserialize(Data data, System.Type type, ref object instance)
+        {
+            Result result = Result.Success;
+            
+            IBaseConverter converter = GetConverter(type);            
+
+            //Create an instance if one doesn't exist
+            if(instance == null)
+            {
+                instance = converter.CreateInstance(type);
+            }
+
+            //Perform deserialization
+            result += converter.Deserialize(data, ref instance);
+            
+            return result;
+        }
+        #endregion
+
+        #region Converters
         private static IBaseConverter GetConverter(System.Type type)
         {
             if (!AssemblyManager.HasInitialized)
@@ -161,5 +163,6 @@ namespace UMS
                 _converters.Add(converter);
             }
         }
+        #endregion
     }
 }
