@@ -68,6 +68,7 @@
     <Compile Include="Converters\Primitives\UnsignedIntegerConverter.cs" />
     <Compile Include="Converters\Primitives\UnsignedLongConverter.cs" />
     <Compile Include="Converters\Primitives\UnsignedShortConverter.cs" />
+    <Compile Include="Converters\RootConverter.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Debugging.cs" />
     <Compile Include="DebuggingFlags.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Reflection\ConverterLoader.cs" />
     <Compile Include="Reflection\IgnoreAttribute.cs" />
     <Compile Include="Reflection\LoadTypesAttribute.cs" />
+    <Compile Include="Reflection\ReflectionHelper.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="Settings.cs" />
