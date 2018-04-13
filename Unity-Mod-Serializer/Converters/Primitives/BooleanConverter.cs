@@ -18,7 +18,6 @@ namespace UMS.Converters.Primitives
                 return Result.Error("Type mismatch. Expected type bool", data);
 
             obj = data.AsBool;
-
             return Result.Success;
         }        
     }

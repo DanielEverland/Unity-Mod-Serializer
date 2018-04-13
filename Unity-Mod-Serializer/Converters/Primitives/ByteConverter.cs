@@ -16,7 +16,7 @@ namespace UMS.Converters.Primitives
             if (!data.IsLong)
                 return Result.Error("Type mismatch. Expected long type", data);
 
-            obj = (byte)System.Convert.ChangeType(data.AsLong, typeof(byte));
+            obj = System.Convert.ToByte(data.AsLong);
             return Result.Success;
         }
     }
