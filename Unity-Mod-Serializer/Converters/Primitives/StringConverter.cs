@@ -6,12 +6,12 @@ namespace UMS.Converters.Primitives
 {
     public class StringConverter : DirectConverter<string>
     {
-        public override Result Serialize(string obj, out Data data)
+        public override Result DoSerialize(string obj, out Data data)
         {
             data = new Data(obj);
             return Result.Success;
         }
-        public override Result Deserialize(Data data, ref string obj)
+        public override Result DoDeserialize(Data data, ref string obj)
         {
             if (!data.IsString)
                 return Result.Error("Type mismatch. Expected String", data);

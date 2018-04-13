@@ -6,12 +6,12 @@ namespace UMS.Converters.Primitives
 {
     public class UnsignedLongConverter : DirectConverter<ulong>
     {
-        public override Result Serialize(ulong obj, out Data data)
+        public override Result DoSerialize(ulong obj, out Data data)
         {
             data = new Data(obj);
             return Result.Success;
         }
-        public override Result Deserialize(Data data, ref ulong obj)
+        public override Result DoDeserialize(Data data, ref ulong obj)
         {
             if (!data.IsULong)
                 return Result.Error("Type mismatch. Expected ULong", data);

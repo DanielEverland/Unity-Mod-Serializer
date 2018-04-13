@@ -6,12 +6,12 @@ namespace UMS.Converters.Primitives
 {
     public class UnsignedIntegerConverter : DirectConverter<uint>
     {
-        public override Result Serialize(uint obj, out Data data)
+        public override Result DoSerialize(uint obj, out Data data)
         {
             data = new Data(obj);
             return Result.Success;
         }
-        public override Result Deserialize(Data data, ref uint obj)
+        public override Result DoDeserialize(Data data, ref uint obj)
         {
             if (!data.IsLong)
                 return Result.Error("Type mismatch. Expected Long", data);

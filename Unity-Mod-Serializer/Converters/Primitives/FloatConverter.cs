@@ -6,12 +6,12 @@ namespace UMS.Converters.Primitives
 {
     public class FloatConverter : DirectConverter<float>
     {
-        public override Result Serialize(float obj, out Data data)
+        public override Result DoSerialize(float obj, out Data data)
         {
             data = new Data(obj);
             return Result.Success;
         }
-        public override Result Deserialize(Data data, ref float obj)
+        public override Result DoDeserialize(Data data, ref float obj)
         {
             if (!data.IsDouble)
                 return Result.Error("Type mismatch. Expected Double", data);

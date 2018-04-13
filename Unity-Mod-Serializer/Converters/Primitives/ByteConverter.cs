@@ -6,12 +6,12 @@ namespace UMS.Converters.Primitives
 {
     public class ByteConverter : DirectConverter<byte>
     {
-        public override Result Serialize(byte obj, out Data data)
+        public override Result DoSerialize(byte obj, out Data data)
         {
             data = new Data(obj);
             return Result.Success;
         }
-        public override Result Deserialize(Data data, ref byte obj)
+        public override Result DoDeserialize(Data data, ref byte obj)
         {
             if (!data.IsLong)
                 return Result.Error("Type mismatch. Expected long type", data);

@@ -6,12 +6,12 @@ namespace UMS.Converters.Primitives
 {
     public class DecimalConverter : DirectConverter<decimal>
     {
-        public override Result Serialize(decimal obj, out Data data)
+        public override Result DoSerialize(decimal obj, out Data data)
         {
             data = new Data(obj);
             return Result.Success;
         }
-        public override Result Deserialize(Data data, ref decimal obj)
+        public override Result DoDeserialize(Data data, ref decimal obj)
         {
             if (!data.IsDecimal)
                 return Result.Error("Type mismatch. Expected Decimal", data);

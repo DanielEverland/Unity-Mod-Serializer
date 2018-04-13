@@ -6,12 +6,12 @@ namespace UMS.Converters.Primitives
 {
     public class SignedByteConverter : DirectConverter<sbyte>
     {
-        public override Result Serialize(sbyte obj, out Data data)
+        public override Result DoSerialize(sbyte obj, out Data data)
         {
             data = new Data(obj);
             return Result.Success;
         }
-        public override Result Deserialize(Data data, ref sbyte obj)
+        public override Result DoDeserialize(Data data, ref sbyte obj)
         {
             if (!data.IsLong)
                 return Result.Error("Type mismatch. Expected Long", data);
