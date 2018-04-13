@@ -13,8 +13,19 @@ namespace UMS.Editor
         private const string ROOT = "Modding/Tests/";
 
         private const string KEY_PRIMITIVES = "Primitives";
+        private const string KEY_REFLECTION = "Reflection";
 
-        [MenuItem(ROOT + "Primitives", priority = Utility.MENU_ITEM_PRIORITY)]
+        [MenuItem(ROOT + KEY_REFLECTION, priority = Utility.MENU_ITEM_PRIORITY)]
+        private static void TestReflection()
+        {
+            StartTest(KEY_REFLECTION);
+
+            ReflectionTestObject obj = new ReflectionTestObject();
+            Test(obj);
+
+            EndTest(KEY_REFLECTION);
+        }
+        [MenuItem(ROOT + KEY_PRIMITIVES, priority = Utility.MENU_ITEM_PRIORITY)]
         private static void TestPrimitives()
         {
             StartTest(KEY_PRIMITIVES);
@@ -70,6 +81,20 @@ namespace UMS.Editor
                 throw;
             }
         }
+#pragma warning disable
+        private class ReflectionTestObject
+        {
+            public float A = 420;
+
+            [Ignore]
+            public string DontSerializeA = "IgnoreMe";
+
+            [SerializeField]
+            private ulong B = ulong.MaxValue;
+
+            private ushort DontSerializeB = ushort.MinValue;                
+        }
+#pragma warning restore
     }
     #endregion
 }
