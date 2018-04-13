@@ -7,6 +7,17 @@ namespace UMS
 {
     public static class Extensions
     {
+        public static void Set<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        {
+            if (!dictionary.ContainsKey(key))
+            {
+                dictionary.Add(key, value);
+            }
+            else
+            {
+                dictionary[key] = value;
+            }
+        }
         public static T Deserialize<T>(this byte[] array)
         {
             return InternalSerializer.Deserialize<T>(array);
