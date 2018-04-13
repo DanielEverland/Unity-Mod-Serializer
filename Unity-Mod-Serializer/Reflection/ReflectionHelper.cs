@@ -165,6 +165,9 @@ namespace UMS.Reflection
 
             foreach (KeyValuePair<string, Data> keyValuePair in data.AsDictionary)
             {
+                if (keyValuePair.Key.StartsWith(MetaData.CHARACTER))
+                    continue;
+
                 MemberInfo member = GetMember(keyValuePair.Key, type);
 
                 if (member == null)

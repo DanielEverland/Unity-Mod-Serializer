@@ -6,7 +6,8 @@ namespace UMS
 {
     public static class MetaData
     {
-        public const string KEY_TYPE = "$type";
+        public const string CHARACTER = "$";
+        public const string KEY_TYPE = CHARACTER + "type";
 
         public static Result AddType(Data data, System.Type type)
         {
