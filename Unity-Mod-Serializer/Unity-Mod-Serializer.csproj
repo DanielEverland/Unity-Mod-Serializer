@@ -69,6 +69,7 @@
     <Compile Include="Converters\Primitives\SignedByteConverter.cs" />
     <Compile Include="Converters\Primitives\UnsignedIntegerConverter.cs" />
     <Compile Include="Converters\Primitives\UnsignedLongConverter.cs" />
+    <Compile Include="Converters\Primitives\UnsignedShortConverter.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Debugging.cs" />
     <Compile Include="DebuggingFlags.cs" />
