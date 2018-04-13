@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace UMS.Reflection
 {
@@ -48,7 +49,7 @@ namespace UMS.Reflection
             data = new Data(new Dictionary<string, Data>());            
             foreach (MemberInfo member in obj.GetType().GetMembers(_memberFlags))
             {
-                if (IsIgnored(member))
+                if (!ShouldSerialize(member))
                     continue;
 
                 switch (member.MemberType)
@@ -260,6 +261,39 @@ namespace UMS.Reflection
         public static bool IsIgnored(MemberInfo member)
         {
             return member.GetCustomAttributes().Any(x => x.GetType() == typeof(IgnoreAttribute));
+        }
+        public static bool ShouldSerialize(MemberInfo member)
+        {
+            if(IsIgnored(member))
+                return false;
+
+            switch (member.MemberType)
+            {
+                case MemberTypes.Field:
+                    return ShouldSerializeField(member as FieldInfo);
+                case MemberTypes.Property:
+                    return ShouldSerializeProperty(member as PropertyInfo);
+            }
+
+            return true;
+        }
+        public static bool ShouldSerializeProperty(PropertyInfo property)
+        {
+            MethodInfo getMethod = property.GetGetMethod();
+
+            if (getMethod == null)
+                return false;
+
+            return getMethod.IsPublic;
+        }
+        public static bool ShouldSerializeField(FieldInfo field)
+        {
+            if (!field.IsPublic)
+            {
+                return field.GetCustomAttributes().Any(x => x.GetType() == typeof(SerializeField));
+            }
+
+            return true;
         }
     }
 }
