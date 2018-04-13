@@ -47,8 +47,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Editor\HookCreator.cs" />
     <Compile Include="Editor\Inspectors\ModPackageEditor.cs" />
+    <Compile Include="Editor\Inspectors\SettingsEditor.cs" />
     <Compile Include="Editor\ModPackageReorderableList.cs" />
+    <Compile Include="Editor\SettingsHandler.cs" />
     <Compile Include="Editor\Tests.cs" />
     <Compile Include="ModPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

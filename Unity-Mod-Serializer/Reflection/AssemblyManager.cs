@@ -90,17 +90,15 @@ namespace UMS.Reflection
         }
         private static void LoadAssembliesInEditor()
         {
-            throw new NotImplementedException();
-            //foreach (string assemblyName in Settings.PredefinedAssemblies)
-            //{
-            //    _loadedAssemblies.AddLast(Assembly.Load(assemblyName));
-            //}
+            foreach (string assemblyName in Settings.PredefinedAssemblies)
+            {
+                _loadedAssemblies.AddLast(Assembly.Load(assemblyName));
+            }
         }
         private static void LoadAssembliesInBuiltGame()
         {
-            throw new NotImplementedException();
             Queue<string> directories = new Queue<string>();
-            //directories.Enqueue(Settings.ModsDirectory);
+            directories.Enqueue(Settings.ModsDirectory);
 
             while (directories.Count > 0)
             {
