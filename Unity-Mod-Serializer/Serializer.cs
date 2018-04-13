@@ -29,14 +29,23 @@ namespace UMS
         }
         private static IBaseConverter GetConverter(System.Type type)
         {
+            IBaseConverter converter = null;
+
             if (_directConverters.ContainsKey(type))
             {
-                return _directConverters[type];
+                converter = _directConverters[type];
             }
             else
             {
-                return TypeInheritanceTree.GetClosestType(_converters, type, x => x.ModelType);
+                converter = TypeInheritanceTree.GetClosestType(_converters, type, x => x.ModelType);
             }
+
+            if(converter == null)
+            {
+                throw new System.NotImplementedException("Couldn't find converter for " + type);
+            }
+
+            return converter;
         }
         public static void AddConverter(IBaseConverter converter)
         {
