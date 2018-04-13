@@ -39,7 +39,7 @@ namespace UMS
                 return Result.Error("No metadata for " + key);
 
             object deserializedObject = null;
-            result += Serializer.Deserialize(data, typeof(T), ref deserializedObject);
+            result += Serializer.Deserialize(data[key], typeof(T), ref deserializedObject);
 
             obj = (T)deserializedObject;
 
