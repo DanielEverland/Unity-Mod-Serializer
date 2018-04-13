@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ProtoBuf;
 
 namespace UMS
 {
@@ -10,18 +9,11 @@ namespace UMS
     {
         public static T Deserialize<T>(this byte[] array)
         {
-            using (MemoryStream stream = new MemoryStream(array))
-            {
-                return ProtoBuf.Serializer.Deserialize<T>(stream);
-            }
+            return InternalSerializer.Deserialize<T>(array);
         }
-        public static byte[] SerializeToBytes(this Data data)
+        public static byte[] SerializeToBytes<T>(this T obj)
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                ProtoBuf.Serializer.Serialize(stream, data);
-                return stream.ToArray();
-            }
+            return InternalSerializer.Serialize(obj);
         }
     }
 }

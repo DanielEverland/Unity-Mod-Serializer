@@ -33,9 +33,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="protobuf-net, Version=2.3.7.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <HintPath>..\packages\protobuf-net.2.3.7\lib\net40\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -77,6 +74,7 @@
     <Compile Include="DebuggingLevels.cs" />
     <Compile Include="Editor\Hooks.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="InternalSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection\AssemblyManager.cs" />
     <Compile Include="Reflection\ConverterLoader.cs" />
@@ -88,15 +86,9 @@
     <Compile Include="TypeInheritanceTree.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /y "$(TargetPath)" "D:\UMS Test Project\Assets\Plugins\$(TargetName)$(TargetExt)"
-copy /y "$(TargetDir)/$(TargetName).pdb" "D:\UMS Test Project\Assets\Plugins\$(TargetName).pdb"
-
-copy /y "$(TargetDir)/protobuf-net.dll" "D:\UMS Test Project\Assets\Plugins\protobuf-net.dll"</PostBuildEvent>
+copy /y "$(TargetDir)/$(TargetName).pdb" "D:\UMS Test Project\Assets\Plugins\$(TargetName).pdb"</PostBuildEvent>
   </PropertyGroup>
 </Project>

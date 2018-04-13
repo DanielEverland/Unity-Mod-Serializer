@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ProtoBuf;
 
 namespace UMS
 {
@@ -9,13 +8,12 @@ namespace UMS
     /// Helper class used to add an abstraction layer,
     /// so we don't have to fiddle around with Protobuf in converters
     /// </summary>
-    [ProtoContract]
+    [System.Serializable]
     public sealed class Data
     {
         /// <summary>
         /// Represents the actual value we serialize
         /// </summary>
-        [ProtoMember(1)]
         private object _value;
 
         #region Static Definitions
