@@ -161,12 +161,12 @@ namespace UMS.Reflection
 
             foreach (KeyValuePair<string, Data> keyValuePair in data.AsDictionary)
             {
-                result += DeserializeMemeber(keyValuePair.Key, keyValuePair.Value, ref deserializedObject);
+                result += DeserializeMember(keyValuePair.Key, keyValuePair.Value, ref deserializedObject);
             }
 
             return result;
         }
-        public static Result DeserializeMemeber(string memberName, Data data, ref object deserializedObject)
+        public static Result DeserializeMember(string memberName, Data data, ref object deserializedObject)
         {
             MemberInfo member = GetMember(memberName, deserializedObject.GetType());
 
