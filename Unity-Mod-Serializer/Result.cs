@@ -148,7 +148,7 @@ namespace UMS
         private bool _succeeded;
         private List<Message> _messages;
 
-        public string FormattedMessage { get { return string.Join(@",\n", _messages.Select(x => x.message.ToString()).ToArray()); } }
+        public string FormattedMessage { get { return string.Join(System.Environment.NewLine, _messages.Select(x => x.message.ToString()).ToArray()); } }
         
         public void AddInfo(object message)
         {
