@@ -15,7 +15,7 @@ namespace UMS
         /// <summary>
         /// Represents the actual value we serialize
         /// </summary>
-        [ProtoMember(0)]
+        [ProtoMember(1)]
         private object _value;
 
         #region Static Definitions

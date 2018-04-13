@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
+using System.IO;
 
 namespace UMS.Editor
 {
@@ -17,7 +18,7 @@ namespace UMS.Editor
         private static void TestPrimitives()
         {
             StartTest(KEY_PRIMITIVES);
-
+            
             Test(true);
             Test((byte)69);
             Test((sbyte)-1);
@@ -47,15 +48,20 @@ namespace UMS.Editor
         {
             try
             {
-                Result result = Serializer.Serialize(obj, out Data data);
+                object deserializedObject = null;
+
+                Result result = Result.Success;
+
+                result += Serializer.Serialize(obj, out Data data);
+                result += Serializer.Deserialize(data.SerializeToBytes(), obj.GetType(), ref deserializedObject);
 
                 if (result.Succeeded)
                 {
-                    Debug.Log(string.Format("Testing {0} ({1}) succeeded\n{2}", obj, obj.GetType().Name, data));
+                    Debug.Log(string.Format("Testing {0} ({1}) succeeded\n{2}\n{3}", obj, obj.GetType().Name, data, result));
                 }
                 else
                 {
-                    Debug.LogError(string.Format("Testing {0} ({1}) failed\n{2}", obj, obj.GetType().Name, data));
+                    Debug.LogError(string.Format("Testing {0} ({1}) failed\n{2}\n{3}", obj, obj.GetType().Name, data, result));
                 }
             }
             catch (System.Exception)

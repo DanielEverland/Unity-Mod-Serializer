@@ -78,12 +78,38 @@ namespace UMS
         /// <summary>
         /// Serializes an object into a byte array
         /// </summary>
+        public static Result Serialize<T>(T value, out byte[] array)
+        {
+            Result result = Result.Success;
+
+            result += Serialize(value, out Data data);
+            array = data.SerializeToBytes();
+
+            return result;
+        }
+        /// <summary>
+        /// Serializes an object into a byte array
+        /// </summary>
         public static Result Serialize(object value, out byte[] array)
         {
             Result result = Result.Success;
 
             result += Serialize(value, out Data data);
             array = data.SerializeToBytes();
+
+            return result;
+        }
+        /// <summary>
+        /// Serializes an object into a Data object
+        /// </summary>
+        public static Result Serialize<T>(T value, out Data data)
+        {
+            Result result = Result.Success;
+
+            System.Type objType = value.GetType();
+            IBaseConverter converter = GetConverter(objType);
+
+            result += converter.Serialize(value, out data);
 
             return result;
         }
