@@ -62,6 +62,7 @@
     <Compile Include="Converters\Primitives\CharacterConverter.cs" />
     <Compile Include="Converters\Primitives\DecimalConverter.cs" />
     <Compile Include="Converters\Primitives\DoubleConverter.cs" />
+    <Compile Include="Converters\Primitives\FloatConverter.cs" />
     <Compile Include="Converters\Primitives\SignedByteConverter.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Debugging.cs" />
