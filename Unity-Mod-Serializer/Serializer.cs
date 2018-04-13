@@ -42,7 +42,7 @@ namespace UMS
             Result result = Result.Success;
 
             Data data = array.Deserialize<Data>();
-            Deserialize(data, objType, ref obj);
+            result += Deserialize(data, objType, ref obj);
 
             return result;
         }
