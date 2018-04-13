@@ -255,7 +255,7 @@ namespace UMS.Reflection
             if (type == null)
                 throw new System.NullReferenceException("Type is null!");
 
-            MemberInfo[] members = type.GetMember(memberName).Where(x => x.MemberType == MemberTypes.Field || x.MemberType == MemberTypes.Property).ToArray();
+            MemberInfo[] members = type.GetMember(memberName, _memberFlags).Where(x => x.MemberType == MemberTypes.Field || x.MemberType == MemberTypes.Property).ToArray();
             if (members.Length > 1)
             {
                 throw new System.InvalidOperationException("Found more than one property or field with the name " + memberName + ". This shouldn't be possible");
