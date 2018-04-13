@@ -72,7 +72,7 @@ namespace UMS.Editor
                 }
                 else
                 {
-                    Debug.LogError(string.Format("Testing {0} ({1}) failed\n{2}\n{3}", obj, obj.GetType().Name, data, result));
+                    result.AssertWithoutWarnings();
                 }
             }
             catch (System.Exception)
