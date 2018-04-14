@@ -93,6 +93,12 @@ namespace UMS
         {
             Result result = Result.Success;
 
+            if (value == null)
+            {
+                data = Data.Null;
+                return Result.Error("Value is null!");
+            }                
+
             Debugging.Verbose(DebuggingFlags.Serializer, string.Format("Trying to serialize {0} ({1})", value, value.GetType()));
 
             System.Type objType = value.GetType();
