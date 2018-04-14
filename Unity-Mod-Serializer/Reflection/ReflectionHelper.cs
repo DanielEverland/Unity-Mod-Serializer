@@ -72,12 +72,15 @@ namespace UMS.Reflection
         public static Result SerializePropertyIntoDictionary(PropertyInfo property, object obj, Data data)
         {
             Result result = Result.Success;
-            
-            result += SerializeProperty(property, obj, out Data objectData);
-            if (result.Succeeded)
+
+            if (ShouldSerializeProperty(property))
             {
-                data[property.Name] = objectData;
-            }
+                result += SerializeProperty(property, obj, out Data objectData);
+                if (result.Succeeded)
+                {
+                    data[property.Name] = objectData;
+                }
+            }            
 
             return result;
         }
@@ -294,6 +297,9 @@ namespace UMS.Reflection
             MethodInfo getMethod = property.GetGetMethod();
 
             if (getMethod == null)
+                return false;
+
+            if (property.SetMethod == null)
                 return false;
 
             return getMethod.IsPublic;
