@@ -88,9 +88,14 @@ namespace UMS.Editor.Inspectors
             EditorGUI.BeginDisabledGroup(!CanDeserialize());
             if (GUI.Button(rect, buttonText))
             {
+                string folderPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+                string[] fileNamesOnDesktop = Directory.GetFiles(folderPath);
+
                 foreach (ModPackage package in Selection.objects)
                 {
-                    throw new System.NotImplementedException();
+                    string fullpath = string.Format("{0}/{1}", folderPath, package.FileName);
+
+                    ModPackage.Load(fullpath);
                 }
             }
             EditorGUI.EndDisabledGroup();
@@ -101,7 +106,7 @@ namespace UMS.Editor.Inspectors
 
             foreach (ModPackage package in Selection.objects)
             {
-                if (fileNamesOnDesktop.Any(x => x.Contains(package.name)))
+                if (fileNamesOnDesktop.Any(x => Path.GetFileName(x) == package.FileName))
                     return true;
             }
 

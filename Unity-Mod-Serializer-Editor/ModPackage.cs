@@ -15,6 +15,7 @@ namespace UMS
             _objectEntries = new List<ObjectEntry>();
         }
 
+        public string FileName { get { return name + Utility.MOD_EXTENSION; } }
         public IEnumerable<ObjectEntry> ObjectEntries { get { return _objectEntries; } }
         public bool IncludeInBuilds { get { return _includeInBuilds; } }
                 
@@ -25,6 +26,20 @@ namespace UMS
         private bool _includeInBuilds = true;
 #pragma warning restore
 
+        public static void Load(string fullPath)
+        {
+            ModFile file = ModFile.Load(fullPath);
+
+            foreach (string id in file.IDs)
+            {
+                ModFile.Entry entry = file[id];
+
+                object deserialized = null;
+                MetaData.GetType(entry.Data, out System.Type type);
+
+                Serializer.Deserialize(entry.Data, type, ref deserialized).AssertWithoutWarnings();
+            }
+        }
         public void SaveToDesktop()
         {
             string desktopPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
