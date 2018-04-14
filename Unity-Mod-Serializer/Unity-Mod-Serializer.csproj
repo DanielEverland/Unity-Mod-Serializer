@@ -76,8 +76,10 @@
     <Compile Include="DebuggingLevels.cs" />
     <Compile Include="Editor\Hooks.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IDManager.cs" />
     <Compile Include="InternalSerializer.cs" />
     <Compile Include="MetaData.cs" />
+    <Compile Include="ModFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection\AssemblyManager.cs" />
     <Compile Include="Reflection\ConverterLoader.cs" />

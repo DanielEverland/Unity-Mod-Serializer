@@ -72,7 +72,7 @@ namespace UMS.Editor.Inspectors
             {
                 foreach (ModPackage package in Selection.objects)
                 {
-                    throw new System.NotImplementedException();
+                    package.SaveToDesktop();
                 }
             }
         }
@@ -97,11 +97,11 @@ namespace UMS.Editor.Inspectors
         }
         private bool CanDeserialize()
         {
+            string[] fileNamesOnDesktop = Directory.GetFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop));
+
             foreach (ModPackage package in Selection.objects)
             {
-                string fullPath = _desktopPath + @"\" + package.FileName;
-
-                if (File.Exists(fullPath))
+                if (fileNamesOnDesktop.Any(x => x.Contains(package.name)))
                     return true;
             }
 
