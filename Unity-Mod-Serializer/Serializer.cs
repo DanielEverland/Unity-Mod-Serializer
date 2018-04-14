@@ -96,6 +96,15 @@ namespace UMS
 
             result += converter.Serialize(value, out data);
 
+            if (result.Succeeded)
+            {
+                Debugging.Info(DebuggingFlags.Serializer, string.Format("Serialized value {0} ({1}) as {2} using converter {3}", value, value.GetType(), data, converter));
+            }
+            else
+            {
+                Debugging.Error(DebuggingFlags.Serializer, string.Format("Failed serializing value {0} ({1}) using converter {2}", value, value.GetType(), converter));
+            }
+
             return result;
         }
         #endregion
@@ -122,13 +131,22 @@ namespace UMS
 
                 if(instance == null)
                 {
-                    throw new System.NullReferenceException(string.Format("Converter ({0}) CreateInstance using ({1}) returned null!", converter, type));
+                    throw new System.NullReferenceException(string.Format("Converter ({0}) CreateInstance using ({1}) returned null!", converter, type.Name));
                 }
             }
 
             //Perform deserialization
             result += converter.Deserialize(data, ref instance);
-            
+
+            if (result.Succeeded)
+            {
+                Debugging.Info(DebuggingFlags.Serializer, string.Format("Deserialized data {0} ({1}) to {2} ({3}) using {4}", data, type.Name, instance, instance.GetType().Name, converter));
+            }
+            else
+            {
+                Debugging.Error(DebuggingFlags.Serializer, string.Format("Failed deserializing data {0} ({1}) using {2}", data, type.Name, converter));
+            }
+
             return result;
         }
         #endregion

@@ -25,7 +25,7 @@ namespace UMS.Converters
             Result result = Result.Success;
 
             System.Type objType = null;
-
+            
             result += MetaData.GetType(data, out objType);
             result += ReflectionHelper.DeserializeObject(data, objType, ref obj);
 
