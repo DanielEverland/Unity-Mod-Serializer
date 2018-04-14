@@ -93,6 +93,7 @@ namespace UMS
         {
             Result result = Result.Success;
 
+            //We don't want to try and serialize null values
             if (value == null)
             {
                 data = Data.Null;
@@ -101,11 +102,13 @@ namespace UMS
 
             Debugging.Verbose(DebuggingFlags.Serializer, string.Format("Trying to serialize {0} ({1})", value, value.GetType()));
 
+            //Grab the type of our given value, and grab a converter that can serialize it.
             System.Type objType = value.GetType();
             IBaseConverter converter = GetConverter(objType);
 
             Debugging.Verbose(DebuggingFlags.Serializer, string.Format("Selected converter {0} ({1})", converter, converter.GetType()));
 
+            //Perform serialization
             result += converter.Serialize(value, out data);
 
             //Add type metadata
