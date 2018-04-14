@@ -30,7 +30,7 @@ namespace UMS
             obj = default(T);
 
             if (!data.IsDictioanry)
-                return Result.Error("Type mismatch. Expected Dictionary");
+                return Result.Error("Type mismatch. Expected Dictionary", data);
 
             Result result = Result.Success;
 
