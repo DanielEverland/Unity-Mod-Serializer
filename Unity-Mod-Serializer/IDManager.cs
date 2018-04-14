@@ -35,7 +35,7 @@ namespace UMS
     /// </summary>
     public static class IDManager
     {
-        public static void Initialize()
+        static IDManager()
         {
             _cachedIDs = new Dictionary<object, uint>();
             _allIDs = new HashSet<uint>();
