@@ -93,8 +93,12 @@ namespace UMS
         {
             Result result = Result.Success;
 
+            Debugging.Verbose(DebuggingFlags.Serializer, string.Format("Trying to serialize {0} ({1})", value, value.GetType()));
+
             System.Type objType = value.GetType();
             IBaseConverter converter = GetConverter(objType);
+
+            Debugging.Verbose(DebuggingFlags.Serializer, string.Format("Selected converter {0} ({1})", converter, converter.GetType()));
 
             result += converter.Serialize(value, out data);
 
