@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Converters\BaseConverter.cs" />
     <Compile Include="Converters\DirectConverter.cs" />
+    <Compile Include="Converters\EnumConverter.cs" />
     <Compile Include="Converters\IBaseConverter.cs" />
     <Compile Include="Converters\IDirectConverter.cs" />
     <Compile Include="Converters\Primitives\BooleanConverter.cs" />
