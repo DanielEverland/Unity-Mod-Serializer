@@ -159,7 +159,7 @@ namespace UMS.Reflection
             if (type == null)
                 return Result.Error("Type is null!");
 
-            if (!data.IsDictioanry)
+            if (!data.IsDictionary)
                 return Result.Error("Type mismatch. Expected dictionary", data);
 
             Debugging.Warning(DebuggingFlags.Reflection, "Deserializing " + data + " using reflection!");

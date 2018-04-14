@@ -11,7 +11,7 @@ namespace UMS
 
         public static Result AddType(Data data, System.Type type)
         {
-            if (!data.IsDictioanry)
+            if (!data.IsDictionary)
                 return Result.Error("Type mismatch. Expected Dictionary");
 
             Result result = Result.Success;
@@ -29,7 +29,7 @@ namespace UMS
         {
             obj = default(T);
 
-            if (!data.IsDictioanry)
+            if (!data.IsDictionary)
                 return Result.Error("Type mismatch. Expected Dictionary", data);
 
             Result result = Result.Success;

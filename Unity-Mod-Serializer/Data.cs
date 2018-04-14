@@ -1,6 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace UMS
 {
@@ -21,14 +22,14 @@ namespace UMS
         {
             get
             {
-                if (!IsDictioanry)
+                if (!IsDictionary)
                     throw new System.InvalidOperationException("Tried to index a non-dictionary Data object " + this);
 
                 return AsDictionary[index];
             }
             set
             {
-                if (!IsDictioanry)
+                if (!IsDictionary)
                     throw new System.InvalidOperationException("Tried to index a non-dictionary Data object " + this);
 
                 AsDictionary.Set(index, value);
@@ -108,7 +109,7 @@ namespace UMS
         public bool IsULong { get { return _value is ulong; } }
         public bool IsString { get { return _value is string; } }
         public bool IsBytes { get { return _value is byte[]; } }
-        public bool IsDictioanry { get { return _value is Dictionary<string, Data>; } }
+        public bool IsDictionary { get { return _value is Dictionary<string, Data>; } }
         public bool IsList { get { return _value is List<Data>; } }
         #endregion
 
@@ -143,12 +144,66 @@ namespace UMS
         #endregion
 
         #region Overrides
+        int indent = 0;
         public override string ToString()
         {
             if (_value == null)
                 return "null";
 
-            return _value.ToString();
+            if (IsBytes)
+            {
+                return "byte[]";
+            }
+            else if(IsDictionary || IsList)
+            {
+                using (StringWriter writer = new StringWriter())
+                {
+                    if (IsDictionary)
+                    {
+                        WriteDictionary(writer);
+                    }
+                    else if(IsList)
+                    {
+                        WriteList(writer);
+                    }
+
+                    return writer.ToString();
+                }
+            }
+            else
+            {
+                return _value.ToString();
+            }
+        }
+        private void Indent(int indentLevel, StringWriter writer)
+        {
+            for (int i = 1; i < indentLevel; i++)
+            {
+                writer.Write("    ");
+            }
+        }
+        private void WriteDictionary(StringWriter writer)
+        {
+            int level = indent;
+            indent++;
+
+            Indent(level, writer);
+            writer.WriteLine("{");
+
+            foreach (KeyValuePair<string, Data> item in AsDictionary)
+            {
+                writer.WriteLine("Key: " + item.Key);
+                writer.WriteLine("Value: " + item.Value);
+            }
+
+            Indent(level, writer);
+            writer.WriteLine("}");
+
+            indent--;
+        }
+        private void WriteList(StringWriter writer)
+        {
+
         }
         #endregion
     }
