@@ -14,7 +14,22 @@ namespace UMS.Editor
 
         private const string KEY_PRIMITIVES = "Primitives";
         private const string KEY_REFLECTION = "Reflection";
+        private const string KEY_VECTORS = "Vectors";
 
+        [MenuItem(ROOT + KEY_VECTORS, priority = Utility.MENU_ITEM_PRIORITY)]
+        private static void TestVectors()
+        {
+            StartTest(KEY_VECTORS);
+
+            Test(new Vector2(1.5432f, 3466f));
+            Test(new Vector3(1.5432f, 3466f, 1.5432f));
+            Test(new Vector4(1.5432f, 3466f, 1.5432f, 3466f));
+
+            Test(new Vector2Int(5, 10));
+            Test(new Vector3Int(15, 143, 65));
+
+            EndTest(KEY_VECTORS);
+        }
         [MenuItem(ROOT + KEY_REFLECTION, priority = Utility.MENU_ITEM_PRIORITY)]
         private static void TestReflection()
         {
@@ -64,7 +79,26 @@ namespace UMS.Editor
                 Result result = Result.Success;
 
                 result += Serializer.Serialize(obj, out Data data);
+
+                if (result.Succeeded)
+                {
+                    Debug.Log(string.Format("SERIALIZED {0} ({1}) to {2}", obj, obj.GetType(), data));
+                }
+                else
+                {
+                    Debug.LogError(string.Format("Failed serializing {0} ({1})", obj, obj.GetType()));
+                }
+
                 result += Serializer.Deserialize(data.SerializeToBytes(), obj.GetType(), ref deserializedObject);
+
+                if (result.Succeeded)
+                {
+                    Debug.Log(string.Format("DESERIALIZED {0} ({1}) to {2}", data, obj.GetType(), deserializedObject));
+                }
+                else
+                {
+                    Debug.LogError(string.Format("Failed deserializing {0} ({1})", data, obj.GetType()));
+                }
 
                 if (result.Succeeded)
                 {

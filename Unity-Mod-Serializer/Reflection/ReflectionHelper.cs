@@ -154,6 +154,18 @@ namespace UMS.Reflection
 
             return result;
         }
+        public static Result DeserializeObject(Data data, ref object deserializedObject)
+        {
+            Result result = Result.Success;
+
+            if(!data.IsDictionary)
+                return Result.Error("Type mismatch. Expected dictionary", data);
+
+            result += MetaData.GetType(data, out System.Type type);
+            result += DeserializeObject(data, type, ref deserializedObject);
+
+            return result;
+        }
         public static Result DeserializeObject(Data data, System.Type type, ref object deserializedObject)
         {
             if (type == null)

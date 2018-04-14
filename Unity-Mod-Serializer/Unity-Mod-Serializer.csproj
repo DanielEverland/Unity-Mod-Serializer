@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\BaseConverter.cs" />
+    <Compile Include="Converters\ComponentConverter.cs" />
     <Compile Include="Converters\DirectConverter.cs" />
     <Compile Include="Converters\EnumConverter.cs" />
     <Compile Include="Converters\GameObjectConverter.cs" />
@@ -72,6 +73,11 @@
     <Compile Include="Converters\Primitives\UnsignedShortConverter.cs" />
     <Compile Include="Converters\RootConverter.cs" />
     <Compile Include="Converters\TypeConverter.cs" />
+    <Compile Include="Converters\Vector2Converter.cs" />
+    <Compile Include="Converters\Vector2IntCovnerter.cs" />
+    <Compile Include="Converters\Vector3Converter.cs" />
+    <Compile Include="Converters\Vector3IntConverter.cs" />
+    <Compile Include="Converters\Vector4Converter.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Debugging.cs" />
     <Compile Include="DebuggingFlags.cs" />

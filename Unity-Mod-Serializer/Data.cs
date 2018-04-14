@@ -17,6 +17,16 @@ namespace UMS
         /// </summary>
         private object _value;
 
+        public Result Add(Data data)
+        {
+            if (!IsList)
+                return Result.Error("Type mismatch. Expected List", this);
+
+            AsList.Add(data);
+
+            return Result.Success;
+        }
+
         #region Indexers
         public Data this[string index]
         {
@@ -126,7 +136,7 @@ namespace UMS
         #endregion
 
         #region Internal Helper Methods
-        private T Cast<T>()
+        public T Cast<T>()
         {
             try
             {

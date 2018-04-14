@@ -9,6 +9,7 @@ namespace UMS.Converters
     public class GameObjectConverter : DirectConverter<GameObject>
     {
         private string KEY_NAME = "name";
+        private string KEY_COMPONENTS = "components";
 
         public override object CreateInstance(Type type)
         {
@@ -20,6 +21,26 @@ namespace UMS.Converters
             data = new Data(new Dictionary<string, Data>());
 
             data[KEY_NAME] = new Data(obj.name);
+
+            result += SerializeComponents(obj, ref data);
+
+            return result;
+        }
+        private Result SerializeComponents(GameObject obj, ref Data data)
+        {
+            Result result = Result.Success;
+
+            if (!data.IsDictionary)
+                return Result.Error("Type mismatch. Expected Dictionary");
+            
+            Data listData = new Data(new List<Data>());
+            foreach (Component comp in obj.GetComponents<Component>())
+            {
+                result += Serializer.Serialize(comp, out Data compData);
+                result += listData.Add(compData);
+            }
+
+            data[KEY_COMPONENTS] = listData;
 
             return result;
         }
