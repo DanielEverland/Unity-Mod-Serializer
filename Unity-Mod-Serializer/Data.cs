@@ -221,7 +221,36 @@ namespace UMS
         }
         private void WriteList(StringWriter writer)
         {
+            writer.WriteLine();
+            Indent(writer);
+            writer.Write("{");
 
+            indent++;
+
+            foreach (Data item in AsList)
+            {
+                writer.WriteLine();
+                Indent(writer);
+                writer.Write("{");
+
+                indent++;
+
+                writer.WriteLine();
+                Indent(writer);
+                writer.Write(item);
+
+                indent--;
+
+                writer.WriteLine();
+                Indent(writer);
+                writer.Write("}");
+            }
+
+            indent--;
+
+            writer.WriteLine();
+            Indent(writer);
+            writer.Write("}");
         }
         #endregion
     }
