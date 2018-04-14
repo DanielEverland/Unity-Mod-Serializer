@@ -33,6 +33,7 @@ namespace UMS
 
         public const string FILE_NAME = "UMS.config";
 
+        #pragma warning disable 0649
         [SerializeField]
         private string _folderName = "Mods";
         [SerializeField]
@@ -49,6 +50,7 @@ namespace UMS
         private DebuggingLevels _debuggingLevels;
         [SerializeField]
         private bool _debugInBuiltVersion;
+        #pragma warning restore
 
         public static IEnumerable<Assembly> GetPredefinedAssemblies()
         {
