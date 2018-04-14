@@ -47,7 +47,7 @@ namespace UMS
 
                 if (result.Succeeded)
                 {
-                    file.Add(IDManager.GetID(entry.Object), data, entry.Key);
+                    file.Add(IDManager.GetID(entry.Object), entry.Object.name, data, entry.Key);
                 }
             }
 

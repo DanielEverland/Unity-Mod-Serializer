@@ -16,10 +16,28 @@ namespace UMS
             _entries = new Dictionary<string, Entry>();
         }
 
+        public Entry this[string id]
+        {
+            get
+            {
+                return _entries[id];
+            }
+        }
+
+        public string FileName { get { return _fileName; } }
         public IEnumerable<string> IDs { get { return _entries.Keys; } }
 
         private readonly string _fileName;
         private Dictionary<string, Entry> _entries;
+        
+        public static ModFile Load(string fullPath)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            using (FileStream fileStream = new FileStream(fullPath, FileMode.Open))
+            {
+                return (ModFile)formatter.Deserialize(fileStream);
+            }
+        }
 
         /// <summary>
         /// Saves the mod file to a folder
@@ -38,7 +56,7 @@ namespace UMS
         /// <summary>
         /// Adds data to the mod file
         /// </summary>
-        public void Add(string id, Data data, string key = null)
+        public void Add(string id, string name, Data data, string key = null)
         {
             if (id == string.Empty || id == null)
                 throw new System.NullReferenceException("Tried to add object with empty ID - " + data);
@@ -52,6 +70,7 @@ namespace UMS
             {
                 Data = data,
                 Key = key,
+                Name = name,
             };
 
             _entries.Add(id, entry);
@@ -60,6 +79,7 @@ namespace UMS
         [System.Serializable]
         public class Entry
         {
+            public string Name;
             public Data Data;
             public string Key;
         }
