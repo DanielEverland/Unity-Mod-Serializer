@@ -198,12 +198,12 @@ namespace UMS.Reflection
             Result result = Result.Success;
             data = Data.Null;
 
-            if (deserializedObject == null)
-                return Result.Error("Object is null " + property.DeclaringType);
-
             if (property == null)
                 return Result.Error("Property is null " + deserializedObject);
 
+            if (deserializedObject == null)
+                return Result.Error(string.Format("Object is null {0} ({1})", property, property.DeclaringType));
+            
             if (property.GetGetMethod() == null)
                 result += Result.Warn("Getter isn't defined on " + property);
 
@@ -229,11 +229,11 @@ namespace UMS.Reflection
         {
             Result result = Result.Success;
 
-            if (deserializedObject == null)
-                return Result.Error("Object is null " + field.DeclaringType);
-
             if (field == null)
                 return Result.Error("Property is null " + deserializedObject);
+
+            if (deserializedObject == null)
+                return Result.Error(string.Format("Object is null {0} ({1})", field, field.DeclaringType));
             
             object deserializedData = null;
             result += Serializer.Deserialize(data, field.DeclaringType, ref deserializedData);
