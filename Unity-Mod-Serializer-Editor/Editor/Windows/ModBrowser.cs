@@ -55,10 +55,11 @@ namespace UMS.Editor.Windows
         private ModFile _file;
         private Vector2 _listScrollPos;
         private Vector2 _textScrollPos;
-        private float _inspectorHeight = 100;
+        private float _listWidth = 200;
         private int _selectedIndex;
         private Styles _styles = new Styles();
 
+        private const float PADDING = 3;
         private static readonly Vector2 _minSize = new Vector2(500, 300);
 
         private void OnGUI()
@@ -68,13 +69,13 @@ namespace UMS.Editor.Windows
                 EditorGUILayout.LabelField("File is null");
                 return;
             }
-
+            
             DrawInspector();
             DrawList();
         }
         private void DrawInspector()
         {
-            Rect inspectorRect = new Rect(0, position.height - _inspectorHeight, position.width, _inspectorHeight);
+            Rect inspectorRect = new Rect(_listWidth + PADDING, 0, position.width - (_listWidth + PADDING), position.height);
             Event currentEvent = Event.current;
 
             if (currentEvent.type == EventType.Repaint)
@@ -115,7 +116,7 @@ namespace UMS.Editor.Windows
         }
         private void DrawList()
         {
-            Rect listRect = new Rect(0, 0, position.width, position.height - _inspectorHeight);
+            Rect listRect = new Rect(0, 0, _listWidth, position.height);
             Rect contentRect = GetListContentRect();
 
             if(Event.current.type == EventType.Repaint)
@@ -128,7 +129,7 @@ namespace UMS.Editor.Windows
             List<string> ids = new List<string>(_file.IDs);
             for (int i = 0; i < ids.Count; i++)
             {
-                Rect itemRect = new Rect(0, i * EditorGUIUtility.singleLineHeight, contentRect.width, EditorGUIUtility.singleLineHeight);
+                Rect itemRect = new Rect(1, i * EditorGUIUtility.singleLineHeight, contentRect.width, EditorGUIUtility.singleLineHeight);
                 Rect worldRect = GetWorldRect(i, listRect);
                 Event currentEvent = Event.current;
 
@@ -167,11 +168,11 @@ namespace UMS.Editor.Windows
         }
         private Rect GetTextContentRect(string text)
         {
-            return new Rect(0, 0, position.width, _styles.MessageStyle.CalcHeight(new GUIContent(text), position.width));
+            return new Rect(Vector2.zero, _styles.MessageStyle.CalcSize(new GUIContent(text)));
         }
         private Rect GetListContentRect()
         {
-            return new Rect(0, 0, position.width, _file.IDs.Count() * EditorGUIUtility.singleLineHeight);
+            return new Rect(0, 0, _listWidth, _file.IDs.Count() * EditorGUIUtility.singleLineHeight);
         }
 
         private class Styles
