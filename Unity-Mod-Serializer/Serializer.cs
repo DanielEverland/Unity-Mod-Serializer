@@ -119,6 +119,11 @@ namespace UMS
             if(instance == null)
             {
                 instance = converter.CreateInstance(type);
+
+                if(instance == null)
+                {
+                    throw new System.NullReferenceException(string.Format("Converter ({0}) CreateInstance using ({1}) returned null!", converter, type));
+                }
             }
 
             //Perform deserialization
