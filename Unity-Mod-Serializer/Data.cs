@@ -144,7 +144,7 @@ namespace UMS
         #endregion
 
         #region Overrides
-        int indent = 0;
+        static int indent = 0;
         public override string ToString()
         {
             if (_value == null)
@@ -175,31 +175,49 @@ namespace UMS
                 return _value.ToString();
             }
         }
-        private void Indent(int indentLevel, StringWriter writer)
+        private void Indent(StringWriter writer)
         {
-            for (int i = 1; i < indentLevel; i++)
+            for (int i = 0; i < indent; i++)
             {
                 writer.Write("    ");
             }
         }
         private void WriteDictionary(StringWriter writer)
         {
-            int level = indent;
-            indent++;
+            writer.WriteLine();
+            Indent(writer);
+            writer.Write("{");
 
-            Indent(level, writer);
-            writer.WriteLine("{");
+            indent++;
 
             foreach (KeyValuePair<string, Data> item in AsDictionary)
             {
-                writer.WriteLine("Key: " + item.Key);
-                writer.WriteLine("Value: " + item.Value);
+                writer.WriteLine();
+                Indent(writer);
+                writer.Write("{");
+
+                indent++;
+
+                writer.WriteLine();
+                Indent(writer);
+                writer.Write("Key: " + item.Key);
+
+                writer.WriteLine();
+                Indent(writer);
+                writer.Write("Value: " + item.Value);
+
+                indent--;
+
+                writer.WriteLine();
+                Indent(writer);
+                writer.Write("}");
             }
 
-            Indent(level, writer);
-            writer.WriteLine("}");
-
             indent--;
+
+            writer.WriteLine();
+            Indent(writer);
+            writer.Write("}");
         }
         private void WriteList(StringWriter writer)
         {
