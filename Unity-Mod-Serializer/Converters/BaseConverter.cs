@@ -30,7 +30,12 @@
         }
         public Result Deserialize(Data data, ref object obj)
         {
-            T outObject = default(T);
+            System.Type objType = obj.GetType();
+
+            if (!typeof(T).IsAssignableFrom(objType))
+                throw new System.ArgumentException(string.Format("Type mismatch. Cannot deserialize ({0}) using Converter type ({1})", objType, typeof(T)));
+
+            T outObject = (T)obj;
             Result result = DoDeserialize(data, ref outObject);
 
             obj = outObject;
