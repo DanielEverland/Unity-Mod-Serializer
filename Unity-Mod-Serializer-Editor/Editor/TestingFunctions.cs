@@ -11,12 +11,23 @@ namespace UMS.Editor
     public static class TestingFunctions
     {
         private const string ROOT = "Modding/Tests/";
+        private const string ROOT_VALUE_TYPES = ROOT + "Value Types/";
 
         private const string KEY_PRIMITIVES = "Primitives";
         private const string KEY_REFLECTION = "Reflection";
         private const string KEY_VECTORS = "Vectors";
+        private const string KEY_QUATERNION = "Quaternion";
+        
+        [MenuItem(ROOT_VALUE_TYPES + KEY_QUATERNION, priority = Utility.MENU_ITEM_PRIORITY)]
+        private static void TestQuaternion()
+        {
+            StartTest(KEY_QUATERNION);
 
-        [MenuItem(ROOT + KEY_VECTORS, priority = Utility.MENU_ITEM_PRIORITY)]
+            Test(Quaternion.Euler(Utility.GetRandomFloat(), Utility.GetRandomFloat(), Utility.GetRandomFloat()));
+
+            EndTest(KEY_QUATERNION);
+        }
+        [MenuItem(ROOT_VALUE_TYPES + KEY_VECTORS, priority = Utility.MENU_ITEM_PRIORITY)]
         private static void TestVectors()
         {
             StartTest(KEY_VECTORS);
@@ -40,7 +51,7 @@ namespace UMS.Editor
 
             EndTest(KEY_REFLECTION);
         }
-        [MenuItem(ROOT + KEY_PRIMITIVES, priority = Utility.MENU_ITEM_PRIORITY)]
+        [MenuItem(ROOT_VALUE_TYPES + KEY_PRIMITIVES, priority = Utility.MENU_ITEM_PRIORITY)]
         private static void TestPrimitives()
         {
             StartTest(KEY_PRIMITIVES);

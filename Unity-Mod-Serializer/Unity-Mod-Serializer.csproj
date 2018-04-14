@@ -71,6 +71,7 @@
     <Compile Include="Converters\Primitives\UnsignedIntegerConverter.cs" />
     <Compile Include="Converters\Primitives\UnsignedLongConverter.cs" />
     <Compile Include="Converters\Primitives\UnsignedShortConverter.cs" />
+    <Compile Include="Converters\QuaternionConverter.cs" />
     <Compile Include="Converters\RootConverter.cs" />
     <Compile Include="Converters\TypeConverter.cs" />
     <Compile Include="Converters\Vector2Converter.cs" />

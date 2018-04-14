@@ -16,6 +16,12 @@ namespace UMS
 
         private static System.Random _random;
 
+        public static float GetRandomFloat()
+        {
+            double mantissa = (_random.NextDouble() * 2.0) - 1.0;
+            double exponent = System.Math.Pow(2.0, _random.Next(-126, 128));
+            return (float)(mantissa * exponent);
+        }
         public static uint GetRandomUnsignedInt()
         {
             //Random doesn't support uint
