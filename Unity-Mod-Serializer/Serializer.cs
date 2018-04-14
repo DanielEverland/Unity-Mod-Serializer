@@ -11,9 +11,11 @@ namespace UMS
         static Serializer()
         {
             _directConverters = new Dictionary<System.Type, IDirectConverter>();
+            _cachedConverters = new Dictionary<System.Type, IBaseConverter>();
             _converters = new List<IBaseConverter>();
         }
 
+        private static Dictionary<System.Type, IBaseConverter> _cachedConverters;
         private static Dictionary<System.Type, IDirectConverter> _directConverters;
         private static List<IBaseConverter> _converters;
 
@@ -157,8 +159,12 @@ namespace UMS
             if (!AssemblyManager.HasInitialized)
                 AssemblyManager.Initialize();
 
-            IBaseConverter converter = null;
+            //First we check if the type has been encountered before
+            if (_cachedConverters.ContainsKey(type))
+                return _cachedConverters[type];
 
+            IBaseConverter converter = null;
+            
             if (_directConverters.ContainsKey(type))
             {
                 converter = _directConverters[type];
@@ -172,6 +178,8 @@ namespace UMS
             {
                 throw new System.NotImplementedException("Couldn't find converter for " + type);
             }
+
+            _cachedConverters.Add(type, converter);
 
             return converter;
         }
