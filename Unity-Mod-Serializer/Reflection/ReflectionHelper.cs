@@ -211,7 +211,7 @@ namespace UMS.Reflection
                 return Result.Error("Setter isn't defined on " + property);
             
             object deserializedData = null;
-            result += Serializer.Deserialize(data, property.DeclaringType, ref deserializedData);
+            result += Serializer.Deserialize(data, property.PropertyType, ref deserializedData);
 
             if (deserializedData == null)
                 return Result.Error("Deserialized data is null!");
@@ -236,7 +236,7 @@ namespace UMS.Reflection
                 return Result.Error(string.Format("Object is null {0} ({1})", field, field.DeclaringType));
             
             object deserializedData = null;
-            result += Serializer.Deserialize(data, field.DeclaringType, ref deserializedData);
+            result += Serializer.Deserialize(data, field.FieldType, ref deserializedData);
 
             if (deserializedData == null)
                 return Result.Error("Deserialized data is null!");
