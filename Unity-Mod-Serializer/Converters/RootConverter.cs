@@ -13,6 +13,8 @@ namespace UMS.Converters
     {
         public override Result DoSerialize(object obj, out Data data)
         {
+            UnityEngine.Debug.LogWarning(string.Format("Serializing {0} using reflection!", obj.GetType().Name));
+
             Result result = Result.Success;
 
             result += ReflectionHelper.SerializeObject(obj, out data);
