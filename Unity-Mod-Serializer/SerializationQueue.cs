@@ -36,7 +36,7 @@ namespace UMS
 
             if (HasBeenEnqueued(id))
                 throw new System.InvalidOperationException(string.Format("Object {0} ({1}) - ID: {2} has been enqueued before", obj, obj.GetType(), id));
-
+            
             _enqueuedObjects.Add(id);
 
             base.Enqueue(obj);

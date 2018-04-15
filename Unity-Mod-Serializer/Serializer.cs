@@ -126,7 +126,7 @@ namespace UMS
             Debugging.Verbose(DebuggingFlags.Serializer, string.Format("Selected converter {0} ({1})", converter, converter.GetType()));
 
             //Serialize the objects members
-            if(value == SerializationQueue.ActiveObject || !IDManager.CanGetID(objType))
+            if(value == SerializationQueue.ActiveObject || !ReferenceManager.SupportsReferencing(objType))
             {
                 //Perform serialization
                 result += converter.Serialize(value, out data);
@@ -138,7 +138,7 @@ namespace UMS
 
                 result += MetaData.AddReference(data, id);
 
-                if (!SerializationQueue.HasBeenEnqueued(id) && IDManager.CanGetID(objType))
+                if (!SerializationQueue.HasBeenEnqueued(id) && ReferenceManager.SupportsReferencing(objType))
                     SerializationQueue.Enqueue(value);
             }            
 
