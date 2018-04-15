@@ -194,7 +194,6 @@ namespace UMS
         }
         private void WriteDictionary(StringWriter writer)
         {
-            writer.WriteLine();
             Indent(writer);
             writer.Write("{");
 

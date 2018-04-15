@@ -100,13 +100,7 @@ namespace UMS.Editor.Windows
         private void GetItemText(string id, TextWriter writer)
         {
             ModFile.Entry entry = _file[id];
-
-            writer.Write("ID: ");
-            writer.Write(id);
-
-            writer.WriteLine();
-
-            writer.Write("Data: ");
+            
             writer.Write(entry.Data);
         }
         private void DrawList()
