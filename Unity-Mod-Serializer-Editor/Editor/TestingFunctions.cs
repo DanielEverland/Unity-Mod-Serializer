@@ -76,8 +76,7 @@ namespace UMS.Editor
         }
         private static void StartTest(string testName)
         {
-            if (!AssemblyManager.HasInitialized)
-                AssemblyManager.Initialize();
+            Session.Initialize();
 
             Debug.Log(string.Format("-----STARTING {0}-----", testName.ToUpper()));
         }

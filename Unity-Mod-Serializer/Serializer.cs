@@ -6,22 +6,37 @@ using UMS.Reflection;
 
 namespace UMS
 {
-    public static class Serializer
+    public class Serializer
     {
-        static Serializer()
+        public Serializer()
         {
             _directConverters = new Dictionary<System.Type, IDirectConverter>();
             _cachedConverters = new Dictionary<System.Type, IBaseConverter>();
             _converters = new List<IBaseConverter>();
 
-            SerializationQueue = new SerializationQueue<object>();
+            _serializationQueue = new SerializationQueue<object>();
+        }
+        public static void Initialize()
+        {
+            UnityEngine.Debug.Log("Initializing Serializer");
+
+            _instance = new Serializer();            
+            AssemblyManager.Initialize();
         }
 
-        public static SerializationQueue<object> SerializationQueue { get; private set; }
+        public static SerializationQueue<object> SerializationQueue { get { return _instance._serializationQueue; } }
 
-        private static Dictionary<System.Type, IBaseConverter> _cachedConverters;
-        private static Dictionary<System.Type, IDirectConverter> _directConverters;
-        private static List<IBaseConverter> _converters;
+        private static Dictionary<System.Type, IBaseConverter> CachedConverters { get { return _instance._cachedConverters; } }
+        private static Dictionary<System.Type, IDirectConverter> DirectConverters { get { return _instance._directConverters; } }
+        private static List<IBaseConverter> Converters { get { return _instance._converters; } }
+
+        private static Serializer _instance;
+
+        private SerializationQueue<object> _serializationQueue;
+
+        private Dictionary<System.Type, IBaseConverter> _cachedConverters;
+        private Dictionary<System.Type, IDirectConverter> _directConverters;
+        private List<IBaseConverter> _converters;
 
         #region Public Deserialize Functions
         /// <summary>
@@ -205,18 +220,18 @@ namespace UMS
         private static IBaseConverter GetConverter(System.Type type)
         {
             //First we check if the type has been encountered before
-            if (_cachedConverters.ContainsKey(type))
-                return _cachedConverters[type];
+            if (CachedConverters.ContainsKey(type))
+                return CachedConverters[type];
 
             IBaseConverter converter = null;
             
-            if (_directConverters.ContainsKey(type))
+            if (DirectConverters.ContainsKey(type))
             {
-                converter = _directConverters[type];
+                converter = DirectConverters[type];
             }
             else
             {
-                converter = TypeInheritanceTree.GetClosestType(_converters, type, x => x.ModelType);
+                converter = TypeInheritanceTree.GetClosestType(Converters, type, x => x.ModelType);
             }
 
             if(converter == null)
@@ -224,7 +239,7 @@ namespace UMS
                 throw new System.NotImplementedException("Couldn't find converter for " + type);
             }
 
-            _cachedConverters.Add(type, converter);
+            CachedConverters.Add(type, converter);
 
             return converter;
         }
@@ -232,11 +247,11 @@ namespace UMS
         {
             if(converter is IDirectConverter directConverter)
             {
-                _directConverters.Add(directConverter.ModelType, directConverter);
+                DirectConverters.Add(directConverter.ModelType, directConverter);
             }
             else
             {
-                _converters.Add(converter);
+                Converters.Add(converter);
             }
         }
         #endregion

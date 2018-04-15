@@ -39,6 +39,8 @@ namespace UMS.Reflection
         
         public static void Initialize()
         {
+            UnityEngine.Debug.Log("Initializing Assembly Manager");
+
 #if DEBUG
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
             stopWatch.Start();
@@ -52,8 +54,6 @@ namespace UMS.Reflection
             stopWatch.Stop();
             UnityEngine.Debug.Log("Reflection flow elapsed: " + stopWatch.Elapsed);
 #endif
-
-            HasInitialized = true;
         }
 
         public static IEnumerable<Assembly> LoadedAssemblies { get { return _loadedAssemblies; } }
@@ -120,6 +120,7 @@ namespace UMS.Reflection
         }
         private static void GatherTypes()
         {
+            _typeAnalysers = null;
             _loadedTypes = new LinkedList<Type>();
 
             foreach (Assembly assembly in LoadedAssemblies)

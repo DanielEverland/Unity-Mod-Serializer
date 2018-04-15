@@ -33,9 +33,6 @@ namespace UMS
         
         public static ModFile Load(string fullPath)
         {
-            if (!AssemblyManager.HasInitialized)
-                AssemblyManager.Initialize();
-
             BinaryFormatter formatter = new BinaryFormatter();
             using (FileStream fileStream = new FileStream(fullPath, FileMode.Open))
             {
@@ -49,9 +46,6 @@ namespace UMS
         /// </summary>
         public void Save(string folderDirectory)
         {
-            if (!AssemblyManager.HasInitialized)
-                AssemblyManager.Initialize();
-
             string fullPath = string.Format("{0}/{1}{2}", folderDirectory, _fileName, Utility.MOD_EXTENSION);
 
             BinaryFormatter formatter = new BinaryFormatter();

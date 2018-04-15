@@ -12,7 +12,7 @@ namespace UMS.Reflection
             {
                 if (type.IsAbstract)
                     return;
-
+                
                 Serializer.AddConverter((IBaseConverter)Activator.CreateInstance(type));
             }
         }

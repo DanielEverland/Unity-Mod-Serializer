@@ -71,8 +71,7 @@ namespace UMS.Editor.Inspectors
 
             if (GUI.Button(rect, buttonText))
             {
-                if (!AssemblyManager.HasInitialized)
-                    AssemblyManager.Initialize();
+                Session.Initialize();
 
                 foreach (ModPackage package in Selection.objects)
                 {
@@ -92,8 +91,7 @@ namespace UMS.Editor.Inspectors
             EditorGUI.BeginDisabledGroup(!CanDeserialize());
             if (GUI.Button(rect, buttonText))
             {
-                if (!AssemblyManager.HasInitialized)
-                    AssemblyManager.Initialize();
+                Session.Initialize();
 
                 string folderPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
                 string[] fileNamesOnDesktop = Directory.GetFiles(folderPath);

@@ -102,6 +102,7 @@
     <Compile Include="Result.cs" />
     <Compile Include="SerializationQueue.cs" />
     <Compile Include="Serializer.cs" />
+    <Compile Include="Session.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="TypeInheritanceTree.cs" />
     <Compile Include="Utility.cs" />
