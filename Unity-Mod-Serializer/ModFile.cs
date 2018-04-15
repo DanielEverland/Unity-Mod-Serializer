@@ -35,6 +35,7 @@ namespace UMS
             BinaryFormatter formatter = new BinaryFormatter();
             using (FileStream fileStream = new FileStream(fullPath, FileMode.Open))
             {
+                UnityEngine.Debug.Log("Deserializing " + fullPath);
                 return (ModFile)formatter.Deserialize(fileStream);
             }
         }
@@ -51,6 +52,8 @@ namespace UMS
             {
                 formatter.Serialize(fileStream, this);
             }
+
+            UnityEngine.Debug.Log("Serialized " + fullPath);
         }
 
         /// <summary>
