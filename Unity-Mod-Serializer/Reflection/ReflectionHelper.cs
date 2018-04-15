@@ -188,6 +188,8 @@ namespace UMS.Reflection
                 if (member == null)
                     continue;
 
+                Debugging.Verbose(DebuggingFlags.Reflection, "Deserializing member " + keyValuePair.Key + " - " + keyValuePair.Value);
+
                 result += DeserializeMember(member, keyValuePair.Value, type, ref deserializedObject);
             }
 
