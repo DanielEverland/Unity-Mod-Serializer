@@ -130,6 +130,10 @@ namespace UMS
             {
                 //Perform serialization
                 result += converter.Serialize(value, out data);
+
+                //Add type metadata
+                if (IDManager.CanGetID(objType) && data.IsDictionary)
+                    result += MetaData.AddType(data, objType);
             }
             else //Serialize the object as a reference
             {
@@ -141,11 +145,7 @@ namespace UMS
                 if (!SerializationQueue.HasBeenEnqueued(id) && ReferenceManager.SupportsReferencing(objType))
                     SerializationQueue.Enqueue(value);
             }            
-
-            //Add type metadata
-            if(IDManager.CanGetID(objType) && data.IsDictionary)
-                result += MetaData.AddType(data, objType);
-
+            
             if (result.Succeeded)
             {
                 Debugging.Info(DebuggingFlags.Serializer, string.Format("Serialized value {0} ({1}) as {2} using converter {3}", value, value.GetType(), data, converter));
