@@ -213,7 +213,6 @@ namespace UMS.Reflection
         public static Result DeserializeProperty(PropertyInfo property, Data data, ref object deserializedObject)
         {
             Result result = Result.Success;
-            data = Data.Null;
 
             if (property == null)
                 return Result.Error("Property is null " + deserializedObject);
