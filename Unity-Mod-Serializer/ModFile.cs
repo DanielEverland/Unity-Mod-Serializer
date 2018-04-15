@@ -59,7 +59,7 @@ namespace UMS
         /// <summary>
         /// Adds data to the mod file
         /// </summary>
-        public void Add(string id, string name, Data data, string key = null)
+        public void Add(string id, Data data, string key = null)
         {
             if (id == string.Empty || id == null)
                 throw new System.NullReferenceException("Tried to add object with empty ID - " + data);
@@ -73,7 +73,6 @@ namespace UMS
             {
                 Data = data,
                 Key = key,
-                Name = name,
             };
 
             _entries.Add(id, entry);
@@ -82,7 +81,6 @@ namespace UMS
         [System.Serializable]
         public class Entry
         {
-            public string Name;
             public Data Data;
             public string Key;
         }

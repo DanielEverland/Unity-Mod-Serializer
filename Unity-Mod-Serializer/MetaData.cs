@@ -33,6 +33,15 @@ namespace UMS
 
             return result;
         }
+        public static bool HasType(Data data)
+        {
+            if (data.IsDictionary)
+            {
+                return data.AsDictionary.ContainsKey(KEY_TYPE);
+            }
+
+            return false;
+        }
         public static Result GetType(Data data, out System.Type type)
         {
             return GetMetaData(data, KEY_TYPE, out type);

@@ -101,11 +101,6 @@ namespace UMS.Editor.Windows
         {
             ModFile.Entry entry = _file[id];
 
-            writer.Write("Name: ");
-            writer.Write(entry.Name);
-
-            writer.WriteLine();
-
             writer.Write("ID: ");
             writer.Write(id);
 
@@ -149,12 +144,46 @@ namespace UMS.Editor.Windows
                     backgroundStyle.Draw(itemRect, false, false, _selectedIndex == i, false);
 
                     //Draw the text
-                    string text = string.Format("{0} ({1})", entry.Name, id);
+                    string text = GetListItemText(id);
                     EditorGUI.LabelField(worldRect, new GUIContent(text));
                 }
             }
 
             GUI.EndScrollView();
+        }
+        private string GetListItemText(string id)
+        {
+            ModFile.Entry entry = _file[id];
+            List<string> information = new List<string>();
+
+            if (entry.Data.IsDictionary)
+            {
+                Dictionary<string, Data> dictionary = entry.Data.AsDictionary;
+                string nameKey = "name";
+
+                if (dictionary.ContainsKey(nameKey))
+                {
+                    Data nameData = dictionary[nameKey];
+
+                    if (nameData.IsString)
+                    {
+                        information.Add(nameData.AsString);
+                    }                    
+                }
+            }
+            if (MetaData.HasType(entry.Data))
+            {
+                Result result = MetaData.GetType(entry.Data, out System.Type type);
+
+                if (result.Succeeded)
+                {
+                    information.Add(string.Format("({0})", type.Name));
+                }
+            }
+
+            information.Add(id);
+
+            return string.Join(" ", information);
         }
         private Rect GetWorldRect(int i, Rect listRect)
         {
