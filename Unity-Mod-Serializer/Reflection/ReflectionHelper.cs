@@ -108,9 +108,14 @@ namespace UMS.Reflection
             if (IsIgnored(property))
                 return Result.Error("Tried to serialize a property with the Ignore attribute " + property);
 
-            Debugging.Verbose(DebuggingFlags.Reflection, string.Format("Serialized property {0} as {1} from {2}", property, data, obj.GetType().Name));
+            object propertyValue = property.GetValue(obj);
 
-            result += Serializer.Serialize(property.GetValue(obj), out data);
+            if(propertyValue != null)
+            {
+                result += Serializer.Serialize(propertyValue, out data);
+
+                Debugging.Verbose(DebuggingFlags.Reflection, string.Format("Serialized property {0} as {1} from {2}", property, data, obj.GetType().Name));
+            }            
 
             return result;
         }
@@ -147,10 +152,15 @@ namespace UMS.Reflection
 
             if(IsIgnored(field))
                 return Result.Error("Tried to serialize a field with the Ignore attribute " + field);
-            
-            result += Serializer.Serialize(field.GetValue(obj), out data);
 
-            Debugging.Verbose(DebuggingFlags.Reflection, string.Format("Serialized field {0} as {1} from {2}", field, data, obj.GetType().Name));
+            object fieldValue = field.GetValue(obj);
+
+            if(fieldValue != null)
+            {
+                result += Serializer.Serialize(fieldValue, out data);
+
+                Debugging.Verbose(DebuggingFlags.Reflection, string.Format("Serialized field {0} as {1} from {2}", field, data, obj.GetType().Name));
+            }            
 
             return result;
         }
