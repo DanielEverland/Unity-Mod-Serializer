@@ -17,7 +17,7 @@ namespace UMS
 
             Result result = Result.Success;
             
-            data[KEY_TYPE] = new Data(ID);
+            data[KEY_REFERENCE] = new Data(ID);
 
             return result;
         }
