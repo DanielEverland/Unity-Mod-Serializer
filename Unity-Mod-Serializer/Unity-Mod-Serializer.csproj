@@ -92,8 +92,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection\AssemblyManager.cs" />
     <Compile Include="Reflection\ConverterLoader.cs" />
+    <Compile Include="Reflection\ReferenceManager.cs" />
     <Compile Include="Reflection\IgnoreAttribute.cs" />
     <Compile Include="Reflection\LoadTypesAttribute.cs" />
+    <Compile Include="Reflection\ReferenceTypesAttribute.cs" />
     <Compile Include="Reflection\ReflectionHelper.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Serializer.cs" />
