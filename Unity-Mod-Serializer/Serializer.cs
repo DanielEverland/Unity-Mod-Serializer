@@ -44,6 +44,19 @@ namespace UMS
         /// <summary>
         /// Deserializes a Data object into memory
         /// </summary>
+        public static Result Deserialize<T>(Data data, System.Type objType, ref T obj)
+        {
+            Result result = Result.Success;
+
+            object boxedObject = obj;
+            result += InternalDeserialize(data, objType, ref boxedObject);
+            obj = (T)boxedObject;
+
+            return result;
+        }
+        /// <summary>
+        /// Deserializes a Data object into memory
+        /// </summary>
         public static Result Deserialize(Data data, System.Type objType, ref object obj)
         {
             return InternalDeserialize(data, objType, ref obj);

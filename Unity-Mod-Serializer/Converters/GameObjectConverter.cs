@@ -53,7 +53,58 @@ namespace UMS.Converters
 
             obj.name = data[KEY_NAME].AsString;
 
+            result += DeserializeComponents(data[KEY_COMPONENTS], ref obj);
+
             return result;
+        }
+        private Result DeserializeComponents(Data data, ref GameObject obj)
+        {
+            if (!data.IsList)
+                return Result.Error("Type mismatch. Expected List", data);
+
+            Result result = Result.Success;
+
+            foreach (Data componentData in data.AsList)
+            {
+                if (!componentData.IsDictionary)
+                    return Result.Error("Type mismatch. Expected Dictionary", componentData);
+
+                result += MetaData.GetType(componentData, out Type componentType);
+
+                Component component = GetComponent(componentType, obj);
+                
+                result += Serializer.Deserialize(componentData, componentType, ref component);
+            }
+
+            return result;
+        }
+        private Component GetComponent(Type type, GameObject obj)
+        {
+            //We don't use AssignableFrom to avoid catching RectTransform
+            if(type == typeof(Transform))
+            {
+                return obj.GetComponent<Transform>();
+            }
+            else if(type == typeof(RectTransform))
+            {
+                Component rectTrans = obj.GetComponent<RectTransform>();
+
+                //This can happen if we're deserializing a UI object
+                //that has not been assigned to a canvas yet. In that
+                //case we simply convert it manually
+                if(rectTrans == null)
+                {
+                    return obj.AddComponent<RectTransform>();
+                }
+                else
+                {
+                    return rectTrans;
+                }
+            }
+            else
+            {
+                return obj.AddComponent(type);
+            }
         }
     }
 }
