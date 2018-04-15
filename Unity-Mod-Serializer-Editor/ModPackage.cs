@@ -70,14 +70,22 @@ namespace UMS
             while (Serializer.SerializationQueue.Count > 0)
             {
                 object obj = Serializer.SerializationQueue.Dequeue();
+                string id = IDManager.GetID(obj);
 
                 Result result = Serializer.Serialize(obj, out Data data);
 
-                if (result.Succeeded && _enqueuedEntries.ContainsKey(obj))
+                if (result.Succeeded)
                 {
-                    ObjectEntry entry = _enqueuedEntries[obj];
+                    if (_enqueuedEntries.ContainsKey(obj))
+                    {
+                        ObjectEntry entry = _enqueuedEntries[obj];
 
-                    file.Add(IDManager.GetID(entry.Object), entry.Object.name, data, entry.Key);
+                        file.Add(id, data, entry.Key);
+                    }
+                    else
+                    {
+                        file.Add(id, data, null);
+                    }
                 }
             }
 
