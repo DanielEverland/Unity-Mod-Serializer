@@ -8,7 +8,19 @@ namespace UMS
     {
         public const string CHARACTER = "$";
         public const string KEY_TYPE = CHARACTER + "type";
+        public const string KEY_REFERENCE = CHARACTER + "ref";
 
+        public static Result AddReference(Data data, string ID)
+        {
+            if (!data.IsDictionary)
+                return Result.Error("Type mismatch. Expected Dictionary");
+
+            Result result = Result.Success;
+            
+            data[KEY_TYPE] = new Data(ID);
+
+            return result;
+        }
         public static Result AddType(Data data, System.Type type)
         {
             if (!data.IsDictionary)

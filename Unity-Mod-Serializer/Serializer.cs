@@ -13,7 +13,11 @@ namespace UMS
             _directConverters = new Dictionary<System.Type, IDirectConverter>();
             _cachedConverters = new Dictionary<System.Type, IBaseConverter>();
             _converters = new List<IBaseConverter>();
+
+            SerializationQueue = new SerializationQueue<object>();
         }
+
+        public static SerializationQueue<object> SerializationQueue { get; private set; }
 
         private static Dictionary<System.Type, IBaseConverter> _cachedConverters;
         private static Dictionary<System.Type, IDirectConverter> _directConverters;
@@ -121,8 +125,22 @@ namespace UMS
 
             Debugging.Verbose(DebuggingFlags.Serializer, string.Format("Selected converter {0} ({1})", converter, converter.GetType()));
 
-            //Perform serialization
-            result += converter.Serialize(value, out data);
+            //Serialize the objects members
+            if(value == SerializationQueue.ActiveObject || !IDManager.CanGetID(objType))
+            {
+                //Perform serialization
+                result += converter.Serialize(value, out data);
+            }
+            else //Serialize the object as a reference
+            {
+                data = new Data(new Dictionary<string, Data>());
+                string id = IDManager.GetID(value);
+
+                result += MetaData.AddReference(data, id);
+
+                if (!SerializationQueue.HasBeenEnqueued(id) && IDManager.CanGetID(objType))
+                    SerializationQueue.Enqueue(value);
+            }            
 
             //Add type metadata
             if(IDManager.CanGetID(objType) && data.IsDictionary)
@@ -186,9 +204,6 @@ namespace UMS
         #region Converters
         private static IBaseConverter GetConverter(System.Type type)
         {
-            if (!AssemblyManager.HasInitialized)
-                AssemblyManager.Initialize();
-
             //First we check if the type has been encountered before
             if (_cachedConverters.ContainsKey(type))
                 return _cachedConverters[type];

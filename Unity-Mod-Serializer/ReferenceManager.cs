@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UMS.Reflection
+namespace UMS
 {
     /// <summary>
     /// Manager that determines which types can be written
@@ -15,6 +15,7 @@ namespace UMS.Reflection
         static ReferenceManager()
         {
             _referencableTypes = new List<Type>();
+            _cachedTypes = new Dictionary<Type, bool>();
         }
 
         private static List<Type> _referencableTypes;

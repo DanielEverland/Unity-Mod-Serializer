@@ -48,7 +48,7 @@ namespace UMS
 
         public static bool CanGetID(Type type)
         {
-            return type.IsClass;
+            return ReferenceManager.SupportsReferencing(type);
         }
         public static string GetID(object obj)
         {
@@ -56,7 +56,7 @@ namespace UMS
                 throw new ArgumentException("Cannot return ID for null object");
 
             if (!CanGetID(obj.GetType()))
-                throw new ArgumentException("Object " + obj + " isn't allowed to get an ID. Implement an EntryWriter for it");
+                throw new ArgumentException("Object " + obj + " isn't allowed to get an ID");
 
             if (!_cachedIDs.ContainsKey(obj))
             {

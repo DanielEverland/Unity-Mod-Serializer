@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using UMS.Reflection;
 
 namespace UMS.Editor
 {
@@ -75,6 +76,9 @@ namespace UMS.Editor
         }
         private static void StartTest(string testName)
         {
+            if (!AssemblyManager.HasInitialized)
+                AssemblyManager.Initialize();
+
             Debug.Log(string.Format("-----STARTING {0}-----", testName.ToUpper()));
         }
         private static void EndTest(string testName)

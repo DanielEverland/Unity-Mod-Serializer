@@ -56,12 +56,27 @@ namespace UMS
         {
             ModFile file = new ModFile(name);
 
+            Dictionary<object, ObjectEntry> _enqueuedEntries = new Dictionary<object, ObjectEntry>();
+
             foreach (ObjectEntry entry in _objectEntries)
             {
-                Result result = Serializer.Serialize(entry.Object, out Data data);
+                string id = IDManager.GetID(entry.Object);
+                
+                Serializer.SerializationQueue.Enqueue(entry.Object);
 
-                if (result.Succeeded)
+                _enqueuedEntries.Add(entry.Object, entry);
+            }
+
+            while (Serializer.SerializationQueue.Count > 0)
+            {
+                object obj = Serializer.SerializationQueue.Dequeue();
+
+                Result result = Serializer.Serialize(obj, out Data data);
+
+                if (result.Succeeded && _enqueuedEntries.ContainsKey(obj))
                 {
+                    ObjectEntry entry = _enqueuedEntries[obj];
+
                     file.Add(IDManager.GetID(entry.Object), entry.Object.name, data, entry.Key);
                 }
             }
