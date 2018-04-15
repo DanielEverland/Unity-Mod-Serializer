@@ -77,12 +77,7 @@ namespace UMS.Editor.Windows
         {
             Rect inspectorRect = new Rect(_listWidth + PADDING, 0, position.width - (_listWidth + PADDING), position.height);
             Event currentEvent = Event.current;
-
-            if (currentEvent.type == EventType.Repaint)
-            {
-                _styles.Box.Draw(inspectorRect, GUIContent.none, 0);
-            }
-
+            
             string text = null;
             using (StringWriter writer = new StringWriter())
             {
