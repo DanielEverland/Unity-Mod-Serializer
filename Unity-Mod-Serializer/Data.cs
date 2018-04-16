@@ -135,6 +135,41 @@ namespace UMS
         public List<Data> AsList { get { return Cast<List<Data>>(); } }
         #endregion
 
+        #region Type Definitions
+        public DataType Type
+        {
+            get
+            {
+                if (IsNull)         return DataType.Null;
+                if (IsBool)         return DataType.Bool;
+                if (IsDouble)       return DataType.Double;
+                if (IsDecimal)      return DataType.Decimal;
+                if (IsLong)         return DataType.Long;
+                if (IsULong)        return DataType.UnsignedLong;
+                if (IsString)       return DataType.String;
+                if (IsBytes)        return DataType.Bytes;
+                if (IsDictionary)   return DataType.Dictionary;
+                if (IsList)         return DataType.Null;
+
+                throw new System.NotImplementedException();
+            }
+        }
+        public enum DataType
+        {
+            Null = 0,
+
+            Bool = 1,
+            Double = 2,
+            Decimal = 3,
+            Long = 4,
+            UnsignedLong = 5,
+            String = 6,
+            Bytes = 7,
+            Dictionary = 8,
+            List = 9,
+        }
+        #endregion
+
         #region Internal Helper Methods
         public T Cast<T>()
         {

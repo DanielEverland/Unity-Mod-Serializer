@@ -50,6 +50,7 @@
     <Compile Include="Editor\HookCreator.cs" />
     <Compile Include="Editor\Inspectors\ModPackageEditor.cs" />
     <Compile Include="Editor\Inspectors\SettingsEditor.cs" />
+    <Compile Include="Editor\ModBrowserTreeView.cs" />
     <Compile Include="Editor\ModPackageReorderableList.cs" />
     <Compile Include="Editor\SettingsHandler.cs" />
     <Compile Include="Editor\TestingFunctions.cs" />

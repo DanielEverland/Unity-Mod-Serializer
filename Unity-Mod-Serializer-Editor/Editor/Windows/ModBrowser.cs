@@ -29,6 +29,7 @@ namespace UMS.Editor.Windows
             {
                 try
                 {
+                    Serializer.Initialize();
                     ModFile file = ModFile.Load(filePath);
 
                     CreateWindow(file);
@@ -50,14 +51,22 @@ namespace UMS.Editor.Windows
         public void LoadFile(ModFile file)
         {
             _file = file;
-        }
 
+            _ids = new List<string>(_file.IDs);
+            _hierarchy = new ModBrowserTreeView();
+
+            if (_ids.Count > 0)
+                SelectEntry(_ids[0]);
+        }
+        
         private ModFile _file;
         private Vector2 _listScrollPos;
         private Vector2 _textScrollPos;
         private float _listWidth = 200;
-        private int _selectedIndex;
+        private string _selectedID;
         private Styles _styles = new Styles();
+        private List<string> _ids;
+        private ModBrowserTreeView _hierarchy;
 
         private const float PADDING = 3;
         private static readonly Vector2 _minSize = new Vector2(500, 300);
@@ -76,27 +85,16 @@ namespace UMS.Editor.Windows
         private void DrawInspector()
         {
             Rect inspectorRect = new Rect(_listWidth + PADDING, 0, position.width - (_listWidth + PADDING), position.height);
-            Event currentEvent = Event.current;
-            
-            string text = null;
-            using (StringWriter writer = new StringWriter())
-            {
-                string id = new List<string>(_file.IDs)[_selectedIndex];
 
-                GetItemText(id, writer);
-                text = writer.ToString();
-            }
-
-            Rect contentRect = GetTextContentRect(text);
-            _textScrollPos = GUI.BeginScrollView(inspectorRect, _textScrollPos, contentRect);
-            EditorGUILayout.SelectableLabel(text, _styles.MessageStyle, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true), GUILayout.MinHeight(contentRect.height));
-            GUI.EndScrollView();
+            _hierarchy.OnGUI(inspectorRect);
         }
-        private void GetItemText(string id, TextWriter writer)
+        private void SelectEntry(string id)
         {
-            ModFile.Entry entry = _file[id];
-            
-            writer.Write(entry.Data);
+            _selectedID = id;
+            ModFile.Entry entry = _file[_selectedID];
+
+            _hierarchy.ActiveObject = entry;
+            _hierarchy.Reload();
         }
         private void DrawList()
         {
@@ -109,20 +107,20 @@ namespace UMS.Editor.Windows
             }
             
             _listScrollPos = GUI.BeginScrollView(listRect, _listScrollPos, contentRect);
-
-            List<string> ids = new List<string>(_file.IDs);
-            for (int i = 0; i < ids.Count; i++)
+            
+            for (int i = 0; i < _ids.Count; i++)
             {
                 Rect itemRect = new Rect(1, i * EditorGUIUtility.singleLineHeight, contentRect.width, EditorGUIUtility.singleLineHeight);
                 Rect worldRect = GetWorldRect(i, listRect);
                 Event currentEvent = Event.current;
 
-                string id = ids[i];
+                string id = _ids[i];
+                bool isSelected = id == _selectedID;
                 ModFile.Entry entry = _file[id];
 
                 if (currentEvent.type == EventType.MouseDown && currentEvent.button == 0 && worldRect.Contains(currentEvent.mousePosition))
                 {
-                    _selectedIndex = i;
+                    SelectEntry(id);
 
                     Repaint();
                 }
@@ -130,7 +128,7 @@ namespace UMS.Editor.Windows
                 {
                     // Draw the background
                     GUIStyle backgroundStyle = i % 2 == 0 ? _styles.OddBackground : _styles.EvenBackground;
-                    backgroundStyle.Draw(itemRect, false, false, _selectedIndex == i, false);
+                    backgroundStyle.Draw(itemRect, false, false, isSelected, false);
 
                     //Draw the text
                     string text = GetListItemText(id);

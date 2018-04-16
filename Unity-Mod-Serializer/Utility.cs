@@ -22,6 +22,10 @@ namespace UMS
             double exponent = System.Math.Pow(2.0, _random.Next(-126, 128));
             return (float)(mantissa * exponent);
         }
+        public static int GetRandomInt()
+        {
+            return _random.Next();
+        }
         public static uint GetRandomUnsignedInt()
         {
             //Random doesn't support uint
