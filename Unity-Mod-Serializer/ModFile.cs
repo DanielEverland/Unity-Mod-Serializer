@@ -46,7 +46,7 @@ namespace UMS
         /// </summary>
         public void Save(string folderDirectory)
         {
-            string fullPath = string.Format("{0}/{1}{2}", folderDirectory, _fileName, Utility.MOD_EXTENSION);
+            string fullPath = string.Format(@"{0}\{1}{2}", folderDirectory, _fileName, Utility.MOD_EXTENSION);
 
             BinaryFormatter formatter = new BinaryFormatter();
             using (FileStream fileStream = new FileStream(fullPath, FileMode.Create))
