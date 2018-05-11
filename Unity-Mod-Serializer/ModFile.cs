@@ -13,11 +13,12 @@ namespace UMS
     [System.Serializable]
     public class ModFile
     {
-        private ModFile() { }
         public ModFile(string fileName)
         {
             _fileName = fileName;
             _entries = new Dictionary<string, Entry>();
+
+            _id = System.Guid.NewGuid();
         }
 
         public Entry this[string id]
@@ -30,9 +31,11 @@ namespace UMS
 
         public string FileName { get { return _fileName; } }
         public IEnumerable<string> IDs { get { return _entries.Keys; } }
+        public System.Guid ID { get { return _id; } }
 
         private readonly string _fileName;
         private Dictionary<string, Entry> _entries;
+        private System.Guid _id;
         
         public static ModFile Load(string fullPath)
         {
