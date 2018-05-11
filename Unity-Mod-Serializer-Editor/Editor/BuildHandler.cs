@@ -26,6 +26,8 @@ namespace UMS.Editor
         }
         private static void BuildMods()
         {
+            Session.Initialize();
+
             BuildSettings();
             CreateModsDirectory();
             BuildCoreMods();
@@ -67,6 +69,7 @@ namespace UMS.Editor
             catch (System.Exception)
             {
                 Debug.LogWarning("Failed to serialize " + package);
+                throw;
             }
         }
         private static void CreateCoreModsFolder()

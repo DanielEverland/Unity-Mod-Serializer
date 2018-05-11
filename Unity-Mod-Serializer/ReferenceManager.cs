@@ -32,6 +32,9 @@ namespace UMS
         }
         public static bool SupportsReferencing(Type type)
         {
+            if (_referencableTypes.Count == 0)
+                throw new System.NullReferenceException("No reference types have been loaded. Did you Initialize the session?");
+
             if(!_cachedTypes.ContainsKey(type))
             {
                 foreach (Type referencableType in _referencableTypes)
