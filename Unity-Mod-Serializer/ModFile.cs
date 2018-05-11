@@ -18,7 +18,7 @@ namespace UMS
             _fileName = fileName;
             _entries = new Dictionary<string, Entry>();
 
-            _id = System.Guid.NewGuid();
+            _guid = System.Guid.NewGuid();
         }
 
         public Entry this[string id]
@@ -31,11 +31,11 @@ namespace UMS
 
         public string FileName { get { return _fileName; } }
         public IEnumerable<string> IDs { get { return _entries.Keys; } }
-        public System.Guid ID { get { return _id; } }
+        public System.Guid GUID { get { return _guid; } }
 
         private readonly string _fileName;
         private Dictionary<string, Entry> _entries;
-        private System.Guid _id;
+        private System.Guid _guid;
         
         public static ModFile Load(string fullPath)
         {
