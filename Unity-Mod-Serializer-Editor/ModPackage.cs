@@ -52,7 +52,7 @@ namespace UMS
 
             file.Save(folderPath);
         }
-        private ModFile CreateFile()
+        public ModFile CreateFile()
         {
             ModFile file = new ModFile(name);
 
