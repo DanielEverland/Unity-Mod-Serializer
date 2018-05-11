@@ -7,6 +7,9 @@ using UMS.Reflection;
 
 namespace UMS
 {
+    /// <summary>
+    /// Contains the data we serialize from mod packages
+    /// </summary>
     [System.Serializable]
     public class ModFile
     {
