@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 
 namespace UMS.Reflection
 {
@@ -98,7 +99,13 @@ namespace UMS.Reflection
         private static void LoadAssembliesInBuiltGame()
         {
             Queue<string> directories = new Queue<string>();
-            directories.Enqueue(Settings.ModsDirectory);
+            
+            string applicationPath = Application.dataPath;
+            string parentPath = Directory.GetParent(applicationPath).FullName;
+            string applicationDataFolder = $@"{parentPath}\{Path.GetFileNameWithoutExtension(applicationPath)}";
+            string modsDirectory = $@"{applicationDataFolder}\{Settings.ModsDirectory}";
+
+            directories.Enqueue(modsDirectory);
 
             while (directories.Count > 0)
             {

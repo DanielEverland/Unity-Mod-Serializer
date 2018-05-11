@@ -54,10 +54,12 @@ namespace UMS
                 return (T)_formatter.Deserialize(stream);
             }
         }
+#if DEBUG
         private static void EnsureIsSerializable(Type type)
         {
             if (!type.GetCustomAttributes().Any(x => x.GetType() == typeof(SerializableAttribute)))
                 throw new System.NotImplementedException("Cannot serialize " + type + ", as it does not implement SerializableAttribute");                
         }
+#endif
     }
 }

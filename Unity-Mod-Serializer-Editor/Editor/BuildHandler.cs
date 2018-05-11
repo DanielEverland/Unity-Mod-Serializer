@@ -97,15 +97,7 @@ namespace UMS.Editor
             {
                 Assembly assembly = Assembly.Load(assemblyName);
 
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    BinaryFormatter formatter = new BinaryFormatter();
-
-                    formatter.Serialize(stream, assembly);
-                    byte[] data = stream.ToArray();
-
-                    File.WriteAllBytes(string.Format(@"{0}\{1}.dll", _pathToLibrary, assemblyName), data);
-                }
+                File.Copy(assembly.Location, string.Format(@"{0}\{1}.dll", _pathToLibrary, assemblyName));
             }
         }
     }
