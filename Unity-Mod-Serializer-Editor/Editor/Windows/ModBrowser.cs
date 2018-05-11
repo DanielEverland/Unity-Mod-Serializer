@@ -61,7 +61,6 @@ namespace UMS.Editor.Windows
         
         private ModFile _file;
         private Vector2 _listScrollPos;
-        private Vector2 _textScrollPos;
         private float _listWidth = 200;
         private string _selectedID;
         private Styles _styles = new Styles();
