@@ -47,6 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Editor\BuildHandler.cs" />
     <Compile Include="Editor\HookCreator.cs" />
     <Compile Include="Editor\Inspectors\ModPackageEditor.cs" />
     <Compile Include="Editor\Inspectors\SettingsEditor.cs" />
