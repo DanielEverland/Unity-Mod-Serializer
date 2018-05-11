@@ -61,7 +61,10 @@ namespace UMS
             foreach (ObjectEntry entry in _objectEntries)
             {
                 string id = IDManager.GetID(entry.Object);
-                
+
+                if (Serializer.SerializationQueue.HasBeenEnqueued(id))
+                    continue;
+
                 Serializer.SerializationQueue.Enqueue(entry.Object);
 
                 _enqueuedEntries.Add(entry.Object, entry);
