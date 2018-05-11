@@ -56,7 +56,6 @@
     <Compile Include="Editor\SettingsHandler.cs" />
     <Compile Include="Editor\TestingFunctions.cs" />
     <Compile Include="Editor\Windows\ModBrowser.cs" />
-    <Compile Include="ModPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
