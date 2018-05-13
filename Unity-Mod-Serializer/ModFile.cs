@@ -80,6 +80,7 @@ namespace UMS
             {
                 Data = data,
                 Key = key,
+                ID = id,
             };
 
             _entries.Add(id, entry);
@@ -90,6 +91,7 @@ namespace UMS
         {
             public Data Data;
             public string Key;
+            public string ID;
         }
     }
 }
