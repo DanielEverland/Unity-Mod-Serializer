@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,6 +7,10 @@ namespace UMS.Converters.Primitives
 {
     public class StringConverter : DirectConverter<string>
     {
+        public override object CreateInstance(Type type)
+        {
+            return string.Empty;
+        }
         public override Result DoSerialize(string obj, out Data data)
         {
             data = new Data(obj);
