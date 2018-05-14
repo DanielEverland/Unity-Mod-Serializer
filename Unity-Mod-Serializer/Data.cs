@@ -25,32 +25,34 @@ namespace UMS
         [ProtoMember(2)]
         private byte? _byteValue;
         [ProtoMember(3)]
-        private short? _shortValue;
+        private sbyte? _sbyteValue;
         [ProtoMember(4)]
-        private ushort? _ushortValue;
+        private short? _shortValue;
         [ProtoMember(5)]
-        private int? _intValue;
+        private ushort? _ushortValue;
         [ProtoMember(6)]
-        private uint? _uintValue;
+        private int? _intValue;
         [ProtoMember(7)]
-        private long? _longValue;
+        private uint? _uintValue;
         [ProtoMember(8)]
-        private ulong? _ulongValue;
+        private long? _longValue;
         [ProtoMember(9)]
-        private float? _floatValue;
+        private ulong? _ulongValue;
         [ProtoMember(10)]
-        private double? _doubleValue;
+        private float? _floatValue;
         [ProtoMember(11)]
-        private decimal? _decimalValue;
+        private double? _doubleValue;
         [ProtoMember(12)]
-        private char? _charValue;
+        private decimal? _decimalValue;
         [ProtoMember(13)]
-        private string _stringValue;
+        private char? _charValue;
         [ProtoMember(14)]
-        private byte[] _byteArrayValue;
+        private string _stringValue;
         [ProtoMember(15)]
-        private List<Data> _listValue;
+        private byte[] _byteArrayValue;
         [ProtoMember(16)]
+        private List<Data> _listValue;
+        [ProtoMember(17)]
         private Dictionary<string, Data> _dictionaryValue;
         #endregion
 
@@ -119,6 +121,10 @@ namespace UMS
         {
             Byte = value;
         }
+        public Data(sbyte value)
+        {
+            SByte = value;
+        }
         public Data(short value)
         {
             Short = value;
@@ -180,6 +186,7 @@ namespace UMS
         #region Properties
         public bool     Bool    { get { return _boolValue.Value; }      set { Clear(); _boolValue = value; } }
         public byte     Byte    { get { return _byteValue.Value; }      set { Clear(); _byteValue = value; } }
+        public sbyte    SByte   { get { return _sbyteValue.Value; }     set { Clear(); _sbyteValue = value; } }
         public short    Short   { get { return _shortValue.Value; }     set { Clear(); _shortValue = value; } }
         public ushort   UShort  { get { return _ushortValue.Value; }    set { Clear(); _ushortValue = value; } }
         public int      Int     { get { return _intValue.Value; }       set { Clear(); _intValue = value; } }
@@ -199,6 +206,7 @@ namespace UMS
         public bool IsNull          { get { return Type == DataType.Null; } }
         public bool IsBool          { get { return _boolValue.HasValue; } }
         public bool IsByte          { get { return _byteValue.HasValue; } }
+        public bool IsSByte         { get { return _sbyteValue.HasValue; } }
         public bool IsShort         { get { return _shortValue.HasValue; } }
         public bool IsUShort        { get { return _ushortValue.HasValue; } }
         public bool IsInt           { get { return _intValue.HasValue; } }
@@ -225,6 +233,7 @@ namespace UMS
 
                 if (IsBool) return Bool;
                 if (IsByte) return Byte;
+                if (IsSByte) return SByte;
                 if (IsShort) return Short;
                 if (IsUShort) return UShort;
                 if (IsInt) return Int;
@@ -254,6 +263,7 @@ namespace UMS
 
                 if (IsBool)     return DataType.Bool;
                 if (IsByte)     return DataType.Byte;
+                if (IsSByte)    return DataType.SignedByte;
                 if (IsShort)    return DataType.Short;
                 if (IsUShort)   return DataType.UnsignedShort;
                 if (IsInt)      return DataType.Int;
@@ -275,20 +285,21 @@ namespace UMS
 
             Bool = 1,
             Byte = 2,
-            Short = 3,
-            UnsignedShort = 4,
-            Int = 5,
-            UnsignedInt = 6,
-            Long = 7,
-            UnsignedLong = 8,
-            Float = 9,
-            Double = 10,
-            Decimal = 11,
-            Char = 12,
-            String = 13,
-            ByteArray = 14,
-            List = 15,
-            Dictionary = 16,
+            SignedByte = 3,
+            Short = 4,
+            UnsignedShort = 5,
+            Int = 6,
+            UnsignedInt = 7,
+            Long = 8,
+            UnsignedLong = 9,
+            Float = 10,
+            Double = 11,
+            Decimal = 12,
+            Char = 13,
+            String = 14,
+            ByteArray = 15,
+            List = 16,
+            Dictionary = 17,
         }
         #endregion
 
@@ -297,6 +308,7 @@ namespace UMS
         {
             _boolValue = null;
             _byteValue = null;
+            _sbyteValue = null;
             _shortValue = null;
             _ushortValue = null;
             _intValue = null;
