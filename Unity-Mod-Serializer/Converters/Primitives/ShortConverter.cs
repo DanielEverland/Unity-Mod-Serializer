@@ -13,10 +13,10 @@ namespace UMS.Converters.Primitives
         }
         public override Result DoDeserialize(Data data, ref short obj)
         {
-            if (!data.IsLong)
-                return Result.Error("Type mismatch. Expected Long", data);
+            if (!data.IsShort)
+                return Result.Error("Type mismatch. Expected Short", data);
 
-            obj = System.Convert.ToInt16(data.Long);
+            obj = System.Convert.ToInt16(data.Short);
             return Result.Success;
         }
     }

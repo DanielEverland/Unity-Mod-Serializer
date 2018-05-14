@@ -13,10 +13,10 @@ namespace UMS.Converters.Primitives
         }
         public override Result DoDeserialize(Data data, ref float obj)
         {
-            if (!data.IsDouble)
-                return Result.Error("Type mismatch. Expected Double", data);
+            if (!data.IsFloat)
+                return Result.Error("Type mismatch. Expected Float", data);
 
-            obj = System.Convert.ToSingle(data.Double);
+            obj = System.Convert.ToSingle(data.Float);
             return Result.Success;
         }
     }

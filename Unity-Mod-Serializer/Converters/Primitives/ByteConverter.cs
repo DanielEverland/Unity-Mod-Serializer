@@ -13,10 +13,10 @@ namespace UMS.Converters.Primitives
         }
         public override Result DoDeserialize(Data data, ref byte obj)
         {
-            if (!data.IsLong)
-                return Result.Error("Type mismatch. Expected long type", data);
+            if (!data.IsByte)
+                return Result.Error("Type mismatch. Expected Byte", data);
 
-            obj = System.Convert.ToByte(data.Long);
+            obj = System.Convert.ToByte(data.Byte);
             return Result.Success;
         }
     }
