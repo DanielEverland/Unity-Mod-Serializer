@@ -13,6 +13,7 @@ namespace UMS
     [ProtoContract]
     public class ModFile
     {
+        public ModFile() {  }
         public ModFile(string fileName)
         {
             _fileName = fileName;
