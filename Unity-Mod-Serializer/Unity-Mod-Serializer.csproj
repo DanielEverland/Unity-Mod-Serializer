@@ -69,6 +69,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="protobuf-net, Version=2.3.7.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <HintPath>..\packages\protobuf-net.2.3.7\lib\net40\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -86,6 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Benchmarker.cs" />
     <Compile Include="Converters\BaseConverter.cs" />
     <Compile Include="Converters\ComponentConverter.cs" />
     <Compile Include="Converters\DirectConverter.cs" />
@@ -144,12 +148,17 @@
     <Compile Include="TypeInheritanceTree.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /y "$(TargetPath)" "D:\UMS Test Project\Assets\Plugins\$(TargetName)$(TargetExt)"
+copy /y "$(TargetDir)/protobuf-net.dll" "D:\UMS Test Project\Assets\Plugins\protobuf-net.dll"
 copy /y "$(TargetDir)/$(TargetName).pdb" "D:\UMS Test Project\Assets\Plugins\$(TargetName).pdb"
 
 copy /y "$(TargetPath)" "D:\Dead Air Source\Dead-Air\Assets\Plugins\$(TargetName)$(TargetExt)"
+copy /y "$(TargetDir)/protobuf-net.dll" "D:\Dead Air Source\Dead-Air\Assets\Plugins\protobuf-net.dll"
 copy /y "$(TargetDir)/$(TargetName).pdb" "D:\Dead Air Source\Dead-Air\Assets\Plugins\$(TargetName).pdb"</PostBuildEvent>
   </PropertyGroup>
 </Project>
