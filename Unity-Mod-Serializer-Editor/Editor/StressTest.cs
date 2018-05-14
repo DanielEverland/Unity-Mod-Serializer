@@ -14,7 +14,6 @@ namespace UMS.Editor
     /// </summary>
     public static class StressTest
     {
-        [MenuItem("Modding/Stress Test", priority = 1000)]
         public static void RunTest()
         {
             TestData data = GetNewData();
