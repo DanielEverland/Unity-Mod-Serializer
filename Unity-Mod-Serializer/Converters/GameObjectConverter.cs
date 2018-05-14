@@ -68,7 +68,7 @@ namespace UMS.Converters
             {
                 if (!componentData.IsDictionary)
                     return Result.Error("Type mismatch. Expected Dictionary", componentData);
-
+                
                 result += MetaData.GetType(componentData, out Type componentType);
 
                 Component component = GetComponent(componentType, obj);

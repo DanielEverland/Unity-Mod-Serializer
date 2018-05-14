@@ -58,7 +58,7 @@ namespace UMS
             Dictionary<string, Data> dictionary = data.Dictionary;
 
             if (!dictionary.ContainsKey(key))
-                return Result.Error("No metadata for " + key);
+                return Result.Error("No metadata for " + key, data);
 
             object deserializedObject = null;
             result += Serializer.Deserialize(data[key], typeof(T), ref deserializedObject);
