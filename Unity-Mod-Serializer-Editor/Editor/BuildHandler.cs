@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using System.Reflection;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace UMS.Editor
 {

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
-using System.Runtime.Serialization.Formatters.Binary;
 using ProtoBuf;
 
 namespace UMS.Editor

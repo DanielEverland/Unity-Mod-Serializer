@@ -2,15 +2,15 @@
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
 using UMS.Reflection;
+using ProtoBuf;
 
 namespace UMS
 {
     /// <summary>
     /// Contains the data we serialize from mod packages
     /// </summary>
-    [System.Serializable]
+    [ProtoContract]
     public class ModFile
     {
         public ModFile(string fileName)
@@ -33,17 +33,20 @@ namespace UMS
         public IEnumerable<string> IDs { get { return _entries.Keys; } }
         public System.Guid GUID { get { return _guid; } }
 
+        [ProtoMember(1)]
         private readonly string _fileName;
+        [ProtoMember(2)]
         private Dictionary<string, Entry> _entries;
+        [ProtoMember(3)]
         private System.Guid _guid;
         
         public static ModFile Load(string fullPath)
         {
-            BinaryFormatter formatter = new BinaryFormatter();
             using (FileStream fileStream = new FileStream(fullPath, FileMode.Open))
             {
                 UnityEngine.Debug.Log("Deserializing " + fullPath);
-                return (ModFile)formatter.Deserialize(fileStream);
+
+                return ProtoBuf.Serializer.Deserialize<ModFile>(fileStream);
             }
         }
 
@@ -53,11 +56,10 @@ namespace UMS
         public void Save(string folderDirectory)
         {
             string fullPath = string.Format(@"{0}\{1}{2}", folderDirectory, _fileName, Utility.MOD_EXTENSION);
-
-            BinaryFormatter formatter = new BinaryFormatter();
+            
             using (FileStream fileStream = new FileStream(fullPath, FileMode.Create))
             {
-                formatter.Serialize(fileStream, this);
+                ProtoBuf.Serializer.Serialize(fileStream, this);
             }
 
             UnityEngine.Debug.Log("Serialized " + fullPath);
@@ -86,11 +88,14 @@ namespace UMS
             _entries.Add(id, entry);
         }
 
-        [System.Serializable]
+        [ProtoContract]
         public class Entry
         {
+            [ProtoMember(1)]
             public Data Data;
+            [ProtoMember(2)]
             public string Key;
+            [ProtoMember(3)]
             public string ID;
         }
     }
