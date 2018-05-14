@@ -94,6 +94,7 @@
     <Compile Include="Editor\ModBrowserTreeView.cs" />
     <Compile Include="Editor\ModPackageReorderableList.cs" />
     <Compile Include="Editor\SettingsHandler.cs" />
+    <Compile Include="Editor\StressTest.cs" />
     <Compile Include="Editor\TestingFunctions.cs" />
     <Compile Include="Editor\Windows\ModBrowser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
