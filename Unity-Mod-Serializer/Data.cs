@@ -43,12 +43,14 @@ namespace UMS
         [ProtoMember(11)]
         private decimal? _decimalValue;
         [ProtoMember(12)]
-        private string _stringValue;
+        private char? _charValue;
         [ProtoMember(13)]
-        private byte[] _byteArrayValue;
+        private string _stringValue;
         [ProtoMember(14)]
-        private List<Data> _listValue;
+        private byte[] _byteArrayValue;
         [ProtoMember(15)]
+        private List<Data> _listValue;
+        [ProtoMember(16)]
         private Dictionary<string, Data> _dictionaryValue;
         #endregion
 
@@ -153,6 +155,10 @@ namespace UMS
         {
             Decimal = value;
         }
+        public Data(char value)
+        {
+            Char = value;
+        }
         public Data(string value)
         {
             String = value;
@@ -183,6 +189,7 @@ namespace UMS
         public float    Float   { get { return _floatValue.Value; }     set { Clear(); _floatValue = value; } }
         public double   Double  { get { return _doubleValue.Value; }    set { Clear(); _doubleValue = value; } }
         public decimal  Decimal { get { return _decimalValue.Value; }   set { Clear(); _decimalValue = value; } }
+        public char     Char    { get { return _charValue.Value; }      set { Clear(); _charValue = value; } }
         public string   String  { get { return _stringValue; }          set { Clear(); _stringValue = value; } }
         public byte[]                   ByteArray   { get { return _byteArrayValue; }   set { Clear(); _byteArrayValue = value; } }
         public List<Data>               List        { get { return _listValue; }        set { Clear(); _listValue = value; } }
@@ -201,6 +208,7 @@ namespace UMS
         public bool IsFloat         { get { return _floatValue.HasValue; } }
         public bool IsDouble        { get { return _doubleValue.HasValue; } }
         public bool IsDecimal       { get { return _decimalValue.HasValue; } }
+        public bool IsChar          { get { return _charValue.HasValue; } }
         public bool IsString        { get { return _stringValue != null; } }
         public bool IsByteArray     { get { return _byteArrayValue != null; } }
         public bool IsList          { get { return _listValue != null; } }
@@ -226,6 +234,7 @@ namespace UMS
                 if (IsFloat) return Float;
                 if (IsDouble) return Double;
                 if (IsDecimal) return Decimal;
+                if (IsChar) return Char;
                 if (IsString) return String;
 
                 return null;
@@ -254,6 +263,7 @@ namespace UMS
                 if (IsFloat)    return DataType.Float;
                 if (IsDouble)   return DataType.Double;
                 if (IsDecimal)  return DataType.Decimal;
+                if (IsChar)     return DataType.Char;
                 if (IsString)   return DataType.String;
 
                 return DataType.Null;
@@ -274,10 +284,11 @@ namespace UMS
             Float = 9,
             Double = 10,
             Decimal = 11,
-            String = 12,
-            ByteArray = 13,
-            List = 14,
-            Dictionary = 15,
+            Char = 12,
+            String = 13,
+            ByteArray = 14,
+            List = 15,
+            Dictionary = 16,
         }
         #endregion
 
@@ -295,6 +306,7 @@ namespace UMS
             _floatValue = null;
             _doubleValue = null;
             _decimalValue = null;
+            _charValue = null;
             _stringValue = null;
             _byteArrayValue = null;
             _listValue = null;

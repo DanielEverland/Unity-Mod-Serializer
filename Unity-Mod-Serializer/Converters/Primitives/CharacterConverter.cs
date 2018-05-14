@@ -13,10 +13,10 @@ namespace UMS.Converters.Primitives
         }
         public override Result DoDeserialize(Data data, ref char obj)
         {
-            if (!data.IsString)
-                return Result.Error("Type mismatch. Expected String", data);
+            if (!data.IsChar)
+                return Result.Error("Type mismatch. Expected Char", data);
 
-            obj = System.Convert.ToChar(data.String);
+            obj = System.Convert.ToChar(data.Char);
             return Result.Success;
         }
     }
