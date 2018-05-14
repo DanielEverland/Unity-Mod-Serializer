@@ -51,14 +51,18 @@ namespace UMS.Editor
         public class TestData
         {
             [ProtoMember(1)]
-            public bool? _boolValue;
+            private bool? _boolValue;
+            [ProtoMember(2)]
+            private double? _doubleValue;
 
             private void Clear()
             {
                 _boolValue = null;
+                _doubleValue = null;
             }
 
             public bool Bool { get { return _boolValue.Value; } set { Clear(); _boolValue = value; } }
+            public double Double { get { return _doubleValue.Value; } set { Clear(); _doubleValue = value; } }
 
             public bool IsBool { get { return _boolValue.HasValue; } }
         }
@@ -67,7 +71,8 @@ namespace UMS.Editor
         {
             return new TestData()
             {
-                _boolValue = true,
+                Bool = true,
+                Double = 12343544235,
             };
         }
     }
