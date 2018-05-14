@@ -52,6 +52,15 @@ namespace UMS.Editor
         {
             [ProtoMember(1)]
             public bool? _boolValue;
+
+            private void Clear()
+            {
+                _boolValue = null;
+            }
+
+            public bool Bool { get { return _boolValue.Value; } set { Clear(); _boolValue = value; } }
+
+            public bool IsBool { get { return _boolValue.HasValue; } }
         }
 
         private static TestData GetNewData()
