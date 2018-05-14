@@ -16,7 +16,7 @@ namespace UMS.Converters.Primitives
             if (!data.IsLong)
                 return Result.Error("Type mismatch. Expected Long", data);
 
-            obj = System.Convert.ToUInt16(data.AsLong);
+            obj = System.Convert.ToUInt16(data.Long);
             return Result.Success;
         }
     }

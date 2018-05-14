@@ -21,7 +21,7 @@ namespace UMS.Converters
             if (!data.IsString)
                 return Result.Error("Type mismatch. Expected string", data);
 
-            obj = Type.GetType(data.AsString);
+            obj = Type.GetType(data.String);
             return Result.Success;
         }
     }

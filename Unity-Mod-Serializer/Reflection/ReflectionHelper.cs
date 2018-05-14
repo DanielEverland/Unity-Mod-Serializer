@@ -188,7 +188,7 @@ namespace UMS.Reflection
 
             Result result = Result.Success;
 
-            foreach (KeyValuePair<string, Data> keyValuePair in data.AsDictionary)
+            foreach (KeyValuePair<string, Data> keyValuePair in data.Dictionary)
             {
                 if (keyValuePair.Key.StartsWith(MetaData.CHARACTER))
                     continue;

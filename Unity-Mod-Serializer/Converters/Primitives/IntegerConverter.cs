@@ -16,7 +16,7 @@ namespace UMS.Converters.Primitives
             if (!data.IsLong)
                 return Result.Error("Type mismatch. Expected Long", data);
 
-            obj = System.Convert.ToInt32(data.AsLong);
+            obj = System.Convert.ToInt32(data.Long);
             return Result.Success;
         }
     }

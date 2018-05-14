@@ -37,7 +37,7 @@ namespace UMS
         {
             if (data.IsDictionary)
             {
-                return data.AsDictionary.ContainsKey(KEY_TYPE);
+                return data.Dictionary.ContainsKey(KEY_TYPE);
             }
 
             return false;
@@ -55,7 +55,7 @@ namespace UMS
 
             Result result = Result.Success;
 
-            Dictionary<string, Data> dictionary = data.AsDictionary;
+            Dictionary<string, Data> dictionary = data.Dictionary;
 
             if (!dictionary.ContainsKey(key))
                 return Result.Error("No metadata for " + key);

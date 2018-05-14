@@ -144,7 +144,7 @@ namespace UMS.Editor.Windows
 
             if (entry.Data.IsDictionary)
             {
-                Dictionary<string, Data> dictionary = entry.Data.AsDictionary;
+                Dictionary<string, Data> dictionary = entry.Data.Dictionary;
                 string nameKey = "name";
 
                 if (dictionary.ContainsKey(nameKey))
@@ -153,7 +153,7 @@ namespace UMS.Editor.Windows
 
                     if (nameData.IsString)
                     {
-                        information.Add(nameData.AsString);
+                        information.Add(nameData.String);
                     }                    
                 }
             }

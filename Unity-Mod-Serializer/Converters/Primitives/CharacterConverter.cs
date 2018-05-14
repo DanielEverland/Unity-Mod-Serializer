@@ -16,7 +16,7 @@ namespace UMS.Converters.Primitives
             if (!data.IsString)
                 return Result.Error("Type mismatch. Expected String", data);
 
-            obj = System.Convert.ToChar(data.AsString);
+            obj = System.Convert.ToChar(data.String);
             return Result.Success;
         }
     }

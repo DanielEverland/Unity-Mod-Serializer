@@ -49,14 +49,14 @@ namespace UMS.Editor
         {
             if (data.IsDictionary)
             {
-                foreach (KeyValuePair<string, Data> keyvaluePair in data.AsDictionary)
+                foreach (KeyValuePair<string, Data> keyvaluePair in data.Dictionary)
                 {
                     AddToItem(parent, keyvaluePair.Key, keyvaluePair.Value);
                 }
             }
             else if (data.IsList)
             {
-                foreach (Data dataInstance in data.AsList)
+                foreach (Data dataInstance in data.List)
                 {
                     AddToItem(parent, null, dataInstance);
                 }

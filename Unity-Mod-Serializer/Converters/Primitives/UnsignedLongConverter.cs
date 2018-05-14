@@ -16,7 +16,7 @@ namespace UMS.Converters.Primitives
             if (!data.IsULong)
                 return Result.Error("Type mismatch. Expected ULong", data);
 
-            obj = data.AsULong;
+            obj = data.ULong;
             return Result.Success;
         }
     }

@@ -22,7 +22,7 @@ namespace UMS.Converters
             if (!data.IsString)
                 return Result.Error("Type mismatch. Expected string");
 
-            string serializedValue = data.AsString;
+            string serializedValue = data.String;
             string typeName = serializedValue.Split(':')[1];
             long value = long.Parse(serializedValue.Split(':')[0]);
 

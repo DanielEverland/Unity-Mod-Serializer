@@ -27,7 +27,7 @@ namespace UMS.Converters
             if (!data.IsList)
                 return Result.Error("Type mismatch. Expected list", data);
 
-            if (data.AsList.Count != 4)
+            if (data.List.Count != 4)
                 return Result.Error("Missing items. Expected a list of 4 floats", data);
 
             for (int i = 0; i < 4; i++)

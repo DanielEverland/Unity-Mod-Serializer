@@ -21,7 +21,7 @@ namespace UMS.Converters.Primitives
             if (!data.IsString)
                 return Result.Error("Type mismatch. Expected String", data);
 
-            obj = data.AsString;
+            obj = data.String;
             return Result.Success;
         }
     }

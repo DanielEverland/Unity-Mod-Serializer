@@ -16,7 +16,7 @@ namespace UMS.Converters.Primitives
             if (!data.IsDouble)
                 return Result.Error("Type mismatch. Expected Double", data);
 
-            obj = data.AsDouble;
+            obj = data.Double;
             return Result.Success;
         }
     }

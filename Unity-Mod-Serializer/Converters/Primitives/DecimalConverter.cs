@@ -16,7 +16,7 @@ namespace UMS.Converters.Primitives
             if (!data.IsDecimal)
                 return Result.Error("Type mismatch. Expected Decimal", data);
 
-            obj = data.AsDecimal;
+            obj = data.Decimal;
             return Result.Success;
         }
     }

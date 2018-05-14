@@ -51,7 +51,7 @@ namespace UMS.Converters
             if (!data.IsDictionary)
                 return Result.Error("Type mismatch. Expected dictionary");
 
-            obj.name = data[KEY_NAME].AsString;
+            obj.name = data[KEY_NAME].String;
 
             result += DeserializeComponents(data[KEY_COMPONENTS], ref obj);
 
@@ -64,7 +64,7 @@ namespace UMS.Converters
 
             Result result = Result.Success;
 
-            foreach (Data componentData in data.AsList)
+            foreach (Data componentData in data.List)
             {
                 if (!componentData.IsDictionary)
                     return Result.Error("Type mismatch. Expected Dictionary", componentData);
