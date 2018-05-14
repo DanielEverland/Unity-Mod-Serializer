@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using ProtoBuf;
 
 namespace UMS
 {
@@ -9,20 +10,54 @@ namespace UMS
     /// Helper class used to add an abstraction layer,
     /// so we don't have to fiddle around with Protobuf in converters
     /// </summary>
-    [System.Serializable]
+    [ProtoContract]
     public sealed class Data
     {
-        /// <summary>
-        /// Represents the actual value we serialize
-        /// </summary>
-        private object _value;
+        #region Values
+        /* This implementation is slightly retarded, but ultimately necessary to properly use Protobuf.
+         * Note that even though we have a lot of duplicate fields, Protobuf will completely ignore them
+         * unless they have a value assigned. So as long as we make sure only one field has a value at a
+         * time, we get the flexibility of using a BinaryFormatter, while harnesing Protobuf's performance
+         */
+
+        [ProtoMember(1)]
+        private bool? _boolValue;
+        [ProtoMember(2)]
+        private byte? _byteValue;
+        [ProtoMember(3)]
+        private short? _shortValue;
+        [ProtoMember(4)]
+        private ushort? _ushortValue;
+        [ProtoMember(5)]
+        private int? _intValue;
+        [ProtoMember(6)]
+        private uint? _uintValue;
+        [ProtoMember(7)]
+        private long? _longValue;
+        [ProtoMember(8)]
+        private ulong? _ulongValue;
+        [ProtoMember(9)]
+        private float? _floatValue;
+        [ProtoMember(10)]
+        private double? _doubleValue;
+        [ProtoMember(11)]
+        private decimal? _decimalValue;
+        [ProtoMember(12)]
+        private string _stringValue;
+        [ProtoMember(13)]
+        private byte[] _byteArrayValue;
+        [ProtoMember(14)]
+        private List<Data> _listValue;
+        [ProtoMember(15)]
+        private Dictionary<string, Data> _dictionaryValue;
+        #endregion
 
         public Result Add(Data data)
         {
             if (!IsList)
                 return Result.Error("Type mismatch. Expected List", this);
 
-            AsList.Add(data);
+            List.Add(data);
 
             return Result.Success;
         }
@@ -35,14 +70,14 @@ namespace UMS
                 if (!IsDictionary)
                     throw new System.InvalidOperationException("Tried to index a non-dictionary Data object " + this);
 
-                return AsDictionary[index];
+                return Dictionary[index];
             }
             set
             {
                 if (!IsDictionary)
                     throw new System.InvalidOperationException("Tried to index a non-dictionary Data object " + this);
 
-                AsDictionary.Set(index, value);
+                Dictionary.Set(index, value);
             }
         }
         public Data this[int index]
@@ -52,11 +87,14 @@ namespace UMS
                 if (!IsList)
                     throw new System.InvalidOperationException("Tried to index a non-list Data object " + this);
 
-                return AsList[index];
+                return List[index];
             }
             set
             {
-                AsList[index] = value;
+                if (!IsList)
+                    throw new System.InvalidOperationException("Tried to index a non-list Data object " + this);
+
+                List[index] = value;
             }
         }
         #endregion
@@ -70,69 +108,129 @@ namespace UMS
         #region Constructors
         public Data()
         {
-            _value = null;
         }
         public Data(bool value)
         {
-            _value = value;
+            Bool = value;
         }
-        public Data(double value)
+        public Data(byte value)
         {
-            _value = value;
+            Byte = value;
         }
-        public Data(decimal value)
+        public Data(short value)
         {
-            _value = value;
+            Short = value;
+        }
+        public Data(ushort value)
+        {
+            UShort = value;
+        }
+        public Data(int value)
+        {
+            Int = value;
+        }
+        public Data(uint value)
+        {
+            UInt = value;
         }
         public Data(long value)
         {
-            _value = value;
+            Long = value;
         }
         public Data(ulong value)
         {
-            _value = value;
+            ULong = value;
+        }
+        public Data(float value)
+        {
+            Float = value;
+        }
+        public Data(double value)
+        {
+            Double = value;
+        }
+        public Data(decimal value)
+        {
+            Decimal = value;
         }
         public Data(string value)
         {
-            _value = value;
+            String = value;
         }
         public Data(byte[] value)
         {
-            _value = value;
+            ByteArray = value;
         }
-        public Data(Dictionary<string, Data> dictionary)
+        public Data(List<Data> value)
         {
-            _value = dictionary;
+            List = value;
         }
-        public Data(List<Data> list)
+        public Data(Dictionary<string, Data> value)
         {
-            _value = list;
+            Dictionary = value;
         }
         #endregion
 
-        #region Definition Properties
-        public bool IsNull { get { return _value == null; } }
-        public bool IsBool { get { return _value is bool; } }
-        public bool IsDouble { get { return _value is double; } }
-        public bool IsDecimal { get { return _value is decimal; } }
-        public bool IsLong { get { return _value is long; } }
-        public bool IsULong { get { return _value is ulong; } }
-        public bool IsString { get { return _value is string; } }
-        public bool IsBytes { get { return _value is byte[]; } }
-        public bool IsDictionary { get { return _value is Dictionary<string, Data>; } }
-        public bool IsList { get { return _value is List<Data>; } }
-        #endregion
+        #region Properties
+        public bool     Bool    { get { return _boolValue.Value; }      set { Clear(); _boolValue = value; } }
+        public byte     Byte    { get { return _byteValue.Value; }      set { Clear(); _byteValue = value; } }
+        public short    Short   { get { return _shortValue.Value; }     set { Clear(); _shortValue = value; } }
+        public ushort   UShort  { get { return _ushortValue.Value; }    set { Clear(); _ushortValue = value; } }
+        public int      Int     { get { return _intValue.Value; }       set { Clear(); _intValue = value; } }
+        public uint     UInt    { get { return _uintValue.Value; }      set { Clear(); _uintValue = value; } }
+        public long     Long    { get { return _longValue.Value; }      set { Clear(); _longValue = value; } }
+        public ulong    ULong   { get { return _ulongValue.Value; }     set { Clear(); _ulongValue = value; } }
+        public float    Float   { get { return _floatValue.Value; }     set { Clear(); _floatValue = value; } }
+        public double   Double  { get { return _doubleValue.Value; }    set { Clear(); _doubleValue = value; } }
+        public decimal  Decimal { get { return _decimalValue.Value; }   set { Clear(); _decimalValue = value; } }
+        public string   String  { get { return _stringValue; }          set { Clear(); _stringValue = value; } }
+        public byte[]                   ByteArray   { get { return _byteArrayValue; }   set { Clear(); _byteArrayValue = value; } }
+        public List<Data>               List        { get { return _listValue; }        set { Clear(); _listValue = value; } }
+        public Dictionary<string, Data> Dictionary  { get { return _dictionaryValue; }  set { Clear(); _dictionaryValue = value; } }
 
-        #region Cast Properties
-        public bool AsBool { get { return Cast<bool>(); } }
-        public double AsDouble { get { return Cast<double>(); } }
-        public decimal AsDecimal { get { return Cast<decimal>(); } }
-        public long AsLong { get { return Cast<long>(); } }
-        public ulong AsULong { get { return Cast<ulong>(); } }
-        public string AsString { get { return Cast<string>(); } }
-        public byte[] AsBytes { get { return Cast<byte[]>(); } }
-        public Dictionary<string, Data> AsDictionary { get { return Cast<Dictionary<string, Data>>(); } }
-        public List<Data> AsList { get { return Cast<List<Data>>(); } }
+
+        public bool IsNull          { get { return Type == DataType.Null; } }
+        public bool IsBool          { get { return _boolValue.HasValue; } }
+        public bool IsByte          { get { return _byteValue.HasValue; } }
+        public bool IsShort         { get { return _shortValue.HasValue; } }
+        public bool IsUShort        { get { return _ushortValue.HasValue; } }
+        public bool IsInt           { get { return _intValue.HasValue; } }
+        public bool IsUInt          { get { return _uintValue.HasValue; } }
+        public bool IsLong          { get { return _longValue.HasValue; } }
+        public bool IsULong         { get { return _ulongValue.HasValue; } }
+        public bool IsFloat         { get { return _floatValue.HasValue; } }
+        public bool IsDouble        { get { return _doubleValue.HasValue; } }
+        public bool IsDecimal       { get { return _decimalValue.HasValue; } }
+        public bool IsString        { get { return _stringValue != null; } }
+        public bool IsByteArray     { get { return _byteArrayValue != null; } }
+        public bool IsList          { get { return _listValue != null; } }
+        public bool IsDictionary    { get { return _dictionaryValue != null; } }
+
+        public object Value
+        {
+            get
+            {
+                //We check these first because they're super common
+                if (IsByteArray) return ByteArray;
+                if (IsList) return List;
+                if (IsDictionary) return Dictionary;
+
+                if (IsBool) return Bool;
+                if (IsByte) return Byte;
+                if (IsShort) return Short;
+                if (IsUShort) return UShort;
+                if (IsInt) return Int;
+                if (IsUInt) return UInt;
+                if (IsLong) return Long;
+                if (IsULong) return ULong;
+                if (IsFloat) return Float;
+                if (IsDouble) return Double;
+                if (IsDecimal) return Decimal;
+                if (IsString) return String;
+
+                return null;
+            }
+        }
         #endregion
 
         #region Type Definitions
@@ -140,18 +238,25 @@ namespace UMS
         {
             get
             {
-                if (IsNull)         return DataType.Null;
-                if (IsBool)         return DataType.Bool;
-                if (IsDouble)       return DataType.Double;
-                if (IsDecimal)      return DataType.Decimal;
-                if (IsLong)         return DataType.Long;
-                if (IsULong)        return DataType.UnsignedLong;
-                if (IsString)       return DataType.String;
-                if (IsBytes)        return DataType.Bytes;
+                //We check these first because they're super common
+                if (IsByteArray)    return DataType.ByteArray;
+                if (IsList)         return DataType.List;
                 if (IsDictionary)   return DataType.Dictionary;
-                if (IsList)         return DataType.Null;
 
-                throw new System.NotImplementedException();
+                if (IsBool)     return DataType.Bool;
+                if (IsByte)     return DataType.Byte;
+                if (IsShort)    return DataType.Short;
+                if (IsUShort)   return DataType.UnsignedShort;
+                if (IsInt)      return DataType.Int;
+                if (IsUInt)     return DataType.UnsignedInt;
+                if (IsLong)     return DataType.Long;
+                if (IsULong)    return DataType.UnsignedLong;
+                if (IsFloat)    return DataType.Float;
+                if (IsDouble)   return DataType.Double;
+                if (IsDecimal)  return DataType.Decimal;
+                if (IsString)   return DataType.String;
+
+                return DataType.Null;
             }
         }
         public enum DataType
@@ -159,43 +264,52 @@ namespace UMS
             Null = 0,
 
             Bool = 1,
-            Double = 2,
-            Decimal = 3,
-            Long = 4,
-            UnsignedLong = 5,
-            String = 6,
-            Bytes = 7,
-            Dictionary = 8,
-            List = 9,
+            Byte = 2,
+            Short = 3,
+            UnsignedShort = 4,
+            Int = 5,
+            UnsignedInt = 6,
+            Long = 7,
+            UnsignedLong = 8,
+            Float = 9,
+            Double = 10,
+            Decimal = 11,
+            String = 12,
+            ByteArray = 13,
+            List = 14,
+            Dictionary = 15,
         }
         #endregion
 
         #region Internal Helper Methods
-        public T Cast<T>()
+        public void Clear()
         {
-            try
-            {
-                return (T)_value;
-            }
-            catch (System.InvalidCastException)
-            {
-                throw new System.InvalidCastException("Issue casting data value " + this + " to type " + typeof(T));
-            }
-            catch (System.Exception)
-            {
-                throw;
-            }
-        }
+            _boolValue = null;
+            _byteValue = null;
+            _shortValue = null;
+            _ushortValue = null;
+            _intValue = null;
+            _uintValue = null;
+            _longValue = null;
+            _ulongValue = null;
+            _floatValue = null;
+            _doubleValue = null;
+            _decimalValue = null;
+            _stringValue = null;
+            _byteArrayValue = null;
+            _listValue = null;
+            _dictionaryValue = null;
+    }
         #endregion
 
         #region Overrides
         static int indent = 0;
         public override string ToString()
         {
-            if (_value == null)
+            if (Value == null)
                 return "null";
 
-            if (IsBytes)
+            if (IsByteArray)
             {
                 return "byte[]";
             }
@@ -217,7 +331,7 @@ namespace UMS
             }
             else
             {
-                return _value.ToString();
+                return Value.ToString();
             }
         }
         private void Indent(StringWriter writer)
@@ -234,7 +348,7 @@ namespace UMS
 
             indent++;
 
-            foreach (KeyValuePair<string, Data> item in AsDictionary)
+            foreach (KeyValuePair<string, Data> item in Dictionary)
             {
                 writer.WriteLine();
                 Indent(writer);
@@ -272,7 +386,7 @@ namespace UMS
 
             indent++;
 
-            foreach (Data item in AsList)
+            foreach (Data item in List)
             {
                 indent++;
 

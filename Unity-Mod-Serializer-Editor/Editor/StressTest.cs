@@ -54,25 +54,30 @@ namespace UMS.Editor
             private bool? _boolValue;
             [ProtoMember(2)]
             private double? _doubleValue;
+            [ProtoMember(3)]
+            private decimal? _decimalValue;
 
             private void Clear()
             {
                 _boolValue = null;
                 _doubleValue = null;
+                _decimalValue = null;
             }
 
             public bool Bool { get { return _boolValue.Value; } set { Clear(); _boolValue = value; } }
             public double Double { get { return _doubleValue.Value; } set { Clear(); _doubleValue = value; } }
+            public decimal Decimal { get { return _decimalValue.Value; } set { Clear(); _decimalValue = value; } }
 
             public bool IsBool { get { return _boolValue.HasValue; } }
+            public bool IsDouble { get { return _doubleValue.HasValue; } }
+            public bool IsDecimal { get { return _decimalValue.HasValue; } }
         }
 
         private static TestData GetNewData()
         {
             return new TestData()
             {
-                Bool = true,
-                Double = 12343544235,
+                Double = 2,
             };
         }
     }
