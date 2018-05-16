@@ -101,6 +101,12 @@ namespace UMS.Editor.Inspectors
                     string fullpath = string.Format("{0}/{1}", folderPath, package.FileName);
 
                     ModPackage.Load(fullpath);
+
+                    foreach (GameObject prefab in ObjectHandler.GetObjectsOfTypeExact<GameObject>())
+                    {
+                        GameObject obj = Instantiate(prefab);
+                        obj.name = prefab.name;
+                    }
                 }
             }
             EditorGUI.EndDisabledGroup();
