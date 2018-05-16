@@ -55,10 +55,13 @@ namespace UMS
                 {
                     ModFile.Entry entry = file[id];
 
-                    UnityEngine.Object obj = null;
-                    result += Deserialize(entry.Data, ref obj);
+                    if(MetaData.GetType(entry.Data, out System.Type type).Succeeded)
+                    {
+                        UnityEngine.Object obj = null;
+                        result += Deserialize(entry.Data, type, ref obj);
 
-                    ObjectHandler.AddObject(obj, entry.Key);
+                        ObjectHandler.AddObject(obj, entry.Key);
+                    }                    
                 }
             }
 
