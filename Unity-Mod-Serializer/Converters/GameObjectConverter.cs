@@ -21,9 +21,9 @@ namespace UMS.Converters
             data = new Data(new Dictionary<string, Data>());
 
             data[KEY_NAME] = new Data(obj.name);
-
-            result += SerializeComponents(obj, ref data);
-
+            
+            result += SerializeComponents(CloneManager.GetClone(obj), ref data);
+            
             return result;
         }
         private Result SerializeComponents(GameObject obj, ref Data data)

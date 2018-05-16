@@ -130,6 +130,7 @@
     <Compile Include="MetaData.cs" />
     <Compile Include="ModFile.cs" />
     <Compile Include="ModPackage.cs" />
+    <Compile Include="CloneManager.cs" />
     <Compile Include="ObjectHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection\AssemblyManager.cs" />
