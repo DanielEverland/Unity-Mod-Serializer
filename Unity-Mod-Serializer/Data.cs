@@ -11,7 +11,7 @@ namespace UMS
     /// so we don't have to fiddle around with Protobuf in converters
     /// </summary>
     [ProtoContract]
-    public sealed class Data
+    public sealed class Data : System.IEquatable<Data>
     {
         #region Values
         /* This implementation is slightly retarded, but ultimately necessary to properly use Protobuf.
@@ -327,6 +327,27 @@ namespace UMS
         #endregion
 
         #region Overrides
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            if(obj is Data data)
+            {
+                return Equals(data);
+            }
+
+            return false;
+        }
+        public bool Equals(Data other)
+        {
+            return Value == other.Value;
+        }
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
         static int indent = 0;
         public override string ToString()
         {
@@ -350,12 +371,12 @@ namespace UMS
                         WriteList(writer);
                     }
 
-                    return writer.ToString();
+                    return $"{writer.ToString()} (Collection)";
                 }
             }
             else
             {
-                return Value.ToString();
+                return $"{Value.ToString()} ({Type})";
             }
         }
         private void Indent(StringWriter writer)

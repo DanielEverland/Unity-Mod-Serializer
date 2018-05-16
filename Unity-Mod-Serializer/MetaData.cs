@@ -21,6 +21,19 @@ namespace UMS
 
             return result;
         }
+        public static bool IsReference(Data data)
+        {
+            if (data.IsDictionary)
+            {
+                return data.Dictionary.ContainsKey(KEY_REFERENCE);
+            }
+
+            return false;
+        }
+        public static Result GetReference(Data data, out string id)
+        {
+            return GetMetaData(data, KEY_REFERENCE, out id);
+        }
         public static Result AddType(Data data, System.Type type)
         {
             if (!data.IsDictionary)

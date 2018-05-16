@@ -22,6 +22,7 @@ namespace UMS
 
             _instance = new Serializer();            
             AssemblyManager.Initialize();
+            ObjectHandler.Initialize();
         }
 
         public static SerializationQueue<object> SerializationQueue { get { return _instance._serializationQueue; } }
@@ -39,6 +40,30 @@ namespace UMS
         private List<IBaseConverter> _converters;
 
         #region Public Deserialize Functions
+        /// <summary>
+        /// Deserializes a modfile and adds all its entries to ObjectHandler
+        /// </summary>
+        public static Result Deserialize(ModFile file)
+        {
+            Result result = Result.Success;
+
+            ObjectHandler.RegisterData(file);
+
+            foreach (string id in file.IDs)
+            {
+                if (file.ShouldDeserialize(id))
+                {
+                    ModFile.Entry entry = file[id];
+
+                    UnityEngine.Object obj = null;
+                    result += Deserialize(entry.Data, ref obj);
+
+                    ObjectHandler.AddObject(obj, entry.Key);
+                }
+            }
+
+            return result;
+        }
         /// <summary>
         /// Deserializes a byte array into memory
         /// </summary>
@@ -185,14 +210,24 @@ namespace UMS
         }
         internal static Result InternalDeserialize(Data data, System.Type type, ref object instance)
         {
+            if (data == Data.Null)
+                return Result.Error("Tried to deserialize data that is null", data);
+
             Result result = Result.Success;
             
-            IBaseConverter converter = GetConverter(type);            
-
+            IBaseConverter converter = GetConverter(type);
+            
             //Create an instance if one doesn't exist
             if(instance == null)
             {
-                instance = converter.CreateInstance(type);
+                try
+                {
+                    instance = converter.CreateInstance(type);
+                }
+                catch (System.Exception e)
+                {
+                    return Result.Exception(e);
+                }                
 
                 if(instance == null)
                 {

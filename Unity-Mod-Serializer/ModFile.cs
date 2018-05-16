@@ -13,11 +13,16 @@ namespace UMS
     [ProtoContract]
     public class ModFile
     {
-        public ModFile() {  }
+        public ModFile()
+        {
+            _entries = new Dictionary<string, Entry>();
+            _deserializationManifest = new List<string>();
+        }
         public ModFile(string fileName)
         {
             _fileName = fileName;
             _entries = new Dictionary<string, Entry>();
+            _deserializationManifest = new List<string>();
 
             _guid = System.Guid.NewGuid();
         }
@@ -39,6 +44,8 @@ namespace UMS
         [ProtoMember(2)]
         private Dictionary<string, Entry> _entries;
         [ProtoMember(3)]
+        private List<string> _deserializationManifest;
+        [ProtoMember(4)]
         private System.Guid _guid;
         
         public static ModFile Load(string fullPath)
@@ -66,9 +73,23 @@ namespace UMS
             UnityEngine.Debug.Log("Serialized " + fullPath);
         }
 
+        public bool ShouldDeserialize(string id)
+        {
+            return _deserializationManifest.Contains(id);
+        }
+
+        /// <summary>
+        /// The deserialization manifest determines which objects we should automatically deserialize
+        /// </summary>
+        public void AddToDeserializationManifest(string id)
+        {
+            _deserializationManifest.Add(id);
+        }
+
         /// <summary>
         /// Adds data to the mod file
         /// </summary>
+        /// <param name="addToDeserializationManifest">Should this entry be deserialized by default when the ModFile is?</param>
         public void Add(string id, Data data, string key = null)
         {
             if (id == string.Empty || id == null)
@@ -88,7 +109,7 @@ namespace UMS
 
             _entries.Add(id, entry);
         }
-
+        
         [ProtoContract]
         public class Entry
         {

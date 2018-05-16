@@ -190,7 +190,7 @@ namespace UMS.Reflection
 
             foreach (KeyValuePair<string, Data> keyValuePair in data.Dictionary)
             {
-                if (keyValuePair.Key.StartsWith(MetaData.CHARACTER))
+                if (keyValuePair.Key.StartsWith(MetaData.CHARACTER) || keyValuePair.Value == Data.Null)
                     continue;
 
                 MemberInfo member = GetMember(keyValuePair.Key, type);
@@ -224,6 +224,9 @@ namespace UMS.Reflection
         {
             Result result = Result.Success;
 
+            if (data == Data.Null)
+                return Result.Error("Trying to deserialize null data", data);
+
             if (property == null)
                 return Result.Error("Property is null " + deserializedObject);
 
@@ -235,7 +238,9 @@ namespace UMS.Reflection
 
             if (property.GetSetMethod() == null)
                 return Result.Error("Setter isn't defined on " + property);
-            
+
+            Debug.Log(data);
+
             object deserializedData = null;
             result += Serializer.Deserialize(data, property.PropertyType, ref deserializedData);
 
@@ -254,6 +259,9 @@ namespace UMS.Reflection
         public static Result DeserializeField(FieldInfo field, Data data, ref object deserializedObject)
         {
             Result result = Result.Success;
+
+            if (data == Data.Null)
+                return Result.Error("Trying to deserialize null data", data);
 
             if (field == null)
                 return Result.Error("Property is null " + deserializedObject);

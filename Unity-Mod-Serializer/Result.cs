@@ -114,7 +114,8 @@ namespace UMS
         {
             foreach (Message message in _messages)
             {
-                message.Output();
+                if(message.type == MessageType.Exception || message.type == MessageType.Error || message.type == MessageType.Warning)
+                    message.Output();
             }
         }
 

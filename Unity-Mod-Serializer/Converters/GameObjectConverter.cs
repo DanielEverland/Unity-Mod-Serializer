@@ -64,14 +64,23 @@ namespace UMS.Converters
 
             Result result = Result.Success;
 
-            foreach (Data componentData in data.List)
+            foreach (Data referenceData in data.List)
             {
+                Result referenceResult = MetaData.GetReference(referenceData, out string id);
+
+                if (!referenceResult.Succeeded)
+                    continue;
+
+                Data componentData = ObjectHandler.GetData(id);
+
                 if (!componentData.IsDictionary)
                     return Result.Error("Type mismatch. Expected Dictionary", componentData);
                 
                 result += MetaData.GetType(componentData, out Type componentType);
 
                 Component component = GetComponent(componentType, obj);
+
+                Debug.Log("Component: " + component);
                 
                 result += Serializer.Deserialize(componentData, componentType, ref component);
             }

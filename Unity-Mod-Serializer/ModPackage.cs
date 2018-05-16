@@ -29,15 +29,7 @@ namespace UMS
         {
             ModFile file = ModFile.Load(fullPath);
 
-            foreach (string id in file.IDs)
-            {
-                ModFile.Entry entry = file[id];
-
-                object deserialized = null;
-                MetaData.GetType(entry.Data, out System.Type type);
-
-                Serializer.Deserialize(entry.Data, type, ref deserialized).AssertWithoutWarnings();
-            }
+            Serializer.Deserialize(file);
         }
         public void SaveToDesktop()
         {
