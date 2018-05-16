@@ -395,7 +395,7 @@ namespace UMS
             if (MetaDataCount == 0)
                 return "";
             
-            string joined = string.Join(", ", _metaData.Select(x => x.ToString()));
+            string joined = string.Join(", ", _metaData);
             string formatted = $"[{joined}]";
 
             return formatted;
