@@ -109,7 +109,6 @@ namespace UMS
         #region Static Definitions
         public static readonly Data True = new Data(true);
         public static readonly Data False = new Data(false);
-        public static readonly Data Null = new Data();
         #endregion
                 
         #region Constructors

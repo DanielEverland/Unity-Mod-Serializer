@@ -34,7 +34,7 @@ namespace UMS.Reflection
                     return SerializeProperty(member as PropertyInfo, obj, out data);                
             }
 
-            data = Data.Null;
+            data = new Data();
             return Result.Error("Cannot serialize " + member.MemberType);
         }
         /// <summary>
@@ -91,7 +91,7 @@ namespace UMS.Reflection
         public static Result SerializeProperty(PropertyInfo property, object obj, out Data data)
         {
             Result result = Result.Success;
-            data = Data.Null;
+            data = new Data();
             
             if (obj == null)
                 return Result.Error("Object is null " + property.DeclaringType);
@@ -142,7 +142,7 @@ namespace UMS.Reflection
         public static Result SerializeField(FieldInfo field, object obj, out Data data)
         {
             Result result = Result.Success;
-            data = Data.Null;
+            data = new Data();
 
             if (obj == null)
                 return Result.Error("Object is null " + field.DeclaringType);
@@ -190,7 +190,7 @@ namespace UMS.Reflection
 
             foreach (KeyValuePair<string, Data> keyValuePair in data.Dictionary)
             {
-                if (keyValuePair.Key.StartsWith(MetaData.CHARACTER) || keyValuePair.Value == Data.Null)
+                if (keyValuePair.Key.StartsWith(MetaData.CHARACTER) || keyValuePair.Value.IsNull)
                     continue;
 
                 MemberInfo member = GetMember(keyValuePair.Key, type);
@@ -224,7 +224,7 @@ namespace UMS.Reflection
         {
             Result result = Result.Success;
 
-            if (data == Data.Null)
+            if (data.IsNull)
                 return Result.Error("Trying to deserialize null data", data);
 
             if (property == null)
@@ -238,9 +238,7 @@ namespace UMS.Reflection
 
             if (property.GetSetMethod() == null)
                 return Result.Error("Setter isn't defined on " + property);
-
-            Debug.Log(data);
-
+                        
             object deserializedData = null;
             result += Serializer.Deserialize(data, property.PropertyType, ref deserializedData);
 
@@ -260,7 +258,7 @@ namespace UMS.Reflection
         {
             Result result = Result.Success;
 
-            if (data == Data.Null)
+            if (data.IsNull)
                 return Result.Error("Trying to deserialize null data", data);
 
             if (field == null)

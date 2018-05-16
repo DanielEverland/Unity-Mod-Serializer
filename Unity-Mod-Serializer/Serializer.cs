@@ -156,7 +156,7 @@ namespace UMS
             //We don't want to try and serialize null values
             if (value == null)
             {
-                data = Data.Null;
+                data = new Data();
                 return Result.Error("Value is null!");
             }                
 
@@ -213,7 +213,7 @@ namespace UMS
         }
         internal static Result InternalDeserialize(Data data, System.Type type, ref object instance)
         {
-            if (data == Data.Null)
+            if (data.IsNull)
                 return Result.Error("Tried to deserialize data that is null", data);
 
             Result result = Result.Success;
