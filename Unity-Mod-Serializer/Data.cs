@@ -327,8 +327,6 @@ namespace UMS
         }
         public void SetMetaData(IMetaData data)
         {
-            UnityEngine.Debug.Log("Adding metadata " + data.ToString());
-
             //Override existing metadata if the type already exists
             for (int i = 0; i < _metaData.Count; i++)
             {
