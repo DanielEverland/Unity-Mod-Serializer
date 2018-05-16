@@ -23,6 +23,7 @@ namespace UMS
             _instance = new Serializer();            
             AssemblyManager.Initialize();
             ObjectHandler.Initialize();
+            IDManager.Initialize();
         }
 
         public static SerializationQueue<object> SerializationQueue { get { return _instance._serializationQueue; } }

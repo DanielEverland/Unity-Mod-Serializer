@@ -35,17 +35,16 @@ namespace UMS
     /// </summary>
     public static class IDManager
     {
-        static IDManager()
-        {
-            _cachedIDs = new Dictionary<object, uint>();
-            _allIDs = new HashSet<uint>();
-        }
-
         private static Dictionary<object, uint> _cachedIDs;
         private static HashSet<uint> _allIDs;
 
         private readonly static BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
+        public static void Initialize()
+        {
+            _cachedIDs = new Dictionary<object, uint>();
+            _allIDs = new HashSet<uint>();
+        }
         public static bool CanGetID(Type type)
         {
             return ReferenceManager.SupportsReferencing(type);
@@ -153,6 +152,12 @@ namespace UMS
 
             foreach (object existingObject in objects)
             {
+                if (existingObject == null)
+                {
+                    Debugging.Info(DebuggingFlags.IDManagerDeepComparer, "Quitting due to null");
+                    continue;
+                }
+
                 if (ReferenceEquals(existingObject, target))
                 {
                     Debugging.Info(DebuggingFlags.IDManagerDeepComparer, "Reference equals true");

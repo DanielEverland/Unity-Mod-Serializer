@@ -17,7 +17,7 @@ namespace UMS
 
         private List<Object> _clones = new List<Object>();
 
-        private void Update()
+        private void LateUpdate()
         {
             foreach (Object obj in _clones)
             {
@@ -25,6 +25,7 @@ namespace UMS
             }
 
             DestroyImmediate(gameObject);
+            _instance = null;
         }
         private T CreateClone<T>(T obj) where T : Object
         {
