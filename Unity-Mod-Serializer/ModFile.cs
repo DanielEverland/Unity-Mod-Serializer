@@ -15,19 +15,19 @@ namespace UMS
     {
         public ModFile()
         {
-            _entries = new Dictionary<string, Entry>();
-            _deserializationManifest = new List<string>();
+            _entries = new Dictionary<ushort, Entry>();
+            _deserializationManifest = new List<ushort>();
         }
         public ModFile(string fileName)
         {
             _fileName = fileName;
-            _entries = new Dictionary<string, Entry>();
-            _deserializationManifest = new List<string>();
+            _entries = new Dictionary<ushort, Entry>();
+            _deserializationManifest = new List<ushort>();
 
             _guid = System.Guid.NewGuid();
         }
 
-        public Entry this[string id]
+        public Entry this[ushort id]
         {
             get
             {
@@ -36,15 +36,15 @@ namespace UMS
         }
 
         public string FileName { get { return _fileName; } }
-        public IEnumerable<string> IDs { get { return _entries.Keys; } }
+        public IEnumerable<ushort> IDs { get { return _entries.Keys; } }
         public System.Guid GUID { get { return _guid; } }
 
         [ProtoMember(1)]
         private readonly string _fileName;
         [ProtoMember(2)]
-        private Dictionary<string, Entry> _entries;
+        private Dictionary<ushort, Entry> _entries;
         [ProtoMember(3)]
-        private List<string> _deserializationManifest;
+        private List<ushort> _deserializationManifest;
         [ProtoMember(4)]
         private System.Guid _guid;
         
@@ -73,7 +73,7 @@ namespace UMS
             UnityEngine.Debug.Log("Serialized " + fullPath);
         }
 
-        public bool ShouldDeserialize(string id)
+        public bool ShouldDeserialize(ushort id)
         {
             return _deserializationManifest.Contains(id);
         }
@@ -81,7 +81,7 @@ namespace UMS
         /// <summary>
         /// The deserialization manifest determines which objects we should automatically deserialize
         /// </summary>
-        public void AddToDeserializationManifest(string id)
+        public void AddToDeserializationManifest(ushort id)
         {
             _deserializationManifest.Add(id);
         }
@@ -90,9 +90,9 @@ namespace UMS
         /// Adds data to the mod file
         /// </summary>
         /// <param name="addToDeserializationManifest">Should this entry be deserialized by default when the ModFile is?</param>
-        public void Add(string id, Data data, string key = null)
+        public void Add(ushort id, Data data, string key = null)
         {
-            if (id == string.Empty || id == null)
+            if (id == 0)
                 throw new System.NullReferenceException("Tried to add object with empty ID - " + data);
 
             if (_entries.ContainsKey(id))
@@ -118,7 +118,7 @@ namespace UMS
             [ProtoMember(2)]
             public string Key;
             [ProtoMember(3)]
-            public string ID;
+            public ushort ID;
         }
     }
 }

@@ -55,6 +55,9 @@ namespace UMS
         [ProtoMember(17)]
         private Dictionary<string, Data> _dictionaryValue;
 
+        [ProtoMember(50)]
+        private List<IMetaData> _metaData = new List<IMetaData>();
+
         [ProtoIgnore]
         private System.Guid _instanceID = System.Guid.NewGuid();
         #endregion
@@ -305,7 +308,31 @@ namespace UMS
         }
         #endregion
 
-        #region Internal Helper Methods
+        #region Public Methods
+        public T GetMetaData<T>() where T : IMetaData
+        {
+            foreach (IMetaData metaData in _metaData)
+            {
+                if (metaData.GetType() == typeof(T))
+                    return (T)metaData;
+            }
+
+            return default(T);
+        }
+        public void SetMetaData(IMetaData data)
+        {
+            //Override existing metadata if the type already exists
+            for (int i = 0; i < _metaData.Count; i++)
+            {
+                if (_metaData[i].GetType() == data.GetType())
+                {
+                    _metaData[i] = data;
+                    return;
+                }                    
+            }
+            
+            _metaData.Add(data);
+        }
         public void Clear()
         {
             _boolValue = null;

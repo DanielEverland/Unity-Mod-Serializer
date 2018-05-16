@@ -26,6 +26,15 @@ namespace UMS
         {
             return _random.Next();
         }
+        public static ushort GetRandomUnsignedShort()
+        {
+            //Random doesn't support ushort
+            byte[] uintData = new byte[2];
+
+            _random.NextBytes(uintData);
+
+            return System.BitConverter.ToUInt16(uintData, 0);
+        }
         public static uint GetRandomUnsignedInt()
         {
             //Random doesn't support uint

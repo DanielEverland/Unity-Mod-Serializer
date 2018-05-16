@@ -12,13 +12,13 @@ namespace UMS
     {
         public static IEnumerable<Data> AllData { get { return _allData.Values; } }
 
-        private static Dictionary<string, Data> _allData;
+        private static Dictionary<ushort, Data> _allData;
         private static List<Object> _allObjects;
         private static Dictionary<string, Object> _keyLookup;
 
         public static void Initialize()
         {
-            _allData = new Dictionary<string, Data>();
+            _allData = new Dictionary<ushort, Data>();
             _allObjects = new List<Object>();
             _keyLookup = new Dictionary<string, Object>();
         }
@@ -78,18 +78,18 @@ namespace UMS
         }
         public static void RegisterData(ModFile file)
         {
-            foreach (string id in file.IDs)
+            foreach (ushort id in file.IDs)
             {
                 ModFile.Entry entry = file[id];
 
                 RegisterData(id, entry.Data);
             }
         }
-        public static void RegisterData(string id, Data data)
+        public static void RegisterData(ushort id, Data data)
         {
             _allData.Set(id, data);
         }
-        public static Data GetData(string id)
+        public static Data GetData(ushort id)
         {
             if (!_allData.ContainsKey(id))
                 throw new System.NullReferenceException("No data has been registered with the ID " + id);

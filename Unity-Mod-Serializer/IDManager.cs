@@ -35,21 +35,21 @@ namespace UMS
     /// </summary>
     public static class IDManager
     {
-        private static Dictionary<object, uint> _cachedIDs;
-        private static HashSet<uint> _allIDs;
+        private static Dictionary<object, ushort> _cachedIDs;
+        private static HashSet<ushort> _allIDs;
 
         private readonly static BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
         public static void Initialize()
         {
-            _cachedIDs = new Dictionary<object, uint>();
-            _allIDs = new HashSet<uint>();
+            _cachedIDs = new Dictionary<object, ushort>();
+            _allIDs = new HashSet<ushort>();
         }
         public static bool CanGetID(Type type)
         {
             return ReferenceManager.SupportsReferencing(type);
         }
-        public static string GetID(object obj)
+        public static ushort GetID(object obj)
         {
             if (obj == null)
                 throw new ArgumentException("Cannot return ID for null object");
@@ -64,11 +64,11 @@ namespace UMS
                 AddToCachingLayer(obj);
             }
 
-            return _cachedIDs[obj].ToString();
+            return _cachedIDs[obj];
         }
         private static void AddToCachingLayer(object obj)
         {
-            bool exists = CheckForExistingID(obj, out uint id);
+            bool exists = CheckForExistingID(obj, out ushort id);
 
             if (exists)
             {
@@ -84,7 +84,7 @@ namespace UMS
                 CreateNewID(obj);
             }
         }
-        private static bool CheckForExistingID(object obj, out uint id)
+        private static bool CheckForExistingID(object obj, out ushort id)
         {
             List<object> encounteredObjects = new List<object>(_cachedIDs.Keys);
             object match = null;
@@ -275,12 +275,12 @@ namespace UMS
         }
         private static void CreateNewID(object obj)
         {
-            uint id = Utility.GetRandomUnsignedInt();
+            ushort id = Utility.GetRandomUnsignedShort();
 
             //This probably won't ever be necessary, but we need to check for collision nevertheless.
             while (_allIDs.Contains(id))
             {
-                id = Utility.GetRandomUnsignedInt();
+                id = Utility.GetRandomUnsignedShort();
             }
 
             Debugging.Info(DebuggingFlags.IDManager, "Creating new ID " + id + " for " + obj);

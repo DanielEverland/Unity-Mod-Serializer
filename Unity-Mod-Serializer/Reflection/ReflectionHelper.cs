@@ -171,7 +171,7 @@ namespace UMS.Reflection
             if(!data.IsDictionary)
                 return Result.Error("Type mismatch. Expected dictionary", data);
 
-            result += MetaData.GetType(data, out System.Type type);
+            System.Type type = data.GetMetaData<TypeMetaData>().Type;
             result += DeserializeObject(data, type, ref deserializedObject);
 
             return result;
@@ -190,7 +190,7 @@ namespace UMS.Reflection
 
             foreach (KeyValuePair<string, Data> keyValuePair in data.Dictionary)
             {
-                if (keyValuePair.Key.StartsWith(MetaData.CHARACTER) || keyValuePair.Value.IsNull)
+                if (keyValuePair.Value.IsNull)
                     continue;
 
                 MemberInfo member = GetMember(keyValuePair.Key, type);

@@ -97,6 +97,7 @@
     <Compile Include="Converters\GameObjectConverter.cs" />
     <Compile Include="Converters\IBaseConverter.cs" />
     <Compile Include="Converters\IDirectConverter.cs" />
+    <Compile Include="Converters\Primitives\ArrayConverter.cs" />
     <Compile Include="Converters\Primitives\BooleanConverter.cs" />
     <Compile Include="Converters\Primitives\ByteConverter.cs" />
     <Compile Include="Converters\Primitives\CharacterConverter.cs" />
@@ -126,8 +127,8 @@
     <Compile Include="Editor\Hooks.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IDManager.cs" />
+    <Compile Include="IMetaData.cs" />
     <Compile Include="InternalSerializer.cs" />
-    <Compile Include="MetaData.cs" />
     <Compile Include="ModFile.cs" />
     <Compile Include="ModPackage.cs" />
     <Compile Include="CloneManager.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Session.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="TypeInheritanceTree.cs" />
+    <Compile Include="TypeMetaData.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>

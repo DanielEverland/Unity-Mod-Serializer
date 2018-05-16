@@ -66,17 +66,12 @@ namespace UMS.Converters
 
             foreach (Data referenceData in data.List)
             {
-                Result referenceResult = MetaData.GetReference(referenceData, out string id);
-
-                if (!referenceResult.Succeeded)
-                    continue;
-
-                Data componentData = ObjectHandler.GetData(id);
+                Data componentData = ObjectHandler.GetData(referenceData.UShort);
 
                 if (!componentData.IsDictionary)
                     return Result.Error("Type mismatch. Expected Dictionary", componentData);
-                
-                result += MetaData.GetType(componentData, out Type componentType);
+
+                System.Type componentType = componentData.GetMetaData<TypeMetaData>().Type;
 
                 Component component = GetComponent(componentType, obj);
                                 

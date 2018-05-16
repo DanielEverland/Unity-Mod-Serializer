@@ -8,7 +8,7 @@ namespace UMS
     {
         public SerializationQueue()
         {
-            _enqueuedObjects = new HashSet<string>();
+            _enqueuedObjects = new HashSet<ushort>();
         }
 
         /// <summary>
@@ -21,9 +21,9 @@ namespace UMS
         /// <summary>
         /// Contains the ID's of all objects that have been enqueued
         /// </summary>
-        private HashSet<string> _enqueuedObjects;
+        private HashSet<ushort> _enqueuedObjects;
 
-        public bool HasBeenEnqueued(string id)
+        public bool HasBeenEnqueued(ushort id)
         {
             return _enqueuedObjects.Contains(id);
         }
@@ -32,7 +32,7 @@ namespace UMS
             if (!IDManager.CanGetID(obj.GetType()))
                 throw new System.ArgumentException(string.Format("Cannot enqueue object {0} ({1}) since IDManager doesn't permit it", obj, obj.GetType()));
 
-            string id = IDManager.GetID(obj);
+            ushort id = IDManager.GetID(obj);
 
             if (HasBeenEnqueued(id))
                 throw new System.InvalidOperationException(string.Format("Object {0} ({1}) - ID: {2} has been enqueued before", obj, obj.GetType(), id));

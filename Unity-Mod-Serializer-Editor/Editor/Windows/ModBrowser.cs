@@ -52,7 +52,7 @@ namespace UMS.Editor.Windows
         {
             _file = file;
 
-            _ids = new List<string>(_file.IDs);
+            _ids = new List<ushort>(_file.IDs);
             _hierarchy = new ModBrowserTreeView();
 
             if (_ids.Count > 0)
@@ -62,9 +62,9 @@ namespace UMS.Editor.Windows
         private ModFile _file;
         private Vector2 _listScrollPos;
         private float _listWidth = 200;
-        private string _selectedID;
+        private ushort _selectedID;
         private Styles _styles = new Styles();
-        private List<string> _ids;
+        private List<ushort> _ids;
         private ModBrowserTreeView _hierarchy;
 
         private const float PADDING = 3;
@@ -87,7 +87,7 @@ namespace UMS.Editor.Windows
 
             _hierarchy.OnGUI(inspectorRect);
         }
-        private void SelectEntry(string id)
+        private void SelectEntry(ushort id)
         {
             _selectedID = id;
             ModFile.Entry entry = _file[_selectedID];
@@ -113,7 +113,7 @@ namespace UMS.Editor.Windows
                 Rect worldRect = GetWorldRect(i, listRect);
                 Event currentEvent = Event.current;
 
-                string id = _ids[i];
+                ushort id = _ids[i];
                 bool isSelected = id == _selectedID;
                 ModFile.Entry entry = _file[id];
 
@@ -137,7 +137,7 @@ namespace UMS.Editor.Windows
 
             GUI.EndScrollView();
         }
-        private string GetListItemText(string id)
+        private string GetListItemText(ushort id)
         {
             ModFile.Entry entry = _file[id];
             List<string> information = new List<string>();
@@ -157,17 +157,17 @@ namespace UMS.Editor.Windows
                     }                    
                 }
             }
-            if (MetaData.HasType(entry.Data))
-            {
-                Result result = MetaData.GetType(entry.Data, out System.Type type);
+            //if (MetaData.HasType(entry.Data))
+            //{
+            //    Result result = MetaData.GetType(entry.Data, out System.Type type);
 
-                if (result.Succeeded)
-                {
-                    information.Add(string.Format("({0})", type.Name));
-                }
-            }
+            //    if (result.Succeeded)
+            //    {
+            //        information.Add(string.Format("({0})", type.Name));
+            //    }
+            //}
 
-            information.Add(id);
+            information.Add(id.ToString());
 
             return string.Join(" ", information);
         }

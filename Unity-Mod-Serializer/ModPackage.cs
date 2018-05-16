@@ -51,7 +51,7 @@ namespace UMS
 
             foreach (ObjectEntry entry in _objectEntries)
             {
-                string id = IDManager.GetID(entry.Object);
+                ushort id = IDManager.GetID(entry.Object);
 
                 if (Serializer.SerializationQueue.HasBeenEnqueued(id))
                     continue;
@@ -66,7 +66,7 @@ namespace UMS
             while (Serializer.SerializationQueue.Count > 0)
             {
                 object obj = Serializer.SerializationQueue.Dequeue();
-                string id = IDManager.GetID(obj);
+                ushort id = IDManager.GetID(obj);
 
                 Result result = Serializer.Serialize(obj, out Data data);
 

@@ -50,16 +50,17 @@ namespace UMS
 
             ObjectHandler.RegisterData(file);
 
-            foreach (string id in file.IDs)
+            foreach (ushort id in file.IDs)
             {
                 if (file.ShouldDeserialize(id))
                 {
                     ModFile.Entry entry = file[id];
+                    TypeMetaData typeMetaData = entry.Data.GetMetaData<TypeMetaData>();
 
-                    if(MetaData.GetType(entry.Data, out System.Type type).Succeeded)
+                    if(typeMetaData != null)
                     {
                         UnityEngine.Object obj = null;
-                        result += Deserialize(entry.Data, type, ref obj);
+                        result += Deserialize(entry.Data, typeMetaData.Type, ref obj);
 
                         ObjectHandler.AddObject(obj, entry.Key);
                     }                    
@@ -176,15 +177,13 @@ namespace UMS
                 result += converter.Serialize(value, out data);
 
                 //Add type metadata
-                if (IDManager.CanGetID(objType) && data.IsDictionary)
-                    result += MetaData.AddType(data, objType);
+                if (IDManager.CanGetID(objType))
+                    data.SetMetaData(new TypeMetaData(objType));
             }
             else //Serialize the object as a reference
             {
-                data = new Data(new Dictionary<string, Data>());
-                string id = IDManager.GetID(value);
-
-                result += MetaData.AddReference(data, id);
+                ushort id = IDManager.GetID(value);
+                data = new Data(id);
 
                 if (!SerializationQueue.HasBeenEnqueued(id) && ReferenceManager.SupportsReferencing(objType))
                     SerializationQueue.Enqueue(value);
