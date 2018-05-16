@@ -56,6 +56,8 @@ namespace UMS
                 if (Serializer.SerializationQueue.HasBeenEnqueued(id))
                     continue;
 
+                file.AddToDeserializationManifest(id);
+
                 Serializer.SerializationQueue.Enqueue(entry.Object);
 
                 _enqueuedEntries.Add(entry.Object, entry);
