@@ -79,9 +79,7 @@ namespace UMS.Converters
                 result += MetaData.GetType(componentData, out Type componentType);
 
                 Component component = GetComponent(componentType, obj);
-
-                Debug.Log("Component: " + component);
-                
+                                
                 result += Serializer.Deserialize(componentData, componentType, ref component);
             }
 
