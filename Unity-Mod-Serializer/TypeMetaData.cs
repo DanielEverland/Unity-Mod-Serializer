@@ -19,5 +19,10 @@ namespace UMS
 
         [ProtoMember(1)]
         public Type Type { get; set; }
+
+        public override string ToString()
+        {
+            return $"$type({Type.Name})";
+        }
     }
 }

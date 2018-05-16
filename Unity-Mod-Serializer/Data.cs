@@ -189,6 +189,8 @@ namespace UMS
         #endregion
 
         #region Properties
+        public int MetaDataCount { get { return _metaData.Count; } }
+
         public bool     Bool    { get { return _boolValue.Value; }      set { Clear(); _boolValue = value; } }
         public byte     Byte    { get { return _byteValue.Value; }      set { Clear(); _byteValue = value; } }
         public sbyte    SByte   { get { return _sbyteValue.Value; }     set { Clear(); _sbyteValue = value; } }
@@ -309,6 +311,10 @@ namespace UMS
         #endregion
 
         #region Public Methods
+        public IEnumerable<IMetaData> GetAllMetaData()
+        {
+            return _metaData;
+        }
         public T GetMetaData<T>() where T : IMetaData
         {
             foreach (IMetaData metaData in _metaData)
@@ -321,6 +327,8 @@ namespace UMS
         }
         public void SetMetaData(IMetaData data)
         {
+            UnityEngine.Debug.Log("Adding metadata " + data.ToString());
+
             //Override existing metadata if the type already exists
             for (int i = 0; i < _metaData.Count; i++)
             {
@@ -380,6 +388,20 @@ namespace UMS
         static int indent = 0;
         public override string ToString()
         {
+            return $"{FormatValue()} {GetMetaDataString()}";
+        }
+        public string GetMetaDataString()
+        {
+            if (MetaDataCount == 0)
+                return "";
+            
+            string joined = string.Join(", ", _metaData.Select(x => x.ToString()));
+            string formatted = $"[{joined}]";
+
+            return formatted;
+        }
+        private string FormatValue()
+        {
             if (Value == null)
                 return "null";
 
@@ -387,7 +409,7 @@ namespace UMS
             {
                 return "byte[]";
             }
-            else if(IsDictionary || IsList)
+            else if (IsDictionary || IsList)
             {
                 using (StringWriter writer = new StringWriter())
                 {
@@ -395,7 +417,7 @@ namespace UMS
                     {
                         WriteDictionary(writer);
                     }
-                    else if(IsList)
+                    else if (IsList)
                     {
                         WriteList(writer);
                     }

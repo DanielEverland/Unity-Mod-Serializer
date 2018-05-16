@@ -83,11 +83,11 @@ namespace UMS.Editor
         {
             if (data.IsDictionary)
             {
-                return "Dictionary";
+                return "Dictionary " + data.GetMetaDataString();
             }
             else if (data.IsList)
             {
-                return "List";
+                return "List " + data.GetMetaDataString();
             }
 
             return data.ToString();

@@ -157,16 +157,7 @@ namespace UMS.Editor.Windows
                     }                    
                 }
             }
-            //if (MetaData.HasType(entry.Data))
-            //{
-            //    Result result = MetaData.GetType(entry.Data, out System.Type type);
-
-            //    if (result.Succeeded)
-            //    {
-            //        information.Add(string.Format("({0})", type.Name));
-            //    }
-            //}
-
+            
             information.Add(id.ToString());
 
             return string.Join(" ", information);
