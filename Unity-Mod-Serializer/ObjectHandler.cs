@@ -34,14 +34,14 @@ namespace UMS
         /// </summary>
         public static IEnumerable<T> GetObjectsOfTypeExact<T>() where T : Object
         {
-            return (IEnumerable<T>)_allObjects.Where(x => x.GetType() == typeof(T));
+            return _allObjects.Where(x => x.GetType() == typeof(T)).Select(x => x as T);
         }
         /// <summary>
         /// Returns all objects which can be cast to <typeparamref name="T"/>
         /// </summary>
         public static IEnumerable<T> GetObjectsOfType<T> () where T : Object
         {
-            return (IEnumerable<T>)_allObjects.Where(x => typeof(T).IsAssignableFrom(x.GetType()));
+            return _allObjects.Where(x => typeof(T).IsAssignableFrom(x.GetType())).Select(x => x as T);
         }
         /// <summary>
         /// Returns the first object which is of the exact type <typeparamref name="T"/>
