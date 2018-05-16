@@ -54,6 +54,9 @@ namespace UMS
         private List<Data> _listValue;
         [ProtoMember(17)]
         private Dictionary<string, Data> _dictionaryValue;
+
+        [ProtoIgnore]
+        private System.Guid _instanceID = System.Guid.NewGuid();
         #endregion
 
         public Result Add(Data data)
@@ -341,11 +344,11 @@ namespace UMS
         }
         public bool Equals(Data other)
         {
-            return Value == other.Value;
+            return _instanceID == other._instanceID;
         }
         public override int GetHashCode()
-        {
-            return Value.GetHashCode();
+        {            
+            return _instanceID.GetHashCode();
         }
 
         static int indent = 0;
