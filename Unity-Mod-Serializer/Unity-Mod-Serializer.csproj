@@ -118,6 +118,7 @@
     <Compile Include="Converters\Primitives\UnsignedShortConverter.cs" />
     <Compile Include="Converters\QuaternionConverter.cs" />
     <Compile Include="Converters\RootConverter.cs" />
+    <Compile Include="Converters\ShaderConverter.cs" />
     <Compile Include="Converters\TypeConverter.cs" />
     <Compile Include="Converters\Vector2Converter.cs" />
     <Compile Include="Converters\Vector2IntCovnerter.cs" />
