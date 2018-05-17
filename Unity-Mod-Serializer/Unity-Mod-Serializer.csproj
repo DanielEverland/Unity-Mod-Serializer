@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="Benchmarker.cs" />
     <Compile Include="Converters\BaseConverter.cs" />
+    <Compile Include="Converters\ColorConverter.cs" />
     <Compile Include="Converters\ComponentConverter.cs" />
     <Compile Include="Converters\DirectConverter.cs" />
     <Compile Include="Converters\EnumConverter.cs" />
