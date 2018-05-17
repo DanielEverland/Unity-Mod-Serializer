@@ -8,7 +8,7 @@ namespace UMS
 {
     public abstract class ModelBase<T> : IModel
     {
-        public Type ModelType => typeof(T);
+        public virtual Type ModelType { get; protected set; } = typeof(T);
 
         public abstract void CreateModel(MetaType type);
     }

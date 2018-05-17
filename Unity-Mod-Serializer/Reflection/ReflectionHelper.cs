@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using ProtoBuf.Meta;
 
 namespace UMS.Reflection
 {
@@ -16,6 +17,19 @@ namespace UMS.Reflection
     {
         private static BindingFlags _memberFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
         
+        public static void CreateMetaType(MetaType meta, System.Type type)
+        {
+            foreach (MemberInfo member in type.GetMembers(_memberFlags))
+            {
+                if (!ShouldSerialize(member))
+                    continue;
+
+                if(member.MemberType == (MemberTypes.Property | MemberTypes.Field))
+                {
+                    meta.Add(member.Name);
+                }
+            }
+        }
         public static Result SerializeMember(string memberName, object obj, out Data data)
         {
             Result result = Result.Success;

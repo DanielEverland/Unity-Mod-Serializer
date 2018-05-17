@@ -136,6 +136,9 @@
     <Compile Include="IModel.cs" />
     <Compile Include="InternalSerializer.cs" />
     <Compile Include="ModelBase.cs" />
+    <Compile Include="Models\ComponentModel.cs" />
+    <Compile Include="Models\GameObjectModel.cs" />
+    <Compile Include="Models\ObjectModel.cs" />
     <Compile Include="ModFile.cs" />
     <Compile Include="ModPackage.cs" />
     <Compile Include="CloneManager.cs" />
