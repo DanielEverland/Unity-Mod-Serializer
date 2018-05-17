@@ -310,6 +310,17 @@ namespace UMS
         }
         #endregion
 
+        #region Static Methods
+        public static Data CreateDictionary()
+        {
+            return new Data(new Dictionary<string, Data>());
+        }
+        public static Data CreateList()
+        {
+            return new Data(new List<Data>());
+        }
+        #endregion
+
         #region Public Methods
         public IEnumerable<IMetaData> GetAllMetaData()
         {
