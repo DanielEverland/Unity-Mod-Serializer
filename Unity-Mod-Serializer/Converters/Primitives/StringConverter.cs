@@ -7,7 +7,7 @@ namespace UMS.Converters.Primitives
 {
     public class StringConverter : DirectConverter<string>
     {
-        public override object CreateInstance(Type type)
+        public override object CreateInstance(Data data, Type type)
         {
             return string.Empty;
         }

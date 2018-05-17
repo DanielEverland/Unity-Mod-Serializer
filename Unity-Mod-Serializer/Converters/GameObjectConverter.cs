@@ -11,7 +11,7 @@ namespace UMS.Converters
         private string KEY_NAME = "name";
         private string KEY_COMPONENTS = "components";
 
-        public override object CreateInstance(Type type)
+        public override object CreateInstance(Data data, Type type)
         {
             return new GameObject();
         }

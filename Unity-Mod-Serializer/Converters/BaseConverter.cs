@@ -18,7 +18,7 @@ namespace UMS.Converters
         public abstract Result DoSerialize(T obj, out Data data);
         public abstract Result DoDeserialize(Data data, ref T obj);
 
-        public virtual object CreateInstance(System.Type type)
+        public virtual object CreateInstance(Data data, System.Type type)
         {
             try
             {
@@ -78,7 +78,13 @@ namespace UMS.Converters
 
             return result;
         }
-
+        protected Result SerializeMember<K>(Data data, string name, K value)
+        {
+            Data memberData;
+            var result = Serializer.Serialize(value, out memberData);
+            if (result.Succeeded) data[name] = memberData;
+            return result;
+        }
         private Result SerializeField(Data data, object instance, FieldInfo field)
         {
             object fieldValue = field.GetValue(instance);
@@ -101,7 +107,7 @@ namespace UMS.Converters
             }
 
             object fieldValue = property.GetValue(instance);
-
+                        
             Result result = Serializer.Serialize(fieldValue, out Data memberData);
             data.Dictionary.Set(property.Name, memberData);
 
@@ -143,7 +149,20 @@ namespace UMS.Converters
 
             return result;
         }
+        protected Result DeserializeMember<K>(Data data, string name, out K value)
+        {
+            Data memberData;
+            if (data.Dictionary.TryGetValue(name, out memberData) == false)
+            {
+                value = default(K);
+                return Result.Error("Unable to find member \"" + name + "\"");
+            }
 
+            object storage = null;
+            var result = Serializer.Deserialize(memberData, typeof(K), ref storage);
+            value = (K)storage;
+            return result;
+        }
         private Result DeserializeField(Data data, object instance, FieldInfo field)
         {
             object deserialized = null;

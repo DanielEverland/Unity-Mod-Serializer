@@ -159,7 +159,7 @@ namespace UMS
             if (value == null)
             {
                 data = new Data();
-                return Result.Error("Value is null!");
+                return result;
             }                
 
             Debugging.Verbose(DebuggingFlags.Serializer, string.Format("Trying to serialize {0} ({1})", value, value.GetType()));
@@ -225,7 +225,7 @@ namespace UMS
             {
                 try
                 {
-                    instance = converter.CreateInstance(type);
+                    instance = converter.CreateInstance(data, type);
                 }
                 catch (System.Exception e)
                 {

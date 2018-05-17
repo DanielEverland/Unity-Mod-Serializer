@@ -25,7 +25,7 @@ namespace UMS.Converters
             "colors",
         };
 
-        public override object CreateInstance(Type type)
+        public override object CreateInstance(Data data, Type type)
         {
             return new Mesh();
         }

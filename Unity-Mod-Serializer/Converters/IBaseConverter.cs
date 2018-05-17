@@ -8,7 +8,7 @@ namespace UMS.Converters
     {
         System.Type ModelType { get; }
 
-        object CreateInstance(System.Type type);
+        object CreateInstance(Data data, System.Type type);
         Result Serialize(object obj, out Data data);
         Result Deserialize(Data data, ref object obj);
     }
