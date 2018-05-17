@@ -80,8 +80,7 @@ namespace UMS.Converters
         }
         protected Result SerializeMember<K>(Data data, string name, K value)
         {
-            Data memberData;
-            var result = Serializer.Serialize(value, out memberData);
+            var result = Serializer.Serialize(value, out Data memberData);
             if (result.Succeeded) data[name] = memberData;
             return result;
         }
@@ -151,8 +150,7 @@ namespace UMS.Converters
         }
         protected Result DeserializeMember<K>(Data data, string name, out K value)
         {
-            Data memberData;
-            if (data.Dictionary.TryGetValue(name, out memberData) == false)
+            if (data.Dictionary.TryGetValue(name, out Data memberData) == false)
             {
                 value = default(K);
                 return Result.Error("Unable to find member \"" + name + "\"");
