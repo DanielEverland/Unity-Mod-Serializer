@@ -142,6 +142,8 @@ namespace UMS.Editor.Windows
             ModFile.Entry entry = _file[id];
             List<string> information = new List<string>();
 
+            information.Add(id.ToString());
+
             if (entry.Data.IsDictionary)
             {
                 Dictionary<string, Data> dictionary = entry.Data.Dictionary;
@@ -156,9 +158,13 @@ namespace UMS.Editor.Windows
                         information.Add(nameData.String);
                     }                    
                 }
+            }            
+
+            TypeMetaData typeMetaData = entry.Data.GetMetaData<TypeMetaData>();
+            if (typeMetaData != null)
+            {
+                information.Add($"({typeMetaData.Type.Name})");
             }
-            
-            information.Add(id.ToString());
 
             return string.Join(" ", information);
         }
