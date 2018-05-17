@@ -308,7 +308,7 @@ namespace UMS.Reflection
         }
         public static bool ShouldSerialize(MemberInfo member)
         {
-            if(IsIgnored(member))
+            if(IsIgnored(member) || MemberBlockerAttribute.IsBlocked(member))
                 return false;
 
             switch (member.MemberType)

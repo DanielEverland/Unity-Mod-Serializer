@@ -140,10 +140,13 @@
     <Compile Include="ObjectHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection\AssemblyManager.cs" />
+    <Compile Include="Reflection\BlockedMembers.cs" />
     <Compile Include="Reflection\ConverterLoader.cs" />
     <Compile Include="ReferenceManager.cs" />
     <Compile Include="Reflection\IgnoreAttribute.cs" />
     <Compile Include="Reflection\LoadTypesAttribute.cs" />
+    <Compile Include="Reflection\MemberBlockerAttribute.cs" />
+    <Compile Include="Reflection\MemberBlockerLoader.cs" />
     <Compile Include="Reflection\ReferenceTypeLoader.cs" />
     <Compile Include="Reflection\ReferenceTypesDeclaration.cs" />
     <Compile Include="Reflection\ReferenceTypesAttribute.cs" />
