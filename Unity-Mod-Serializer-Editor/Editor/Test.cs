@@ -6,6 +6,7 @@ using UnityEditor;
 using ProtoBuf;
 using ProtoBuf.Meta;
 using System.IO;
+using UMS;
 
 namespace UMS.Editor
 {
@@ -24,6 +25,64 @@ namespace UMS.Editor
         private const int ITERATIONS = 10000;
         private static RuntimeTypeModel _model;
 
+        #region Surrogate Test
+        [MenuItem("Modding/Test Surrogate")]
+        private static void TestSurrogate()
+        {
+            RuntimeTypeModel model = TypeModel.Create();
+
+            MetaType metaType = model.Add(typeof(BaseClass), false);
+            metaType.SetSurrogate(typeof(Surrogate));
+
+            BaseClass obj = new BaseClass("Test");
+            
+            using (MemoryStream stream = new MemoryStream())
+            {
+                model.Serialize(stream, obj);
+                model.Deserialize(stream, null, typeof(BaseClass));
+            }
+        }
+        private class BaseClass
+        {
+            public BaseClass()
+            {
+            }
+            public BaseClass(string name)
+            {
+                Name = name;
+            }
+
+            public string Name { get; set; }
+        }
+        [ProtoContract]
+        private class Surrogate
+        {
+            public Surrogate()
+            {
+            }
+            public Surrogate(string name)
+            {
+                this.name = name;
+            }
+
+            [ProtoMember(1)]
+            public string name;
+
+            public static implicit operator Surrogate (BaseClass obj)
+            {
+                return obj == null ? null : new Surrogate(obj.Name);
+            }
+            public static implicit operator BaseClass (Surrogate surrogate)
+            {
+                return surrogate == null ? null : new BaseClass(surrogate.name);
+            }
+
+            public override string ToString()
+            {
+                return name;
+            }
+        }
+        #endregion
         [MenuItem("Modding/Run Protobuf Test")]
         private static void RunTest()
         {
