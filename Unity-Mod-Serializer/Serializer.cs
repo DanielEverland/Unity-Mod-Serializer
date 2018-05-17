@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UMS.Converters;
 using UMS.Reflection;
+using ProtoBuf.Meta;
+using System.IO;
 
 namespace UMS
 {
@@ -10,6 +12,7 @@ namespace UMS
     {
         public Serializer()
         {
+            _cachedModels = new Dictionary<System.Type, IModel>();
             _directConverters = new Dictionary<System.Type, IDirectConverter>();
             _cachedConverters = new Dictionary<System.Type, IBaseConverter>();
             _converters = new List<IBaseConverter>();
@@ -24,6 +27,8 @@ namespace UMS
             AssemblyManager.Initialize();
             ObjectHandler.Initialize();
             IDManager.Initialize();
+
+            _instance.CreateModel();
         }
 
         public static SerializationQueue<object> SerializationQueue { get { return _instance._serializationQueue; } }
@@ -31,14 +36,31 @@ namespace UMS
         private static Dictionary<System.Type, IBaseConverter> CachedConverters { get { return _instance._cachedConverters; } }
         private static Dictionary<System.Type, IDirectConverter> DirectConverters { get { return _instance._directConverters; } }
         private static List<IBaseConverter> Converters { get { return _instance._converters; } }
+        private static RuntimeTypeModel Model { get { return _instance._model; } }
 
         private static Serializer _instance;
 
         private SerializationQueue<object> _serializationQueue;
 
+        private Dictionary<System.Type, IModel> _cachedModels;
         private Dictionary<System.Type, IBaseConverter> _cachedConverters;
         private Dictionary<System.Type, IDirectConverter> _directConverters;
         private List<IBaseConverter> _converters;
+        private RuntimeTypeModel _model;
+        
+        public static void AddModel(IModel model)
+        {
+            _instance._cachedModels.Set(model.ModelType, model);
+        }
+        private void CreateModel()
+        {
+            _model = TypeModel.Create();
+
+            foreach (IModel model in _cachedModels.Values)
+            {
+                model.CreateModel(_model.Add(model.ModelType, false));
+            }
+        }
 
         #region Public Deserialize Functions
         /// <summary>
@@ -113,6 +135,10 @@ namespace UMS
         #endregion
 
         #region Public Serialize Functions
+        public static byte[] Serialize(object obj)
+        {
+            return InternalSerialize(obj);
+        }
         /// <summary>
         /// Serializes an object into a byte array
         /// </summary>
@@ -144,6 +170,17 @@ namespace UMS
         #endregion
 
         #region Internal Serialize Functions
+        internal static byte[] InternalSerialize(object obj)
+        {
+            if (!Model.CanSerialize(obj.GetType()))
+                throw new System.NotImplementedException("Cannot serialize " + obj.GetType());
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                Model.Serialize(stream, obj);
+                return stream.ToArray();
+            }
+        }
         internal static Result InternalSerialize(object value, out byte[] array)
         {
             Result result = InternalSerialize(value, out Data data);

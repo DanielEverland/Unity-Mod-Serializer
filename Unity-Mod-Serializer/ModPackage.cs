@@ -68,21 +68,23 @@ namespace UMS
                 object obj = Serializer.SerializationQueue.Dequeue();
                 ushort id = IDManager.GetID(obj);
 
-                Result result = Serializer.Serialize(obj, out Data data);
+                Serializer.Serialize(obj);
 
-                if (result.Succeeded)
-                {
-                    if (_enqueuedEntries.ContainsKey(obj))
-                    {
-                        ObjectEntry entry = _enqueuedEntries[obj];
+                //Result result = Serializer.Serialize(obj, out Data data);
 
-                        file.Add(id, data, entry.Key);
-                    }
-                    else
-                    {
-                        file.Add(id, data, null);
-                    }
-                }
+                //if (result.Succeeded)
+                //{
+                //    if (_enqueuedEntries.ContainsKey(obj))
+                //    {
+                //        ObjectEntry entry = _enqueuedEntries[obj];
+
+                //        file.Add(id, data, entry.Key);
+                //    }
+                //    else
+                //    {
+                //        file.Add(id, data, null);
+                //    }
+                //}
             }
 
             return file;
