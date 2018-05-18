@@ -66,16 +66,16 @@ namespace UMS.Converters
 
             foreach (Data referenceData in data.List)
             {
-                Data componentData = ObjectHandler.GetData(referenceData.UShort);
+                //Data componentData = ObjectHandler.GetData(referenceData.UShort);
 
-                if (!componentData.IsDictionary)
-                    return Result.Error("Type mismatch. Expected Dictionary", componentData);
+                //if (!componentData.IsDictionary)
+                //    return Result.Error("Type mismatch. Expected Dictionary", componentData);
 
-                System.Type componentType = componentData.GetMetaData<TypeMetaData>().Type;
+                //System.Type componentType = componentData.GetMetaData<TypeMetaData>().Type;
 
-                Component component = GetComponent(componentType, obj);
+                //Component component = GetComponent(componentType, obj);
                                 
-                result += Serializer.Deserialize(componentData, componentType, ref component);
+                //result += Serializer.Deserialize(componentData, componentType, ref component);
             }
 
             return result;

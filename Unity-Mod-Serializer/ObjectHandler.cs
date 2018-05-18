@@ -6,19 +6,15 @@ using UnityEngine;
 namespace UMS
 {
     /// <summary>
-    /// Handles objects using their ID's during deserialization
+    /// Contains deserialized objects
     /// </summary>
     public static class ObjectHandler
     {
-        public static IEnumerable<Data> AllData { get { return _allData.Values; } }
-
-        private static Dictionary<ushort, Data> _allData;
         private static List<Object> _allObjects;
         private static Dictionary<string, Object> _keyLookup;
 
         public static void Initialize()
         {
-            _allData = new Dictionary<ushort, Data>();
             _allObjects = new List<Object>();
             _keyLookup = new Dictionary<string, Object>();
         }
@@ -75,26 +71,6 @@ namespace UMS
             }
 
             _allObjects.Add(obj);
-        }
-        public static void RegisterData(ModFile file)
-        {
-            foreach (ushort id in file.IDs)
-            {
-                ModFile.Entry entry = file[id];
-
-                RegisterData(id, entry.Data);
-            }
-        }
-        public static void RegisterData(ushort id, Data data)
-        {
-            _allData.Set(id, data);
-        }
-        public static Data GetData(ushort id)
-        {
-            if (!_allData.ContainsKey(id))
-                throw new System.NullReferenceException("No data has been registered with the ID " + id);
-
-            return _allData[id];
         }
     }
 }

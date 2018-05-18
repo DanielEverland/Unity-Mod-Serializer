@@ -52,7 +52,7 @@ namespace UMS.Editor.Windows
         {
             _file = file;
 
-            _ids = new List<ushort>(_file.IDs);
+            //_ids = new List<ushort>(_file.IDs);
             _hierarchy = new ModBrowserTreeView();
 
             if (_ids.Count > 0)
@@ -144,27 +144,27 @@ namespace UMS.Editor.Windows
 
             information.Add(id.ToString());
 
-            if (entry.Data.IsDictionary)
-            {
-                Dictionary<string, Data> dictionary = entry.Data.Dictionary;
-                string nameKey = "name";
+            //if (entry.Data.IsDictionary)
+            //{
+            //    Dictionary<string, Data> dictionary = entry.Data.Dictionary;
+            //    string nameKey = "name";
 
-                if (dictionary.ContainsKey(nameKey))
-                {
-                    Data nameData = dictionary[nameKey];
+            //    if (dictionary.ContainsKey(nameKey))
+            //    {
+            //        Data nameData = dictionary[nameKey];
 
-                    if (nameData.IsString)
-                    {
-                        information.Add(nameData.String);
-                    }                    
-                }
-            }            
+            //        if (nameData.IsString)
+            //        {
+            //            information.Add(nameData.String);
+            //        }                    
+            //    }
+            //}            
 
-            TypeMetaData typeMetaData = entry.Data.GetMetaData<TypeMetaData>();
-            if (typeMetaData != null)
-            {
-                information.Add($"({typeMetaData.Type.Name})");
-            }
+            //TypeMetaData typeMetaData = entry.Data.GetMetaData<TypeMetaData>();
+            //if (typeMetaData != null)
+            //{
+            //    information.Add($"({typeMetaData.Type.Name})");
+            //}
 
             return string.Join(" ", information);
         }
@@ -184,7 +184,8 @@ namespace UMS.Editor.Windows
         }
         private Rect GetListContentRect()
         {
-            return new Rect(0, 0, _listWidth, _file.IDs.Count() * EditorGUIUtility.singleLineHeight);
+            return Rect.zero;
+            //return new Rect(0, 0, _listWidth, _file.IDs.Count() * EditorGUIUtility.singleLineHeight);
         }
 
         private class Styles

@@ -70,26 +70,24 @@ namespace UMS
         {
             Result result = Result.Success;
 
-            ObjectHandler.RegisterData(file);
+            //ObjectHandler.RegisterData(file);
 
-            foreach (ushort id in file.IDs)
+            foreach (ModFile.Entry entry in file)
             {
-                if (file.ShouldDeserialize(id))
-                {
-                    ModFile.Entry entry = file[id];
-                    TypeMetaData typeMetaData = entry.Data.GetMetaData<TypeMetaData>();
+                UnityEngine.Object obj = (UnityEngine.Object)Deserialize(entry.Data, entry.Type);
 
-                    if(typeMetaData != null)
-                    {
-                        UnityEngine.Object obj = null;
-                        result += Deserialize(entry.Data, typeMetaData.Type, ref obj);
-
-                        ObjectHandler.AddObject(obj, entry.Key);
-                    }                    
-                }
+                ObjectHandler.AddObject(obj, entry.Key);
             }
 
             return result;
+        }
+        public static object Deserialize(byte[] data, System.Type type)
+        {
+            return InternalDeserialize(data, type);
+        }
+        public static T Deserialize<T>(byte[] data)
+        {
+            return (T)InternalDeserialize(data, typeof(T));
         }
         /// <summary>
         /// Deserializes a byte array into memory
@@ -240,6 +238,13 @@ namespace UMS
         #endregion
 
         #region Internal Deserialize Functions
+        internal static object InternalDeserialize(byte[] data, System.Type type)
+        {
+            using (MemoryStream stream = new MemoryStream(data))
+            {
+                return Model.Deserialize(stream, null, type);
+            }            
+        }
         internal static Result InternalDeserialize<T>(Data data, ref T instance)
         {
             object boxedObject = instance;

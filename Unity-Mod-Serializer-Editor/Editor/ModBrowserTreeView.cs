@@ -21,7 +21,7 @@ namespace UMS.Editor
             TreeViewItem root = new TreeViewItem(-1, -1, "Root");
             _ids = new Dictionary<Data, int>();
 
-            AddToItem(root, ActiveObject.Key, ActiveObject.Data);
+            //AddToItem(root, ActiveObject.Key, ActiveObject.Data);
 
             SetupDepthsFromParentsAndChildren(root);
 

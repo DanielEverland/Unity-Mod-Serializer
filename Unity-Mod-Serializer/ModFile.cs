@@ -11,40 +11,35 @@ namespace UMS
     /// Contains the data we serialize from mod packages
     /// </summary>
     [ProtoContract]
-    public class ModFile
+    public class ModFile : IEnumerable<ModFile.Entry>
     {
         public ModFile()
         {
-            _entries = new Dictionary<ushort, Entry>();
-            _deserializationManifest = new List<ushort>();
+            _entries = new List<Entry>();
         }
         public ModFile(string fileName)
         {
             _fileName = fileName;
-            _entries = new Dictionary<ushort, Entry>();
-            _deserializationManifest = new List<ushort>();
+            _entries = new List<Entry>();
 
             _guid = System.Guid.NewGuid();
         }
 
-        public Entry this[ushort id]
+        public Entry this[int index]
         {
             get
             {
-                return _entries[id];
+                return _entries[index];
             }
         }
 
         public string FileName { get { return _fileName; } }
-        public IEnumerable<ushort> IDs { get { return _entries.Keys; } }
         public System.Guid GUID { get { return _guid; } }
 
         [ProtoMember(1)]
         private readonly string _fileName;
         [ProtoMember(2)]
-        private Dictionary<ushort, Entry> _entries;
-        [ProtoMember(3)]
-        private List<ushort> _deserializationManifest;
+        private List<Entry> _entries;
         [ProtoMember(4)]
         private System.Guid _guid;
         
@@ -72,53 +67,42 @@ namespace UMS
 
             UnityEngine.Debug.Log("Serialized " + fullPath);
         }
-
-        public bool ShouldDeserialize(ushort id)
+        
+        public void Add(Entry entry)
         {
-            return _deserializationManifest.Contains(id);
+            _entries.Add(entry);
         }
-
-        /// <summary>
-        /// The deserialization manifest determines which objects we should automatically deserialize
-        /// </summary>
-        public void AddToDeserializationManifest(ushort id)
+        public void Add<T>(T obj, string key = null) where T : UnityEngine.Object
         {
-            _deserializationManifest.Add(id);
-        }
-
-        /// <summary>
-        /// Adds data to the mod file
-        /// </summary>
-        /// <param name="addToDeserializationManifest">Should this entry be deserialized by default when the ModFile is?</param>
-        public void Add(ushort id, Data data, string key = null)
-        {
-            if (id == 0)
-                throw new System.NullReferenceException("Tried to add object with empty ID - " + data);
-
-            if (_entries.ContainsKey(id))
-            {
-                throw new System.InvalidOperationException("Object with id " + id + " already exists!");
-            }
-
             Entry entry = new Entry()
             {
-                Data = data,
+                Data = Serializer.Serialize(obj),
                 Key = key,
-                ID = id,
+                Type = obj.GetType(),
             };
 
-            _entries.Add(id, entry);
+            _entries.Add(entry);
         }
-        
+
+        public IEnumerator<Entry> GetEnumerator()
+        {
+            return _entries.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
         [ProtoContract]
         public class Entry
         {
             [ProtoMember(1)]
-            public Data Data;
+            public byte[] Data;
             [ProtoMember(2)]
             public string Key;
             [ProtoMember(3)]
-            public ushort ID;
+            public System.Type Type;
         }
     }
 }
