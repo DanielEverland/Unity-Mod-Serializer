@@ -11,6 +11,7 @@ namespace UMS.Models
     {
         public override void CreateModel(MetaType type)
         {
+            type.AsReferenceDefault = true;
             type.SetSurrogate(typeof(GameObjectSurrogate));
         }
 
