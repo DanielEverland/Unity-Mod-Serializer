@@ -9,6 +9,11 @@ namespace UMS.Models
 {
     public class GameObjectModel : ObjectModel<GameObject>
     {
+        /// <summary>
+        /// This is used for components so they know which object owns them
+        /// </summary>
+        public static GameObject CurrentInstance { get; set; }
+
         public override void CreateModel(MetaType type)
         {
             type.AsReferenceDefault = true;
@@ -20,6 +25,16 @@ namespace UMS.Models
         {
             [ProtoMember(1)]
             public string Name;
+            [ProtoMember(2)]
+            public List<Component> Components = new List<Component>();
+            
+            [ProtoBeforeDeserialization()]
+            private void BeforeDeserialize()
+            {
+                //We create a static instance that all the data on our
+                //surrogate will deserialize into
+                CurrentInstance = new GameObject();
+            }
 
             public static implicit operator GameObjectSurrogate (GameObject obj)
             {
@@ -31,7 +46,7 @@ namespace UMS.Models
 
                 foreach (Component component in obj.GetComponents<Component>())
                 {
-                    Debug.Log("Serialized " + component);
+                    surrogate.Components.Add(component);
                 }
 
                 return surrogate;
@@ -41,7 +56,9 @@ namespace UMS.Models
                 if (surrogate == null)
                     return null;
 
-                GameObject obj = new GameObject();
+                //We consume the static instance
+                GameObject obj = CurrentInstance;
+                CurrentInstance = null;
 
                 obj.name = surrogate.Name;
 

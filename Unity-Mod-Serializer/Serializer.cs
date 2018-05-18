@@ -32,11 +32,11 @@ namespace UMS
         }
 
         public static SerializationQueue<object> SerializationQueue { get { return _instance._serializationQueue; } }
+        public static RuntimeTypeModel Model { get { return _instance._model; } }
 
         private static Dictionary<System.Type, IBaseConverter> CachedConverters { get { return _instance._cachedConverters; } }
         private static Dictionary<System.Type, IDirectConverter> DirectConverters { get { return _instance._directConverters; } }
         private static List<IBaseConverter> Converters { get { return _instance._converters; } }
-        private static RuntimeTypeModel Model { get { return _instance._model; } }
 
         private static Serializer _instance;
 
