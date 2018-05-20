@@ -13,6 +13,7 @@ namespace UMS.Wrappers
         private static Dictionary<Type, Func<object, object>> _wrappedTypes = new Dictionary<Type, Func<object, object>>()
         {
             { typeof(bool), x => BoolWrapper.Create((bool)x) },
+            { typeof(byte), x => ByteWrapper.Create((byte)x) },
         };
         
         public static object Process(object obj)
