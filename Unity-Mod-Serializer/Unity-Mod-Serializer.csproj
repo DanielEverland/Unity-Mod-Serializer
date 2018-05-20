@@ -69,6 +69,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FastMember, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.1.3.0\lib\net45\FastMember.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="protobuf-net, Version=2.3.7.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.3.7\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
@@ -139,6 +143,9 @@
     <Compile Include="Models\ComponentModel.cs" />
     <Compile Include="Models\GameObjectModel.cs" />
     <Compile Include="Models\ObjectModel.cs" />
+    <Compile Include="Models\QuaternionModel.cs" />
+    <Compile Include="Models\Vector2Model.cs" />
+    <Compile Include="Models\Vector3Model.cs" />
     <Compile Include="ModFile.cs" />
     <Compile Include="ModPackage.cs" />
     <Compile Include="CloneManager.cs" />

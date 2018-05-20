@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using ProtoBuf.Meta;
 using ProtoBuf;
+using FastMember;
 
 namespace UMS.Models
 {
@@ -21,6 +22,8 @@ namespace UMS.Models
         {
             [ProtoMember(1)]
             public System.Type Type;
+            [ProtoMember(2, DynamicType = true)]
+            public Dictionary<int, object> Data;
 
             public static implicit operator ComponentSurrogate(Component obj)
             {
@@ -29,7 +32,8 @@ namespace UMS.Models
 
                 ComponentSurrogate surrogate = new ComponentSurrogate();
                 surrogate.Type = obj.GetType();
-
+                surrogate.Data = ReflectionHelper.Serialize(obj);
+                
                 return surrogate;
             }
             public static implicit operator Component(ComponentSurrogate surrogate)
@@ -38,8 +42,14 @@ namespace UMS.Models
                     return null;
                 
                 Component component = GetComponent(GameObjectModel.CurrentInstance, surrogate.Type);
-                
-                return null;
+
+                //Data won't be serialized if it's empty, so we have to do a null check here
+                if(surrogate.Data != null)
+                {
+                    ReflectionHelper.Deserialize(component, surrogate.Data);
+                }                
+
+                return component;
             }
             private static Component GetComponent(GameObject obj, System.Type type)
             {

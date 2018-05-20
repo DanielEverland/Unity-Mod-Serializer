@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Reflection;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,6 +9,7 @@ using ProtoBuf;
 using ProtoBuf.Meta;
 using System.IO;
 using UMS;
+using FastMember;
 
 namespace UMS.Editor
 {
@@ -24,6 +27,44 @@ namespace UMS.Editor
 
         private const int ITERATIONS = 10000;
         private static RuntimeTypeModel _model;
+        private static string _value;
+        private static TypeAccessor _accessor;
+        private static ReflectionData _data;
+        private static string _fieldName;
+
+        [MenuItem("Modding/Test Field")]
+        private static void TestField()
+        {
+            _data = new ReflectionData();
+            _data.Field = "Field Value";
+            _data.Property = "Property Value";
+
+            _fieldName = "Property";
+            _value = "test";
+
+            PropertyInfo property = _data.GetType().GetProperty(_fieldName);
+            MethodInfo propertyGetMethod = property.GetGetMethod();
+
+            _accessor = TypeAccessor.Create(_data.GetType());
+
+            Benchmarker.Profile("Creation", ITERATIONS, () => { TypeAccessor.Create(_data.GetType()); });
+            
+            Benchmarker.Profile("FastMember", ITERATIONS, TestFastMember);
+            Benchmarker.Profile("Regular", ITERATIONS, TestRegularAccessor);
+        }
+        private static void TestFastMember()
+        {
+            _accessor[_data, _fieldName] = _value;
+        }
+        private static void TestRegularAccessor()
+        {
+            _data.Property = _value;
+        }
+        private class ReflectionData
+        {
+            public string Field;
+            public string Property { get; set; }
+        }
 
         #region Surrogate Test
         [MenuItem("Modding/Test Surrogate")]

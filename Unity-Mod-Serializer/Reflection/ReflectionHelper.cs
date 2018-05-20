@@ -1,9 +1,11 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using ProtoBuf.Meta;
+using FastMember;
 
 namespace UMS.Reflection
 {
@@ -16,16 +18,181 @@ namespace UMS.Reflection
     public static class ReflectionHelper
     {
         private static BindingFlags _memberFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-        
+
+        /// <summary>
+        /// Serialization graphs can quickly complete serialization for any given type
+        /// </summary>
+        private static Dictionary<Type, SerializationGraph> _serializationGraphs = new Dictionary<Type, SerializationGraph>();
+
+        /// <summary>
+        /// We only serialize the hashcode of member names, so we need to convert those during deserialization
+        /// </summary>
+        private static Dictionary<int, string> _nameLookup = new Dictionary<int, string>();
+
+        private class SerializationGraph
+        {
+            public SerializationGraph(Type type)
+            {
+                _accessor = TypeAccessor.Create(type);
+
+                foreach (MemberInfo member in type.GetMembers(_memberFlags))
+                {
+                    if (!ShouldSerialize(member))
+                        continue;
+                                        
+                    if(member.MemberType == MemberTypes.Property || member.MemberType == MemberTypes.Field)
+                    {
+                        _serializableMembers.Add(Member.Create(member.Name));
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Contains all the members we want to serialize in a given type
+            /// </summary>
+            private List<Member> _serializableMembers = new List<Member>();
+
+            /// <summary>
+            /// FastMember type accessor. Makes reading fields and properties insanely fast
+            /// </summary>
+            private TypeAccessor _accessor;
+            
+            public Dictionary<int, object> Serialize(object obj)
+            {
+                Dictionary<int, object> toReturn = new Dictionary<int, object>();
+
+                foreach (Member member in _serializableMembers)
+                {
+                    toReturn.Add(member.Hashcode, _accessor[obj, member.Name]);
+                }
+
+                return toReturn;
+            }
+            [ProtoBuf.ProtoContract]
+            private class BooleanWrapper
+            {
+                [ProtoBuf.ProtoMember(1)]
+                public bool _value;
+            }
+            public void Deserialize(object obj, Dictionary<int, object> data)
+            {
+                foreach (KeyValuePair<int, object> pair in data)
+                {
+#if DEBUG
+                    if (!_nameLookup.ContainsKey(pair.Key))
+                        Debug.LogWarning("Couldn't find lookup for " + pair.Key + " - " + obj.GetType());
+#endif
+
+                    _accessor[obj, _nameLookup[pair.Key]] = pair.Value;
+                }
+            }
+
+            private struct Member
+            {
+                public string Name;
+                public int Hashcode;
+
+                public static Member Create(string name)
+                {
+                    Member toReturn = new Member()
+                    {
+                        Name = name,
+                        Hashcode = name.GetHashCode(),
+                    };
+
+                    if (!_nameLookup.ContainsKey(toReturn.Hashcode))
+                    {
+                        _nameLookup.Add(toReturn.Hashcode, toReturn.Name);
+                    }
+
+                    return toReturn;
+                }
+            }
+        }
+
+        private static SerializationGraph GetSerializationGraph(Type type)
+        {
+            if (!_serializationGraphs.ContainsKey(type))
+            {
+                _serializationGraphs.Add(type, new SerializationGraph(type));
+            }
+
+            return _serializationGraphs[type];
+        }
+        public static Dictionary<int, object> Serialize(object obj)
+        {
+#if DEBUG
+            if (obj == null)
+                throw new NullReferenceException("Object is null");
+#endif
+
+            return GetSerializationGraph(obj.GetType()).Serialize(obj);
+        }
+        public static void Deserialize(object obj, Dictionary<int, object> data)
+        {
+#if DEBUG
+            if (obj == null)
+                throw new NullReferenceException("Object is null");
+
+            if (data == null)
+                throw new NullReferenceException("Data is null");
+#endif
+
+            GetSerializationGraph(obj.GetType()).Deserialize(obj, data);
+        }
+
+        public static bool ShouldSerialize(MemberInfo member)
+        {
+            if (IsIgnored(member) || MemberBlockerAttribute.IsBlocked(member))
+                return false;
+
+            switch (member.MemberType)
+            {
+                case MemberTypes.Field:
+                    return ShouldSerializeField(member as FieldInfo);
+                case MemberTypes.Property:
+                    return ShouldSerializeProperty(member as PropertyInfo);
+            }
+
+            return true;
+        }
+        public static bool ShouldSerializeProperty(PropertyInfo property)
+        {
+            MethodInfo getMethod = property.GetGetMethod();
+
+            if (getMethod == null)
+                return false;
+
+            if (property.SetMethod == null)
+                return false;
+
+            return getMethod.IsPublic;
+        }
+        public static bool ShouldSerializeField(FieldInfo field)
+        {
+            if (!field.IsPublic)
+            {
+                return field.GetCustomAttributes().Any(x => x.GetType() == typeof(SerializeField));
+            }
+
+            return true;
+        }
+        public static bool IsIgnored(MemberInfo member)
+        {
+            return member.GetCustomAttribute(typeof(IgnoreAttribute)) != null;
+        }
+
+        #region Deprecated Shit
         public static void CreateMetaType(MetaType meta, System.Type type)
         {
             foreach (MemberInfo member in type.GetMembers(_memberFlags))
             {
                 if (!ShouldSerialize(member))
                     continue;
-
+                
                 if(member.MemberType == (MemberTypes.Property | MemberTypes.Field))
                 {
+                    Debug.Log("Adding " + member);
                     meta.Add(member.Name);
                 }
             }
@@ -316,45 +483,9 @@ namespace UMS.Reflection
 
             return members[0];
         }
-        public static bool IsIgnored(MemberInfo member)
-        {
-            return member.GetCustomAttributes().Any(x => x.GetType() == typeof(IgnoreAttribute));
-        }
-        public static bool ShouldSerialize(MemberInfo member)
-        {
-            if(IsIgnored(member) || MemberBlockerAttribute.IsBlocked(member))
-                return false;
-
-            switch (member.MemberType)
-            {
-                case MemberTypes.Field:
-                    return ShouldSerializeField(member as FieldInfo);
-                case MemberTypes.Property:
-                    return ShouldSerializeProperty(member as PropertyInfo);
-            }
-
-            return true;
-        }
-        public static bool ShouldSerializeProperty(PropertyInfo property)
-        {
-            MethodInfo getMethod = property.GetGetMethod();
-
-            if (getMethod == null)
-                return false;
-
-            if (property.SetMethod == null)
-                return false;
-
-            return getMethod.IsPublic;
-        }
-        public static bool ShouldSerializeField(FieldInfo field)
-        {
-            if (!field.IsPublic)
-            {
-                return field.GetCustomAttributes().Any(x => x.GetType() == typeof(SerializeField));
-            }
-
-            return true;
-        }
+        
+        
+        
+        #endregion
     }
 }
