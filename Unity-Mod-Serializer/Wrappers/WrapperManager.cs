@@ -21,6 +21,7 @@ namespace UMS.Wrappers
             { typeof(float), x => FloatWrapper.Create((float)x) },
             { typeof(int), x => IntWrapper.Create((int)x) },
             { typeof(uint), x => UnsignedIntWrapper.Create((uint)x) },
+            { typeof(long), x => LongWrapper.Create((long)x) },
         };
         
         public static object Process(object obj)
