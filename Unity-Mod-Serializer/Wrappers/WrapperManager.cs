@@ -14,6 +14,7 @@ namespace UMS.Wrappers
         {
             { typeof(bool), x => BoolWrapper.Create((bool)x) },
             { typeof(byte), x => ByteWrapper.Create((byte)x) },
+            { typeof(sbyte), x => SignedByteWrapper.Create((sbyte)x) },
         };
         
         public static object Process(object obj)
