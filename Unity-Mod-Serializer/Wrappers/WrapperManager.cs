@@ -17,6 +17,7 @@ namespace UMS.Wrappers
             { typeof(sbyte), x => SignedByteWrapper.Create((sbyte)x) },
             { typeof(char), x => CharWrapper.Create((char)x) },
             { typeof(decimal), x => DecimalWrapper.Create((decimal)x) },
+            { typeof(double), x => DoubleWrapper.Create((double)x) },
         };
         
         public static object Process(object obj)
