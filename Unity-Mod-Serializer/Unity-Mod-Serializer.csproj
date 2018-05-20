@@ -173,6 +173,8 @@
     <Compile Include="TypeMetaData.cs" />
     <Compile Include="UnityEngineObjectHelper.cs" />
     <Compile Include="Utility.cs" />
+    <Compile Include="Wrappers\BoolWrapper.cs" />
+    <Compile Include="Wrappers\WrapperManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

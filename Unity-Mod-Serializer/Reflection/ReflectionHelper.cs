@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using ProtoBuf.Meta;
 using FastMember;
+using UMS.Wrappers;
 
 namespace UMS.Reflection
 {
@@ -63,7 +64,7 @@ namespace UMS.Reflection
 
                 foreach (Member member in _serializableMembers)
                 {
-                    toReturn.Add(member.Hashcode, _accessor[obj, member.Name]);
+                    toReturn.Add(member.Hashcode, WrapperManager.Process(_accessor[obj, member.Name]));
                 }
 
                 return toReturn;
