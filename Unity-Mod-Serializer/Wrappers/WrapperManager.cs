@@ -20,6 +20,7 @@ namespace UMS.Wrappers
             { typeof(double), x => DoubleWrapper.Create((double)x) },
             { typeof(float), x => FloatWrapper.Create((float)x) },
             { typeof(int), x => IntWrapper.Create((int)x) },
+            { typeof(uint), x => UnsignedIntWrapper.Create((uint)x) },
         };
         
         public static object Process(object obj)
