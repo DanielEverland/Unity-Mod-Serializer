@@ -19,6 +19,7 @@ namespace UMS.Wrappers
             { typeof(decimal), x => DecimalWrapper.Create((decimal)x) },
             { typeof(double), x => DoubleWrapper.Create((double)x) },
             { typeof(float), x => FloatWrapper.Create((float)x) },
+            { typeof(int), x => IntWrapper.Create((int)x) },
         };
         
         public static object Process(object obj)
