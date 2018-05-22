@@ -166,7 +166,7 @@ namespace UMS
 
             using (MemoryStream stream = new MemoryStream())
             {
-                Model.Serialize(stream, obj);
+                ProtoBuf.Serializer.Serialize(stream, obj);
                 return stream.ToArray();
             }
         }
@@ -233,7 +233,7 @@ namespace UMS
         {
             using (MemoryStream stream = new MemoryStream(data))
             {
-                return Model.Deserialize(stream, null, type);
+                return ProtoBuf.Serializer.Deserialize(type, stream);
             }            
         }
         internal static Result InternalDeserialize<T>(Data data, ref T instance)

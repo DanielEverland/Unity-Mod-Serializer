@@ -39,7 +39,23 @@ namespace UMS.Editor
             obj.name = "This is a test";
             obj.transform.position = new Vector3(155, 45, 65);
 
-            ExecuteSurrogateTest(obj, Serializer.Model);
+            byte[] data = null;
+            using (MemoryStream stream = new MemoryStream())
+            {
+                ProtoBuf.Serializer.Serialize(stream, obj);
+                Debug.Log($"Serializing ({stream.Length})");
+
+                Debug.Log("Deserilizing First Pass...");
+                Debug.Log(ProtoBuf.Serializer.Deserialize(obj.GetType(), stream));
+
+                data = stream.ToArray();
+            }
+
+            using (MemoryStream stream2 = new MemoryStream(data))
+            {
+                Debug.Log("Deserilizing Second Pass...");
+                Debug.Log(ProtoBuf.Serializer.Deserialize(obj.GetType(), stream2));
+            }
         }
         [MenuItem("Modding/Test Field")]
         private static void TestField()
