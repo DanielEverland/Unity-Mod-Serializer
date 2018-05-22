@@ -31,7 +31,7 @@ namespace UMS.Editor
         private static TypeAccessor _accessor;
         private static ReflectionData _data;
         private static string _fieldName;
-
+        
         [MenuItem("Modding/Test Field")]
         private static void TestField()
         {
@@ -72,50 +72,56 @@ namespace UMS.Editor
         {
             RuntimeTypeModel model = TypeModel.Create();
 
-            MetaType metaType = model.Add(typeof(BaseClass), false);
-            metaType.SetSurrogate(typeof(Surrogate));
+            MetaType metaType = model.Add(typeof(GameObject), false);
+            metaType.SetSurrogate(typeof(GameObjectSurrogate));
 
-            BaseClass obj = new BaseClass("Test");
-            
+            GameObject toSerialize = new GameObject();
+            toSerialize.name = "This is a test name";
+            toSerialize.transform.position = new Vector3(64, 1, 54);
+
+            ExecuteSurrogateTest(toSerialize, model);
+        }
+        private static void ExecuteSurrogateTest(object obj, RuntimeTypeModel model)
+        {
+            byte[] data = null;
             using (MemoryStream stream = new MemoryStream())
             {
+                Debug.Log("Serializing...");
                 model.Serialize(stream, obj);
-                model.Deserialize(stream, null, typeof(BaseClass));
-            }
-        }
-        private class BaseClass
-        {
-            public BaseClass()
-            {
-            }
-            public BaseClass(string name)
-            {
-                Name = name;
+
+                Debug.Log("Deserilizing First Pass...");
+                model.Deserialize(stream, null, obj.GetType());
+
+                data = stream.ToArray();
             }
 
-            public string Name { get; set; }
+            using (MemoryStream stream2 = new MemoryStream(data))
+            {
+                Debug.Log("Deserilizing Second Pass...");
+                model.Deserialize(stream2, null, obj.GetType());
+            }
         }
         [ProtoContract]
-        private class Surrogate
+        private class GameObjectSurrogate
         {
-            public Surrogate()
+            public GameObjectSurrogate()
             {
             }
-            public Surrogate(string name)
+            public GameObjectSurrogate(GameObject obj)
             {
-                this.name = name;
+                name = obj.name;
             }
 
             [ProtoMember(1)]
             public string name;
 
-            public static implicit operator Surrogate (BaseClass obj)
+            public static implicit operator GameObjectSurrogate(GameObject obj)
             {
-                return obj == null ? null : new Surrogate(obj.Name);
+                return obj == null ? null : new GameObjectSurrogate(obj);
             }
-            public static implicit operator BaseClass (Surrogate surrogate)
+            public static implicit operator GameObject(GameObjectSurrogate surrogate)
             {
-                return surrogate == null ? null : new BaseClass(surrogate.name);
+                return surrogate == null ? null : new GameObject(surrogate.name);
             }
 
             public override string ToString()
