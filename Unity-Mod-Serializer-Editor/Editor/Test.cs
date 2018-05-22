@@ -35,26 +35,27 @@ namespace UMS.Editor
         [MenuItem("Modding/Test GameObject")]
         private static void TestGameObject()
         {
+            Session.Initialize();
+
             GameObject obj = new GameObject();
             obj.name = "This is a test";
             obj.transform.position = new Vector3(155, 45, 65);
 
+            object toSerialize = Operator.Serialize(obj);
+
             byte[] data = null;
             using (MemoryStream stream = new MemoryStream())
             {
-                ProtoBuf.Serializer.Serialize(stream, obj);
+                ProtoBuf.Serializer.Serialize(stream, toSerialize);
                 Debug.Log($"Serializing ({stream.Length})");
-
-                Debug.Log("Deserilizing First Pass...");
-                Debug.Log(ProtoBuf.Serializer.Deserialize(obj.GetType(), stream));
-
+                
                 data = stream.ToArray();
             }
 
             using (MemoryStream stream2 = new MemoryStream(data))
             {
-                Debug.Log("Deserilizing Second Pass...");
-                Debug.Log(ProtoBuf.Serializer.Deserialize(obj.GetType(), stream2));
+                Debug.Log("Deserilizing...");
+                Debug.Log(ProtoBuf.Serializer.Deserialize(toSerialize.GetType(), stream2));
             }
         }
         [MenuItem("Modding/Test Field")]
