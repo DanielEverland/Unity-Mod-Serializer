@@ -32,7 +32,16 @@ namespace UMS
         }
 
         public static SerializationQueue<object> SerializationQueue { get { return _instance._serializationQueue; } }
-        public static RuntimeTypeModel Model { get { return _instance._model; } }
+        public static RuntimeTypeModel Model
+        {
+            get
+            {
+                if (_instance == null)
+                    Session.Initialize();
+
+                return _instance._model;
+            }
+        }
 
         private static Dictionary<System.Type, IBaseConverter> CachedConverters { get { return _instance._cachedConverters; } }
         private static Dictionary<System.Type, IDirectConverter> DirectConverters { get { return _instance._directConverters; } }

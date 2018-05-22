@@ -71,8 +71,6 @@ namespace UMS.Editor.Inspectors
 
             if (GUI.Button(rect, buttonText))
             {
-                Session.Initialize();
-
                 foreach (ModPackage package in Selection.objects)
                 {
                     package.SaveToDesktop();
@@ -91,8 +89,6 @@ namespace UMS.Editor.Inspectors
             EditorGUI.BeginDisabledGroup(!CanDeserialize());
             if (GUI.Button(rect, buttonText))
             {
-                Session.Initialize();
-
                 string folderPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
                 string[] fileNamesOnDesktop = Directory.GetFiles(folderPath);
 

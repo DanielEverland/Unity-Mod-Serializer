@@ -25,8 +25,6 @@ namespace UMS.Editor
         }
         private static void BuildMods()
         {
-            Session.Initialize();
-
             BuildSettings();
             CreateModsDirectory();
             BuildCoreMods();
