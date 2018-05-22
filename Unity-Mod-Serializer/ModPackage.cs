@@ -28,8 +28,6 @@ namespace UMS
         public static void Load(string fullPath)
         {
             ModFile file = ModFile.Load(fullPath);
-
-            Serializer.Deserialize(file);
         }
         public void SaveToDesktop()
         {

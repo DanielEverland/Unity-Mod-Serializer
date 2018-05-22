@@ -72,24 +72,6 @@ namespace UMS
         }
 
         #region Public Deserialize Functions
-        /// <summary>
-        /// Deserializes a modfile and adds all its entries to ObjectHandler
-        /// </summary>
-        public static Result Deserialize(ModFile file)
-        {
-            Result result = Result.Success;
-
-            //ObjectHandler.RegisterData(file);
-
-            foreach (ModFile.Entry entry in file)
-            {
-                UnityEngine.Object obj = (UnityEngine.Object)Deserialize(entry.Data, entry.Type);
-
-                ObjectHandler.AddObject(obj, entry.Key);
-            }
-
-            return result;
-        }
         public static object Deserialize(byte[] data, System.Type type)
         {
             return InternalDeserialize(data, type);

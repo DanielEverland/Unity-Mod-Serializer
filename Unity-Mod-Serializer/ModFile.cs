@@ -45,11 +45,20 @@ namespace UMS
         
         public static ModFile Load(string fullPath)
         {
-            using (FileStream fileStream = new FileStream(fullPath, FileMode.Open))
-            {
-                UnityEngine.Debug.Log("Deserializing " + fullPath);
+            UnityEngine.Debug.Log("Deserializing " + fullPath);
 
-                return ProtoBuf.Serializer.Deserialize<ModFile>(fileStream);
+            byte[] data = File.ReadAllBytes(fullPath);
+
+            ModFile file = Serializer.Deserialize<ModFile>(data);
+            
+            return file;
+        }
+
+        private void CreateObjects()
+        {
+            foreach (Entry entry in _entries)
+            {
+                ObjectHandler.AddObject(entry.Object, entry.Key);
             }
         }
 
@@ -59,12 +68,12 @@ namespace UMS
         public void Save(string folderDirectory)
         {
             string fullPath = string.Format(@"{0}\{1}{2}", folderDirectory, _fileName, Utility.MOD_EXTENSION);
-            
-            using (FileStream fileStream = new FileStream(fullPath, FileMode.Create))
-            {
-                ProtoBuf.Serializer.Serialize(fileStream, this);
-            }
 
+            byte[] data = Serializer.Serialize(this);
+            File.WriteAllBytes(fullPath, data);
+
+            UnityEngine.Debug.Log(Serializer.Deserialize<ModFile>(data));
+                                    
             UnityEngine.Debug.Log("Serialized " + fullPath);
         }
         
@@ -76,9 +85,8 @@ namespace UMS
         {
             Entry entry = new Entry()
             {
-                Data = Serializer.Serialize(obj),
+                Object = obj as UnityEngine.GameObject,
                 Key = key,
-                Type = obj.GetType(),
             };
 
             _entries.Add(entry);
@@ -98,11 +106,9 @@ namespace UMS
         public class Entry
         {
             [ProtoMember(1)]
-            public byte[] Data;
+            public UnityEngine.GameObject Object;
             [ProtoMember(2)]
             public string Key;
-            [ProtoMember(3)]
-            public System.Type Type;
         }
     }
 }
