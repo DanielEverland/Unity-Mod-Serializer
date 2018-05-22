@@ -32,6 +32,15 @@ namespace UMS.Editor
         private static ReflectionData _data;
         private static string _fieldName;
         
+        [MenuItem("Modding/Test GameObject")]
+        private static void TestGameObject()
+        {
+            GameObject obj = new GameObject();
+            obj.name = "This is a test";
+            obj.transform.position = new Vector3(155, 45, 65);
+
+            ExecuteSurrogateTest(obj, Serializer.Model);
+        }
         [MenuItem("Modding/Test Field")]
         private static void TestField()
         {
@@ -86,11 +95,11 @@ namespace UMS.Editor
             byte[] data = null;
             using (MemoryStream stream = new MemoryStream())
             {
-                Debug.Log("Serializing...");
                 model.Serialize(stream, obj);
+                Debug.Log($"Serializing ({stream.Length})");
 
                 Debug.Log("Deserilizing First Pass...");
-                model.Deserialize(stream, null, obj.GetType());
+                Debug.Log(model.Deserialize(stream, null, obj.GetType()));
 
                 data = stream.ToArray();
             }
@@ -98,7 +107,7 @@ namespace UMS.Editor
             using (MemoryStream stream2 = new MemoryStream(data))
             {
                 Debug.Log("Deserilizing Second Pass...");
-                model.Deserialize(stream2, null, obj.GetType());
+                Debug.Log(model.Deserialize(stream2, null, obj.GetType()));
             }
         }
         [ProtoContract]
