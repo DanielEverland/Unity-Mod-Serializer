@@ -12,8 +12,6 @@ namespace UMS
         public Serializer()
         {
             _cachedModels = new Dictionary<System.Type, IModel>();
-
-            _serializationQueue = new SerializationQueue<object>();
         }
         public static void Initialize()
         {
@@ -22,12 +20,10 @@ namespace UMS
             _instance = new Serializer();            
             AssemblyManager.Initialize();
             ObjectHandler.Initialize();
-            IDManager.Initialize();
 
             _instance.CreateModel();
         }
-
-        public static SerializationQueue<object> SerializationQueue { get { return _instance._serializationQueue; } }
+        
         public static RuntimeTypeModel Model
         {
             get
@@ -40,8 +36,6 @@ namespace UMS
         }
 
         private static Serializer _instance;
-
-        private SerializationQueue<object> _serializationQueue;
 
         private Dictionary<System.Type, IModel> _cachedModels;
         private RuntimeTypeModel _model;
