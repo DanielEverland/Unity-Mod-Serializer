@@ -170,9 +170,6 @@ namespace UMS.Reflection
 
             foreach (Type type in _loadedTypes)
             {
-                if (type.GetCustomAttributes(false).Any(x => x is IgnoreAttribute))
-                    continue;
-
                 _typeAnalysers(type);
             }
         }

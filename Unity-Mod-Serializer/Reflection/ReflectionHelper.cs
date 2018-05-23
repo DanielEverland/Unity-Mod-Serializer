@@ -137,7 +137,7 @@ namespace UMS.Reflection
 
         public static bool ShouldSerialize(MemberInfo member)
         {
-            if (IsIgnored(member) || MemberBlockerAttribute.IsBlocked(member))
+            if (MemberBlockerAttribute.IsBlocked(member))
                 return false;
 
             switch (member.MemberType)
@@ -171,9 +171,5 @@ namespace UMS.Reflection
 
             return true;
         }
-        public static bool IsIgnored(MemberInfo member)
-        {
-            return member.GetCustomAttribute(typeof(IgnoreAttribute)) != null;
-        }        
     }
 }
