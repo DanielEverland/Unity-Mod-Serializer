@@ -6,43 +6,7 @@ namespace UMS
 {
     public static class Utility
     {
-        static Utility()
-        {
-            _random = new System.Random();
-        }
-
         public const int MENU_ITEM_PRIORITY = 100;
         public const string MOD_EXTENSION = ".mod";
-
-        private static System.Random _random;
-
-        public static float GetRandomFloat()
-        {
-            double mantissa = (_random.NextDouble() * 2.0) - 1.0;
-            double exponent = System.Math.Pow(2.0, _random.Next(-126, 128));
-            return (float)(mantissa * exponent);
-        }
-        public static int GetRandomInt()
-        {
-            return _random.Next();
-        }
-        public static ushort GetRandomUnsignedShort()
-        {
-            //Random doesn't support ushort
-            byte[] uintData = new byte[2];
-
-            _random.NextBytes(uintData);
-
-            return System.BitConverter.ToUInt16(uintData, 0);
-        }
-        public static uint GetRandomUnsignedInt()
-        {
-            //Random doesn't support uint
-            byte[] uintData = new byte[4];
-
-            _random.NextBytes(uintData);
-
-            return System.BitConverter.ToUInt32(uintData, 0);
-        }
     }
 }
