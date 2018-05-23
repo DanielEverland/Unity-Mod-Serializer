@@ -17,13 +17,13 @@ namespace UMS
     // obviously, usually because we haven't used the [ProtoInclude] attribute on inherited types. Thing
     // is, though, that none of the types have *any* inhertiance at all. Perhaps a bug in protobuf?
     [ProtoContract]
-    public class Data
+    public class MemberValue
     {
         [ProtoMember(1)]
-        private int memberID;
+        public int MemberID;
         [ProtoMember(2)]
-        private System.Type type;
+        public System.Type Type;
         [ProtoMember(3)]
-        private byte[] data;
+        public byte[] Data;
     }
 }
