@@ -71,13 +71,13 @@ namespace UMS.Editor
         }
         private static void CreateCoreModsFolder()
         {
-            _pathToCoreMods = string.Format(@"{0}\{1}", _pathToRootModsFolder, Settings.CoreFolderName);
+            _pathToCoreMods = string.Format($@"{_pathToRootModsFolder}\{Settings.CoreFolderName}");
 
             Directory.CreateDirectory(_pathToCoreMods);
         }
         private static void CreateModsDirectory()
         {
-            _pathToRootModsFolder = string.Format(@"{0}\{1}", _pathToRootBuildFolder, Settings.ModsDirectory);
+            _pathToRootModsFolder = string.Format($@"{_pathToRootBuildFolder}\{Settings.ModsDirectory}");
 
             Directory.CreateDirectory(_pathToRootModsFolder);
         }
@@ -86,7 +86,7 @@ namespace UMS.Editor
             if (Settings.PredefinedAssemblies.Count() == 0)
                 return;
 
-            _pathToLibrary = string.Format(@"{0}\{1}", _pathToRootModsFolder, Settings.PredefinedAssembliesFolderName);
+            _pathToLibrary = string.Format($@"{_pathToRootModsFolder}\{Settings.PredefinedAssembliesFolderName}");
 
             Directory.CreateDirectory(_pathToLibrary);
 
