@@ -7,9 +7,7 @@ namespace UMS.Editor
     {
         public static Settings GetSettings()
         {
-            Settings toReturn;
-
-            if (SearchForSettings(out toReturn))
+            if (SearchForSettings(out Settings toReturn))
             {
                 return toReturn;
             }
