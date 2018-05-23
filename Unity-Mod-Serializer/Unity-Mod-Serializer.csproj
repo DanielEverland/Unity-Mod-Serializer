@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmarker.cs" />
+    <Compile Include="Data.cs" />
     <Compile Include="Debugging.cs" />
     <Compile Include="DebuggingFlags.cs" />
     <Compile Include="DebuggingLevels.cs" />
