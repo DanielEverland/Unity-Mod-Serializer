@@ -146,9 +146,7 @@ namespace UMS.Reflection
             {
                 if (method.GetCustomAttributes(false).Any(x => x.GetType() == typeof(LoadTypesAttribute)))
                 {
-                    Result result = LoadTypesAttribute.IsValid(method);
-
-                    if (result.Succeeded)
+                    if (LoadTypesAttribute.IsValid(method))
                     {
                         //We cache the function as a delegate because it's much faster than calling MethodInfo.Invoke
                         _typeAnalysers += (Action<Type>)Delegate.CreateDelegate(typeof(Action<Type>), method);
@@ -156,7 +154,7 @@ namespace UMS.Reflection
                     else
                     {
 #if DEBUG
-                        UnityEngine.Debug.LogWarning("Couldn't load " + method + "\n" + result.FormattedMessage);
+                        UnityEngine.Debug.LogWarning($"Couldn't load {method}");
 #endif
                     }
                 }

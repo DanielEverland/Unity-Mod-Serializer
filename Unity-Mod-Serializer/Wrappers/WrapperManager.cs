@@ -28,6 +28,13 @@ namespace UMS.Wrappers
             { typeof(string), x => StringWrapper.Create((string)x) },
         };
         
+        public static bool CanProcess(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            return _wrappedTypes.ContainsKey(obj.GetType());
+        }
         public static object Process(object obj)
         {
             if (obj == null)

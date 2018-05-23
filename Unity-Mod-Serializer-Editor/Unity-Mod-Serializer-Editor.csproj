@@ -82,11 +82,13 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEditor">
-      <HintPath>C:\Program Files\Unity_2018.1.0f2\Editor\Data\Managed\UnityEditor.dll</HintPath>
+    <Reference Include="UnityEditor, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Unity_2018.1.1f1\Editor\Data\Managed\UnityEditor.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>C:\Program Files\Unity_2018.1.0f2\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Unity_2018.1.1f1\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -94,13 +96,9 @@
     <Compile Include="Editor\HookCreator.cs" />
     <Compile Include="Editor\Inspectors\ModPackageEditor.cs" />
     <Compile Include="Editor\Inspectors\SettingsEditor.cs" />
-    <Compile Include="Editor\ModBrowserTreeView.cs" />
     <Compile Include="Editor\ModPackageReorderableList.cs" />
     <Compile Include="Editor\SettingsHandler.cs" />
     <Compile Include="Editor\StressTest.cs" />
-    <Compile Include="Editor\Test.cs" />
-    <Compile Include="Editor\TestingFunctions.cs" />
-    <Compile Include="Editor\Windows\ModBrowser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
