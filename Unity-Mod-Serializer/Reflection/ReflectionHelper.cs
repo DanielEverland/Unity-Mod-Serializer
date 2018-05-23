@@ -6,7 +6,6 @@ using System.Linq;
 using UnityEngine;
 using ProtoBuf.Meta;
 using FastMember;
-using UMS.Wrappers;
 
 namespace UMS.Reflection
 {

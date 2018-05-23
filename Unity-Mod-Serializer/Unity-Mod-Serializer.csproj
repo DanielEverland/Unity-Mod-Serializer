@@ -130,21 +130,6 @@
     <Compile Include="TypeInheritanceTree.cs" />
     <Compile Include="TypeMetaData.cs" />
     <Compile Include="Utility.cs" />
-    <Compile Include="Wrappers\BoolWrapper.cs" />
-    <Compile Include="Wrappers\ByteWrapper.cs" />
-    <Compile Include="Wrappers\CharWrapper.cs" />
-    <Compile Include="Wrappers\DecimalWrapper.cs" />
-    <Compile Include="Wrappers\DoubleWrapper.cs" />
-    <Compile Include="Wrappers\FloatWrapper.cs" />
-    <Compile Include="Wrappers\IntWrapper.cs" />
-    <Compile Include="Wrappers\LongWrapper.cs" />
-    <Compile Include="Wrappers\ShortWrapper.cs" />
-    <Compile Include="Wrappers\SignedByteWrapper.cs" />
-    <Compile Include="Wrappers\StringWrapper.cs" />
-    <Compile Include="Wrappers\UnsignedIntWrapper.cs" />
-    <Compile Include="Wrappers\UnsignedLongWrapper.cs" />
-    <Compile Include="Wrappers\UnsignedShortWrapper.cs" />
-    <Compile Include="Wrappers\WrapperManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
