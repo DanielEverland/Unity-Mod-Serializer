@@ -74,7 +74,10 @@ namespace UMS.Reflection
                 {
 #if DEBUG
                     if (!_nameLookup.ContainsKey(pair.Key))
+                    {
                         Debug.LogWarning("Couldn't find lookup for " + pair.Key + " - " + obj.GetType());
+                        continue;
+                    }                        
 #endif
 
                     _accessor[obj, _nameLookup[pair.Key]] = pair.Value;

@@ -65,7 +65,7 @@ namespace UMS.Editor
             }
             catch (System.Exception)
             {
-                Debug.LogWarning("Failed to serialize " + package);
+                Debugging.Error(DebuggingFlags.Serializer, $"Failed to serialize {package}");
                 throw;
             }
         }

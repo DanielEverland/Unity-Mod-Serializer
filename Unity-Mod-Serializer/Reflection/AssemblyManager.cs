@@ -40,7 +40,7 @@ namespace UMS.Reflection
         
         public static void Initialize()
         {
-            UnityEngine.Debug.Log("Initializing Assembly Manager");
+            Debugging.Info(DebuggingFlags.Reflection, "Initializing Reflection Flow");
 
 #if DEBUG
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
@@ -53,7 +53,7 @@ namespace UMS.Reflection
 
 #if DEBUG
             stopWatch.Stop();
-            UnityEngine.Debug.Log("Reflection flow elapsed: " + stopWatch.Elapsed);
+            Debugging.Info(DebuggingFlags.Reflection, $"Reflection flow elapsed: {stopWatch.Elapsed}");
 #endif
         }
 
@@ -154,7 +154,7 @@ namespace UMS.Reflection
                     else
                     {
 #if DEBUG
-                        UnityEngine.Debug.LogWarning($"Couldn't load {method}");
+                        Debug.LogWarning($"Couldn't load {method}");
 #endif
                     }
                 }
@@ -164,7 +164,7 @@ namespace UMS.Reflection
         {
             if (_typeAnalysers == null)
             {
-                UnityEngine.Debug.LogWarning("No analysers loaded");
+                Debug.LogWarning("No analysers loaded");
                 return;
             }
 

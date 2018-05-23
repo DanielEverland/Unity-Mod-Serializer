@@ -94,7 +94,7 @@ namespace UMS.Editor.Inspectors
 
                 foreach (ModPackage package in Selection.objects)
                 {
-                    string fullpath = string.Format("{0}/{1}", folderPath, package.FileName);
+                    string fullpath = $@"{folderPath}\{package.FileName}";
 
                     ModPackage.Load(fullpath);
                 }

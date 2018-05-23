@@ -45,7 +45,7 @@ namespace UMS
         
         public static ModFile Load(string fullPath)
         {
-            UnityEngine.Debug.Log("Deserializing " + fullPath);
+            Debugging.Verbose(DebuggingFlags.Serializer, $"Deserializing {fullPath}");
 
             byte[] data = File.ReadAllBytes(fullPath);
 
@@ -72,9 +72,7 @@ namespace UMS
             byte[] data = Serializer.Serialize(this);
             File.WriteAllBytes(fullPath, data);
 
-            UnityEngine.Debug.Log(Serializer.Deserialize<ModFile>(data));
-                                    
-            UnityEngine.Debug.Log("Serialized " + fullPath);
+            Debugging.Verbose(DebuggingFlags.Serializer, $"Serialized {fullPath}");
         }
         
         public void Add(Entry entry)

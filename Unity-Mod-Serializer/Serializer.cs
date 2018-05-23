@@ -15,7 +15,7 @@ namespace UMS
         }
         public static void Initialize()
         {
-            UnityEngine.Debug.Log("Initializing Serializer");
+            Debugging.Info(DebuggingFlags.Serializer, "Initializing Serializer");
 
             _instance = new Serializer();            
             AssemblyManager.Initialize();
@@ -91,7 +91,7 @@ namespace UMS
             }
             catch (System.Exception e)
             {
-                UnityEngine.Debug.LogWarning($"Issue serializing {obj} ({obj.GetType().Name})");
+                Debugging.Warning(DebuggingFlags.Serializer, $"Issue serializing {obj} ({obj.GetType().Name})");
                 UnityEngine.Debug.LogException(e);
                 return null;
             }
@@ -113,7 +113,7 @@ namespace UMS
             }
             catch (System.Exception e)
             {
-                UnityEngine.Debug.LogWarning($"Issue deserializing {type.Name} ({data.Length.ToString("N0")})");
+                Debugging.Warning(DebuggingFlags.Serializer, $"Issue deserializing {type.Name} ({data.Length.ToString("N0")})");
                 UnityEngine.Debug.LogException(e);
                 return null;
             }
