@@ -7,19 +7,6 @@ namespace UMS
 {
     public static class Extensions
     {
-        ///<returns>Whether the type is serializable natively by Protobuf</returns>
-        public static bool IsSerializable(this object obj)
-        {
-            if (obj == null)
-                return true;
-
-            return IsSerializable(obj.GetType());
-        }
-        ///<returns>Whether the type is serializable natively by Protobuf</returns>
-        public static bool IsSerializable(this System.Type type)
-        {
-            return ProtoBuf.Meta.RuntimeTypeModel.Default.CanSerialize(type);
-        }
         public static void Enqueue<T>(this Queue<T> queue, IEnumerable<T> collection)
         {
             foreach (T item in collection)
