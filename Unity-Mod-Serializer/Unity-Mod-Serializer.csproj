@@ -96,14 +96,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmarker.cs" />
-    <Compile Include="Data.cs" />
+    <Compile Include="MemberValue.cs" />
     <Compile Include="Debugging.cs" />
     <Compile Include="DebuggingFlags.cs" />
     <Compile Include="DebuggingLevels.cs" />
     <Compile Include="Editor\Hooks.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IDManager.cs" />
-    <Compile Include="IMetaData.cs" />
     <Compile Include="IModel.cs" />
     <Compile Include="InternalSerializer.cs" />
     <Compile Include="ModelBase.cs" />
@@ -129,7 +128,6 @@
     <Compile Include="Session.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="TypeInheritanceTree.cs" />
-    <Compile Include="TypeMetaData.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
