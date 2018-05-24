@@ -19,6 +19,14 @@ namespace UMS
     [ProtoContract]
     public class MemberValue
     {
+        public MemberValue() { }
+        public MemberValue(int memberID, System.Type type, byte[] data)
+        {
+            MemberID = memberID;
+            Type = type;
+            Data = data;
+        }
+
         [ProtoMember(1)]
         public int MemberID;
         [ProtoMember(2)]

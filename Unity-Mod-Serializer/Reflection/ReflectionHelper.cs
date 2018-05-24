@@ -57,30 +57,30 @@ namespace UMS.Reflection
             /// </summary>
             private TypeAccessor _accessor;
             
-            public Dictionary<int, object> Serialize(object obj)
+            public List<MemberValue> Serialize(object obj)
             {
-                Dictionary<int, object> toReturn = new Dictionary<int, object>();
+                List<MemberValue> toReturn = new List<MemberValue>();
 
                 foreach (Member member in _serializableMembers)
                 {
-                    toReturn.Add(member.Hashcode, _accessor[obj, member.Name]);
+                    toReturn.Add(new MemberValue(member.Hashcode, obj.GetType(), Serializer.Serialize(_accessor[obj, member.Name])));
                 }
 
                 return toReturn;
             }
-            public void Deserialize(object obj, Dictionary<int, object> data)
+            public void Deserialize(object obj, List<MemberValue> data)
             {
-                foreach (KeyValuePair<int, object> pair in data)
+                foreach (MemberValue value in data)
                 {
 #if DEBUG
-                    if (!_nameLookup.ContainsKey(pair.Key))
+                    if (!_nameLookup.ContainsKey(value.MemberID))
                     {
-                        Debug.LogWarning("Couldn't find lookup for " + pair.Key + " - " + obj.GetType());
+                        Debug.LogWarning($"Couldn't find lookup for {value.MemberID} - {obj.GetType()}");
                         continue;
-                    }                        
+                    }
 #endif
 
-                    _accessor[obj, _nameLookup[pair.Key]] = pair.Value;
+                    _accessor[obj, _nameLookup[value.MemberID]] = Serializer.Deserialize(value.Data, value.Type);
                 }
             }
 
@@ -116,7 +116,7 @@ namespace UMS.Reflection
 
             return _serializationGraphs[type];
         }
-        public static Dictionary<int, object> Serialize(object obj)
+        public static List<MemberValue> Serialize(object obj)
         {
 #if DEBUG
             if (obj == null)
@@ -125,7 +125,7 @@ namespace UMS.Reflection
 
             return GetSerializationGraph(obj.GetType()).Serialize(obj);
         }
-        public static void Deserialize(object obj, Dictionary<int, object> data)
+        public static void Deserialize(object obj, List<MemberValue> data)
         {
 #if DEBUG
             if (obj == null)

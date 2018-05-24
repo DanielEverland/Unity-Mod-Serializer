@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using ProtoBuf;
+using UMS.Reflection;
 
 namespace UMS
 {
@@ -13,14 +14,19 @@ namespace UMS
         public SerializableComponent(Component comp)
         {
             type = comp.GetType();
+            data = ReflectionHelper.Serialize(comp);
         }
 
         [ProtoMember(1)]
         private System.Type type;
+        [ProtoMember(2)]
+        private List<MemberValue> data;
 
         public void Deserialize(GameObject obj)
         {
             Component component = GetComponent(obj);
+
+            ReflectionHelper.Deserialize(component, data);
         }
         private Component GetComponent(GameObject obj)
         {
