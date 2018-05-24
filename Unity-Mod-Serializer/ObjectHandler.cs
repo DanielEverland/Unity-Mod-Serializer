@@ -18,6 +18,14 @@ namespace UMS
             _allObjects = new List<Object>();
             _keyLookup = new Dictionary<string, Object>();
         }
+        public static void InstantiateAllObjects()
+        {
+            foreach (Object obj in _keyLookup.Values)
+            {
+                GameObject instantiate = (GameObject)GameObject.Instantiate(obj);
+                instantiate.name = obj.name;
+            }
+        }
         public static T GetObject<T>(string key) where T : Object
         {
             if (!_keyLookup.ContainsKey(key))

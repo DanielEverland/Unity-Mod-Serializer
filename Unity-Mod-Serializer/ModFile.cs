@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UMS.Reflection;
 using ProtoBuf;
+using UnityEngine;
 
 namespace UMS
 {
@@ -54,6 +55,11 @@ namespace UMS
 
             byte[] data = File.ReadAllBytes(fullPath);
             ModFile file = Serializer.Deserialize<ModFile>(data);
+
+            file.CreateObjects();
+
+            if(Application.isEditor)
+                ObjectHandler.InstantiateAllObjects();
             
 #if DEBUG
             Debugging.Info(DebuggingFlags.Serializer, $"Deserialization Elapsed: {stopWatch.Elapsed.Milliseconds}ms");
