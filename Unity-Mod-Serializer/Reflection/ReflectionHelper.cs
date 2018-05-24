@@ -84,8 +84,8 @@ namespace UMS.Reflection
                         continue;
                     }
 #endif
-
-                    _accessor[obj, _nameLookup[value.MemberID]] = Serializer.Deserialize(value.Data, value.Type);
+                    
+                    _accessor[obj, _nameLookup[value.MemberID]] = Serializer.Deserialize(value.Data, AssemblyManager.GetType(value.TypeName));
                 }
             }
 

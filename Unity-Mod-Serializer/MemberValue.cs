@@ -23,14 +23,14 @@ namespace UMS
         public MemberValue(int memberID, System.Type type, byte[] data)
         {
             MemberID = memberID;
-            Type = type;
+            TypeName = type.FullName;
             Data = data;
         }
 
         [ProtoMember(1)]
         public int MemberID;
         [ProtoMember(2)]
-        public System.Type Type;
+        public string TypeName;
         [ProtoMember(3)]
         public byte[] Data;
     }

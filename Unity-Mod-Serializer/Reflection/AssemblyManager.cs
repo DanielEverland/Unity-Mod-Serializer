@@ -75,7 +75,26 @@ namespace UMS.Reflection
 
         private static LinkedList<Assembly> _loadedAssemblies;
         private static LinkedList<Type> _loadedTypes;
+        private static Dictionary<string, Type> _cachedTypes = new Dictionary<string, Type>();
 
+        public static Type GetType(string fullName)
+        {
+            if (_cachedTypes.ContainsKey(fullName))
+                return _cachedTypes[fullName];
+
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                Type type = assembly.GetType(fullName);
+
+                if (type != null)
+                {
+                    _cachedTypes.Set(fullName, type);
+                    return type;
+                }
+            }
+
+            throw new System.NullReferenceException("Couldn't get type from " + fullName);
+        }
         private static void GatherAssemblies()
         {
             _loadedAssemblies = new LinkedList<Assembly>();
