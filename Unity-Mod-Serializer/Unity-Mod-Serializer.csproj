@@ -105,6 +105,8 @@
     <Compile Include="IModel.cs" />
     <Compile Include="ModelBase.cs" />
     <Compile Include="Models\BoneWeightModel.cs" />
+    <Compile Include="Models\Color32Model.cs" />
+    <Compile Include="Models\ColorModel.cs" />
     <Compile Include="Models\GameObjectModel.cs" />
     <Compile Include="Models\Matrix4x4Model.cs" />
     <Compile Include="Models\MeshModel.cs" />
