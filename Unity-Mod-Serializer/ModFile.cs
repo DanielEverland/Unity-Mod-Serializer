@@ -83,7 +83,7 @@ namespace UMS
         {
             Entry entry = new Entry()
             {
-                Object = obj as UnityEngine.GameObject,
+                Object = obj,
                 Key = key,
             };
 
@@ -103,8 +103,8 @@ namespace UMS
         [ProtoContract]
         public class Entry
         {
-            [ProtoMember(1)]
-            public UnityEngine.GameObject Object;
+            [ProtoMember(1, DynamicType = true)]
+            public UnityEngine.Object Object;
             [ProtoMember(2)]
             public string Key;
         }
