@@ -82,6 +82,7 @@ namespace UMS.Editor.Inspectors
             if (GUI.changed)
             {
                 serializedObject.ApplyModifiedProperties();
+                EditorUtility.SetDirty(target);
             }
         }
         private void DrawBuildSettings()
