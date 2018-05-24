@@ -104,6 +104,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="IModel.cs" />
     <Compile Include="ModelBase.cs" />
+    <Compile Include="Models\GameObjectModel.cs" />
     <Compile Include="ModFile.cs" />
     <Compile Include="ModPackage.cs" />
     <Compile Include="CloneManager.cs" />
