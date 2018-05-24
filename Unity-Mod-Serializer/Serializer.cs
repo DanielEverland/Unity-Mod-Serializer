@@ -78,6 +78,13 @@ namespace UMS
             if (!Model.CanSerialize(obj.GetType()))
                 throw new System.NotImplementedException("Cannot serialize " + obj.GetType());
 
+#if DEBUG
+            System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+            stopWatch.Start();
+#endif
+
+            byte[] toReturn = null;
+
             try
             {
                 using (MemoryStream stream = new MemoryStream())
@@ -86,7 +93,7 @@ namespace UMS
 
                     Debugging.Info(DebuggingFlags.Serializer, $"Serialized {obj.GetType().Name} ({stream.ToArray().Length.ToString("N0")})");
 
-                    return stream.ToArray();
+                    toReturn = stream.ToArray();
                 }
             }
             catch (System.Exception e)
@@ -95,7 +102,12 @@ namespace UMS
                 UnityEngine.Debug.LogException(e);
                 return null;
             }
-            
+
+#if DEBUG
+            Debugging.Info(DebuggingFlags.Serializer, $"Serialization Elapsed: {stopWatch.Elapsed}");
+#endif
+
+            return toReturn;
         }
         #endregion
 
@@ -104,11 +116,18 @@ namespace UMS
         {
             Debugging.Info(DebuggingFlags.Serializer, $"Deserializing {type.Name} ({data.Length.ToString("N0")})");
 
+            object toReturn = null;
+
+#if DEBUG
+            System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+            stopWatch.Start();
+#endif
+
             try
             {
                 using (MemoryStream stream = new MemoryStream(data))
                 {
-                    return Model.Deserialize(stream, null, type);
+                    toReturn = Model.Deserialize(stream, null, type);
                 }
             }
             catch (System.Exception e)
@@ -118,6 +137,11 @@ namespace UMS
                 return null;
             }
 
+#if DEBUG
+            Debugging.Info(DebuggingFlags.Serializer, $"Deserialization Elapsed: {stopWatch.Elapsed}");
+#endif
+
+            return toReturn;
         }
         #endregion
     }
