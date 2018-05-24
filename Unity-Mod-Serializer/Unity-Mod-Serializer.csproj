@@ -113,6 +113,7 @@
     <Compile Include="Models\Vector2Model.cs" />
     <Compile Include="Models\Vector3IntModel.cs" />
     <Compile Include="Models\Vector3Model.cs" />
+    <Compile Include="Models\Vector4Model.cs" />
     <Compile Include="ModFile.cs" />
     <Compile Include="ModPackage.cs" />
     <Compile Include="CloneManager.cs" />
