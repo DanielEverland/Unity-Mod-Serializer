@@ -70,6 +70,11 @@ namespace UMS
             string fullPath = $@"{folderDirectory}\{_fileName}{Utility.MOD_EXTENSION}";
 
             byte[] data = Serializer.Serialize(this);
+            
+            // Serialzation failed. No need to output any log, the serializer will do that
+            if(data == null)
+                return;
+
             File.WriteAllBytes(fullPath, data);
 
             Debugging.Verbose(DebuggingFlags.Serializer, $"Serialized {fullPath}");
