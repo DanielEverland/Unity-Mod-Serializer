@@ -63,7 +63,12 @@ namespace UMS.Reflection
 
                 foreach (Member member in _serializableMembers)
                 {
-                    toReturn.Add(new MemberValue(member.Hashcode, obj.GetType(), Serializer.Serialize(_accessor[obj, member.Name])));
+                    object value = _accessor[obj, member.Name];
+
+                    if (value == null)
+                        continue;
+
+                    toReturn.Add(new MemberValue(member.Hashcode, value.GetType(), Serializer.Serialize(value)));
                 }
 
                 return toReturn;
