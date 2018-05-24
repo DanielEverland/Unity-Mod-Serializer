@@ -110,6 +110,7 @@
     <Compile Include="Models\GameObjectModel.cs" />
     <Compile Include="Models\Matrix4x4Model.cs" />
     <Compile Include="Models\MeshModel.cs" />
+    <Compile Include="Models\PhysicMaterialModel.cs" />
     <Compile Include="Models\QuaternionModel.cs" />
     <Compile Include="Models\Vector2IntModel.cs" />
     <Compile Include="Models\Vector2Model.cs" />
