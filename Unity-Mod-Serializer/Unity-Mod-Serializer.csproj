@@ -113,6 +113,7 @@
     <Compile Include="Models\MeshModel.cs" />
     <Compile Include="Models\PhysicMaterialModel.cs" />
     <Compile Include="Models\QuaternionModel.cs" />
+    <Compile Include="Models\ShaderModel.cs" />
     <Compile Include="Models\Vector2IntModel.cs" />
     <Compile Include="Models\Vector2Model.cs" />
     <Compile Include="Models\Vector3IntModel.cs" />
