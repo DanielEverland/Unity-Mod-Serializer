@@ -105,6 +105,7 @@
     <Compile Include="IModel.cs" />
     <Compile Include="ModelBase.cs" />
     <Compile Include="Models\GameObjectModel.cs" />
+    <Compile Include="Models\MeshModel.cs" />
     <Compile Include="Models\QuaternionModel.cs" />
     <Compile Include="Models\Vector2IntModel.cs" />
     <Compile Include="Models\Vector2Model.cs" />
