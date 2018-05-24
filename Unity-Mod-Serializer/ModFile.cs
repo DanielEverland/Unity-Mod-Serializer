@@ -56,7 +56,7 @@ namespace UMS
             ModFile file = Serializer.Deserialize<ModFile>(data);
             
 #if DEBUG
-            Debugging.Info(DebuggingFlags.Serializer, $"Deserialization Elapsed: {stopWatch.Elapsed}");
+            Debugging.Info(DebuggingFlags.Serializer, $"Deserialization Elapsed: {stopWatch.Elapsed.Milliseconds}ms");
 #endif
 
             return file;
@@ -92,7 +92,7 @@ namespace UMS
             File.WriteAllBytes(fullPath, data);
             
 #if DEBUG
-            Debugging.Info(DebuggingFlags.Serializer, $"Serialization Elapsed: {stopWatch.Elapsed}");
+            Debugging.Info(DebuggingFlags.Serializer, $"Serialization Elapsed: {stopWatch.Elapsed.Milliseconds}ms");
 #endif
         }
 
