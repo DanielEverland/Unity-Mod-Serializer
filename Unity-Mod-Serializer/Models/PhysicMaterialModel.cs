@@ -10,7 +10,6 @@ namespace UMS.Models
     {
         public override void CreateModel(MetaType type)
         {
-            type.AsReferenceDefault = true;
             type.Add("name", "dynamicFriction", "staticFriction", "bounciness", "frictionCombine");
         }
     }

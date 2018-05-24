@@ -12,11 +12,10 @@ namespace UMS.Models
     {
         public override void CreateModel(MetaType type)
         {
-            type.AsReferenceDefault = true;
             type.SetSurrogate(typeof(MeshSurrogate));
         }
 
-        [ProtoContract(AsReferenceDefault = true)]
+        [ProtoContract()]
         private class MeshSurrogate
         {
             public MeshSurrogate() { }

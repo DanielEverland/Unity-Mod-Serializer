@@ -11,11 +11,10 @@ namespace UMS.Models
     {
         public override void CreateModel(MetaType type)
         {
-            type.AsReferenceDefault = true;
             type.SetSurrogate(typeof(MaterialSurrogate));
         }
 
-        [ProtoContract(AsReferenceDefault = true)]
+        [ProtoContract()]
         private class MaterialSurrogate
         {
             public MaterialSurrogate() { }
