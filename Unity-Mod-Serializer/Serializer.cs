@@ -84,7 +84,7 @@ namespace UMS
                 {
                     Model.Serialize(stream, obj);
 
-                    Debugging.Info(DebuggingFlags.Serializer, $"Serialzied {obj.GetType().Name} ({stream.ToArray().Length.ToString("N0")})");
+                    Debugging.Info(DebuggingFlags.Serializer, $"Serialized {obj.GetType().Name} ({stream.ToArray().Length.ToString("N0")})");
 
                     return stream.ToArray();
                 }
