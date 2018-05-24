@@ -45,7 +45,7 @@ namespace UMS
         
         public static ModFile Load(string fullPath)
         {
-            Debugging.Verbose(DebuggingFlags.Serializer, $"Deserializing {fullPath}");
+            Debugging.Info(DebuggingFlags.Serializer, $"Deserializing {fullPath}");
             
 #if DEBUG
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
@@ -54,7 +54,7 @@ namespace UMS
 
             byte[] data = File.ReadAllBytes(fullPath);
             ModFile file = Serializer.Deserialize<ModFile>(data);
-
+            
 #if DEBUG
             Debugging.Info(DebuggingFlags.Serializer, $"Deserialization Elapsed: {stopWatch.Elapsed}");
 #endif
@@ -75,6 +75,8 @@ namespace UMS
         /// </summary>
         public void Save(string folderDirectory)
         {
+            Debugging.Info(DebuggingFlags.Serializer, $"Serializing {folderDirectory}");
+
 #if DEBUG
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
             stopWatch.Start();
@@ -89,8 +91,6 @@ namespace UMS
 
             File.WriteAllBytes(fullPath, data);
             
-            Debugging.Verbose(DebuggingFlags.Serializer, $"Serialized {fullPath}");
-
 #if DEBUG
             Debugging.Info(DebuggingFlags.Serializer, $"Serialization Elapsed: {stopWatch.Elapsed}");
 #endif

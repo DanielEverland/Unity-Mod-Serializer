@@ -86,15 +86,12 @@ namespace UMS
                 using (MemoryStream stream = new MemoryStream())
                 {
                     Model.Serialize(stream, obj);
-
-                    Debugging.Info(DebuggingFlags.Serializer, $"Serialized {obj.GetType().Name} ({stream.ToArray().Length.ToString("N0")})");
-
                     return stream.ToArray();
                 }
             }
             catch (System.Exception e)
             {
-                Debugging.Warning(DebuggingFlags.Serializer, $"Issue serializing {obj} ({obj.GetType().Name})");
+                Debugging.Error(DebuggingFlags.Serializer, $"Issue serializing {obj}");
                 UnityEngine.Debug.LogException(e);
                 return null;
             }
@@ -104,8 +101,6 @@ namespace UMS
         #region Internal Deserialize Functions
         internal static object InternalDeserialize(byte[] data, System.Type type)
         {
-            Debugging.Info(DebuggingFlags.Serializer, $"Deserializing {type.Name} ({data.Length.ToString("N0")})");
-            
             try
             {
                 using (MemoryStream stream = new MemoryStream(data))
@@ -115,7 +110,7 @@ namespace UMS
             }
             catch (System.Exception e)
             {
-                Debugging.Warning(DebuggingFlags.Serializer, $"Issue deserializing {type.Name} ({data.Length.ToString("N0")})");
+                Debugging.Error(DebuggingFlags.Serializer, $"Issue deserializing {type.Name} ({data.Length.ToString("N0")})");
                 UnityEngine.Debug.LogException(e);
                 return null;
             }
