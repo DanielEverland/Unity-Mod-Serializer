@@ -82,7 +82,7 @@ namespace UMS
             {
                 using (MemoryStream stream = new MemoryStream())
                 {
-                    ProtoBuf.Serializer.Serialize(stream, obj);
+                    Model.Serialize(stream, obj);
 
                     Debugging.Verbose(DebuggingFlags.Serializer, $"Serialzied {obj.GetType().Name} ({stream.ToArray().Length.ToString("N0")})");
 
@@ -108,7 +108,7 @@ namespace UMS
             {
                 using (MemoryStream stream = new MemoryStream(data))
                 {
-                    return ProtoBuf.Serializer.Deserialize(type, stream);
+                    return Model.Deserialize(stream, null, type);
                 }
             }
             catch (System.Exception e)
