@@ -84,7 +84,7 @@ namespace UMS
                 {
                     Model.Serialize(stream, obj);
 
-                    Debugging.Verbose(DebuggingFlags.Serializer, $"Serialzied {obj.GetType().Name} ({stream.ToArray().Length.ToString("N0")})");
+                    Debugging.Info(DebuggingFlags.Serializer, $"Serialzied {obj.GetType().Name} ({stream.ToArray().Length.ToString("N0")})");
 
                     return stream.ToArray();
                 }
@@ -102,7 +102,7 @@ namespace UMS
         #region Internal Deserialize Functions
         internal static object InternalDeserialize(byte[] data, System.Type type)
         {
-            Debugging.Verbose(DebuggingFlags.Serializer, $"Deserializing {type.Name} ({data.Length.ToString("N0")})");
+            Debugging.Info(DebuggingFlags.Serializer, $"Deserializing {type.Name} ({data.Length.ToString("N0")})");
 
             try
             {
