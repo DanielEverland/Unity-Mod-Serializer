@@ -22,16 +22,33 @@ namespace UMS.Models
             public GameObjectSurrogate(GameObject obj)
             {
                 name = obj.name;
+
+                components = new List<SerializableComponent>();
+                foreach (Component comp in obj.GetComponents<Component>())
+                {
+                    components.Add(new SerializableComponent(comp));
+                }
             }
 
             [ProtoMember(1)]
             private string name;
+            [ProtoMember(2)]
+            private List<SerializableComponent> components;
 
             public GameObject Deserialize()
             {
                 GameObject obj = new GameObject();
 
                 obj.name = name;
+
+                //Protobuf doesn't serialize empty collections, so we have to do a null check here
+                if(components != null)
+                {
+                    foreach (SerializableComponent comp in components)
+                    {
+                        comp.Deserialize(obj);
+                    }
+                }
 
                 return obj;
             }

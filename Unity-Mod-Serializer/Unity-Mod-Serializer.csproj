@@ -117,6 +117,7 @@
     <Compile Include="Reflection\MemberBlockerLoader.cs" />
     <Compile Include="Reflection\ModelLoader.cs" />
     <Compile Include="Reflection\ReflectionHelper.cs" />
+    <Compile Include="SerializableComponent.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Settings.cs" />
