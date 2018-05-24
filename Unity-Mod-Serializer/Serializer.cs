@@ -75,6 +75,9 @@ namespace UMS
         #region Internal Serialize Functions
         internal static byte[] InternalSerialize(object obj)
         {
+            if (obj == null)
+                return null;
+
             if (!Model.CanSerialize(obj.GetType()))
                 throw new System.NotImplementedException("Cannot serialize " + obj.GetType());
             
