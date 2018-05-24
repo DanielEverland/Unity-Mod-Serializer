@@ -106,6 +106,7 @@
     <Compile Include="ModelBase.cs" />
     <Compile Include="Models\BoneWeightModel.cs" />
     <Compile Include="Models\GameObjectModel.cs" />
+    <Compile Include="Models\Matrix4x4Model.cs" />
     <Compile Include="Models\MeshModel.cs" />
     <Compile Include="Models\QuaternionModel.cs" />
     <Compile Include="Models\Vector2IntModel.cs" />
