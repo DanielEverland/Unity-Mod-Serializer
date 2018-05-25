@@ -148,16 +148,28 @@ namespace UMS.Reflection
         {
             _typeAnalysers = null;
             _loadedTypes = new LinkedList<Type>();
-
+            
             foreach (Assembly assembly in LoadedAssemblies)
             {
-                foreach (Type type in assembly.GetTypes())
+                try
                 {
-                    _loadedTypes.AddLast(type);
+                    foreach (Type type in assembly.GetTypes())
+                    {
+                        _loadedTypes.AddLast(type);
 
-                    PollForHook(type);
+                        PollForHook(type);
+                    }
                 }
-            }
+                catch(ReflectionTypeLoadException)
+                {
+                    Debug.LogError("Couldn't load types in " + assembly.FullName);
+                    throw;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }            
         }
         private static void PollForHook(Type type)
         {
