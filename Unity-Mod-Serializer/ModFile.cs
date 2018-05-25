@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,15 +13,15 @@ namespace UMS
     /// Contains the data we serialize from mod packages
     /// </summary>
     [ProtoContract]
-    public class ModFile : IEnumerable<ModFile.Entry>
+    public class ModFile : IEnumerable<ModFile.Entry>, IEquatable<ModFile>
     {
         public ModFile()
         {
             _entries = new List<Entry>();
         }
-        public ModFile(string fileName)
+        public ModFile(string name)
         {
-            _fileName = fileName;
+            _name = name;
             _entries = new List<Entry>();
 
             _guid = System.Guid.NewGuid();
@@ -34,11 +35,11 @@ namespace UMS
             }
         }
 
-        public string FileName { get { return _fileName; } }
+        public string Name { get { return _name; } }
         public System.Guid GUID { get { return _guid; } }
 
         [ProtoMember(1)]
-        private readonly string _fileName;
+        private readonly string _name;
         [ProtoMember(2)]
         private List<Entry> _entries;
         [ProtoMember(4)]
@@ -88,7 +89,7 @@ namespace UMS
             stopWatch.Start();
 #endif
 
-            string fullPath = $@"{folderDirectory}\{_fileName}{Utility.MOD_EXTENSION}";
+            string fullPath = $@"{folderDirectory}\{_name}{Utility.MOD_EXTENSION}";
             byte[] data = Serializer.Serialize(this);
             
             // Serialzation failed. No need to output any log, the serializer will do that
@@ -127,6 +128,34 @@ namespace UMS
             return GetEnumerator();
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            if(obj is ModFile file)
+            {
+                return Equals(file);
+            }
+
+            return false;
+        }
+        public bool Equals(ModFile other)
+        {
+            if (other == null)
+                return false;
+
+            return other.GUID == this.GUID;
+        }
+        public override int GetHashCode()
+        {
+            return GUID.GetHashCode();
+        }
+        public override string ToString()
+        {
+            return $"{Name} ({GUID})";
+        }
+        
         [ProtoContract]
         public class Entry
         {
