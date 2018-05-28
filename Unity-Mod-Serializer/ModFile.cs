@@ -15,16 +15,15 @@ namespace UMS
     [ProtoContract]
     public class ModFile : IEnumerable<ModFile.Entry>, IEquatable<ModFile>
     {
-        public ModFile()
+        public ModFile(ModPackage package)
         {
-            _entries = new List<Entry>();
-        }
-        public ModFile(string name)
-        {
-            _name = name;
             _entries = new List<Entry>();
 
-            _guid = System.Guid.NewGuid();
+            if (package.GUID == Guid.Empty)
+                throw new System.NullReferenceException("GUID is empty");
+
+            _name = package.name;
+            _guid = package.GUID;
         }
 
         public Entry this[int index]
@@ -42,7 +41,7 @@ namespace UMS
         private readonly string _name;
         [ProtoMember(2)]
         private List<Entry> _entries;
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         private System.Guid _guid;
         
         public static ModFile Load(string fullPath)

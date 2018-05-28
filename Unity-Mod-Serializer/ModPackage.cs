@@ -7,7 +7,7 @@ namespace UMS
 {
     [System.Serializable]
     [CreateAssetMenu(fileName = "ModPackage.asset", menuName = "Modding/Package", order = Utility.MENU_ITEM_PRIORITY)]
-    public class ModPackage : ScriptableObject
+    public partial class ModPackage : ScriptableObject
     {
         public ModPackage()
         {
@@ -17,14 +17,17 @@ namespace UMS
         public string FileName { get { return name + Utility.MOD_EXTENSION; } }
         public IEnumerable<ObjectEntry> ObjectEntries { get { return _objectEntries; } }
         public bool IncludeInBuilds { get { return _includeInBuilds; } }
-                
+        public System.Guid GUID { get { return guid; } }
+                        
 #pragma warning disable
         [SerializeField]
         private List<ObjectEntry> _objectEntries;
         [SerializeField]
         private bool _includeInBuilds = true;
+        [SerializeField]
+        private SerializableGUID guid;
 #pragma warning restore
-
+        
         public static void Load(string fullPath)
         {
             ModFile file = ModFile.Load(fullPath);
@@ -43,14 +46,12 @@ namespace UMS
         }
         public ModFile CreateFile()
         {
-            ModFile file = new ModFile(name);
-            
-            foreach (ObjectEntry entry in _objectEntries)
-            {
-                file.Add(entry.Object, entry.Key);
-            }
-
-            return file;
+            return new ModFile(this);
+        }
+        [ContextMenu("Assign New GUID")]
+        private void AssignNewGUID()
+        {
+            guid = System.Guid.NewGuid();
         }
         
         [System.Serializable]
