@@ -15,6 +15,10 @@ namespace UMS
     [ProtoContract]
     public class ModFile : IEnumerable<ModFile.Entry>, IEquatable<ModFile>
     {
+        public ModFile()
+        {
+            _entries = new List<Entry>();
+        }
         public ModFile(ModPackage package)
         {
             _entries = new List<Entry>();
