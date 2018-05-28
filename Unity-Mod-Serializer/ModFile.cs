@@ -24,6 +24,11 @@ namespace UMS
 
             _name = package.name;
             _guid = package.GUID;
+
+            foreach (ModPackage.ObjectEntry entry in package.ObjectEntries)
+            {
+                Add(entry.Object, entry.Key);
+            }
         }
 
         public Entry this[int index]
@@ -36,6 +41,7 @@ namespace UMS
 
         public string Name { get { return _name; } }
         public System.Guid GUID { get { return _guid; } }
+        public IEnumerable<Entry> Entries { get { return _entries; } }
 
         [ProtoMember(1)]
         private readonly string _name;
