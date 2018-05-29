@@ -66,6 +66,8 @@ namespace UMS
             byte[] data = File.ReadAllBytes(fullPath);
             ModFile file = Serializer.Deserialize<ModFile>(data);
 
+            Debugging.Info(DebuggingFlags.Serializer, $"Deserialized {file}");
+
             file.CreateObjects();
 
             if(Application.isEditor)
@@ -91,7 +93,7 @@ namespace UMS
         /// </summary>
         public void Save(string folderDirectory)
         {
-            Debugging.Info(DebuggingFlags.Serializer, $"Serializing {folderDirectory}");
+            Debugging.Info(DebuggingFlags.Serializer, $"Serializing {this} to {folderDirectory}");
 
 #if DEBUG
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
