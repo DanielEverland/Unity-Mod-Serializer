@@ -12,7 +12,7 @@ namespace UMS
     /// <summary>
     /// Contains the data we serialize from mod packages
     /// </summary>
-    [ProtoContract]
+    [ProtoContract(IgnoreListHandling = true)]
     public class ModFile : IEnumerable<ModFile.Entry>, IEquatable<ModFile>
     {
         public ModFile()
