@@ -63,12 +63,19 @@ namespace UMS.Reflection
 
                 foreach (Member member in _serializableMembers)
                 {
-                    object value = _accessor[obj, member.Name];
+                    try
+                    {
+                        object value = _accessor[obj, member.Name];
 
-                    if (value == null)
-                        continue;
+                        if (value == null)
+                            continue;
 
-                    toReturn.Add(new MemberValue(member.Hashcode, value.GetType(), Serializer.Serialize(value)));
+                        toReturn.Add(new MemberValue(member.Hashcode, value.GetType(), Serializer.Serialize(value)));
+                    }
+                    catch (Exception e)
+                    {
+                        Debugging.Warning(DebuggingFlags.Serializer, $"Issue serializing {member.Name} on {obj}\n{e}");
+                    }                    
                 }
 
                 return toReturn;
