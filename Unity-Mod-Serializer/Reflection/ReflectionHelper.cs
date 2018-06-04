@@ -77,11 +77,9 @@ namespace UMS.Reflection
             {
                 foreach (MemberValue value in data)
                 {
-#if DEBUG
                     if (!_nameLookup.ContainsKey(value.MemberID))
                     {
-                        Debug.LogWarning($"Couldn't find lookup for {value.MemberID} - {obj.GetType()}");
-                        continue;
+                        throw new NullReferenceException($"Couldn't find lookup for {value.MemberID} - {obj.GetType()}");
                     }
 #endif
                     
