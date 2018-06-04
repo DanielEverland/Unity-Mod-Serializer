@@ -84,13 +84,20 @@ namespace UMS.Reflection
             {
                 foreach (MemberValue value in data)
                 {
-                    if (!_nameLookup.ContainsKey(value.MemberID))
+                    try
                     {
-                        Debug.LogWarning($"Couldn't find lookup for {value.MemberID} - {obj.GetType()}");
-                        return;
+                        if (!_nameLookup.ContainsKey(value.MemberID))
+                        {
+                            Debug.LogWarning($"Couldn't find lookup for {value.MemberID} - {obj.GetType()}");
+                            return;
+                        }
+
+                        _accessor[obj, _nameLookup[value.MemberID]] = Serializer.Deserialize(value.Data, AssemblyManager.GetType(value.TypeName));
                     }
-                    
-                    _accessor[obj, _nameLookup[value.MemberID]] = Serializer.Deserialize(value.Data, AssemblyManager.GetType(value.TypeName));
+                    catch (Exception e)
+                    {
+                        Debugging.Warning(DebuggingFlags.Serializer, $"Issue deserializing {value.MemberID} - {obj.GetType()}\n{e}");
+                    }
                 }
             }
 
