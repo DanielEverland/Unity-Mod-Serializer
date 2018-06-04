@@ -81,7 +81,6 @@ namespace UMS.Reflection
                     {
                         throw new NullReferenceException($"Couldn't find lookup for {value.MemberID} - {obj.GetType()}");
                     }
-#endif
                     
                     _accessor[obj, _nameLookup[value.MemberID]] = Serializer.Deserialize(value.Data, AssemblyManager.GetType(value.TypeName));
                 }

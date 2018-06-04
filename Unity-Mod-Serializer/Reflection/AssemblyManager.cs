@@ -99,7 +99,7 @@ namespace UMS.Reflection
         {
             _loadedAssemblies = new LinkedList<Assembly>();
 
-            if (UnityEngine.Application.isEditor)
+            if (Application.isEditor)
             {
                 LoadAssembliesInEditor();
             }

@@ -11,6 +11,7 @@ namespace UMS.Editor
 {
     public static class BuildHandler
     {
+        private static string _pathToManagedFolder;
         private static string _pathToRootBuildFolder;
         private static string _pathToRootModsFolder;
         private static string _pathToCoreMods;
@@ -20,6 +21,7 @@ namespace UMS.Editor
         private static void PostBuild(BuildTarget target, string pathToBuiltProject)
         {
             _pathToRootBuildFolder = string.Format(@"{0}\{1}_Data", Path.GetDirectoryName(pathToBuiltProject), Path.GetFileNameWithoutExtension(pathToBuiltProject));
+            _pathToManagedFolder = $@"{_pathToRootBuildFolder}\Managed";
 
             BuildMods();
         }
@@ -89,13 +91,23 @@ namespace UMS.Editor
             _pathToLibrary = string.Format($@"{_pathToRootModsFolder}\{Settings.PredefinedAssembliesFolderName}");
 
             Directory.CreateDirectory(_pathToLibrary);
-
+            
             foreach (string assemblyName in Settings.PredefinedAssemblies)
             {
-                Assembly assembly = Assembly.Load(assemblyName);
-
-                File.Copy(assembly.Location, string.Format(@"{0}\{1}.dll", _pathToLibrary, assemblyName));
+                File.Copy(AssemblyFilePath(assemblyName), string.Format(@"{0}\{1}.dll", _pathToLibrary, assemblyName));
             }
+        }
+        private static string AssemblyFilePath(string name)
+        {
+            foreach (string filePath in Directory.GetFiles(_pathToManagedFolder))
+            {
+                if(Path.GetFileNameWithoutExtension(filePath) == name)
+                {
+                    return filePath;
+                }
+            }
+
+            throw new System.NullReferenceException($"Couldn't find {name}. It must be in the build project's Managed folder");
         }
     }
 }

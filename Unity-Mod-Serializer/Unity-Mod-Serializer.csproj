@@ -148,6 +148,9 @@
 copy /y "$(TargetDir)/$(TargetName).pdb" "D:\UMS Test Project\Assets\Plugins\$(TargetName).pdb"
 
 copy /y "$(TargetPath)" "D:\Dead Air Source\Plugins\$(TargetName)$(TargetExt)"
-copy /y "$(TargetDir)/$(TargetName).pdb" "D:\Dead Air Source\Plugins\$(TargetName).pdb"</PostBuildEvent>
+copy /y "$(TargetDir)/$(TargetName).pdb" "D:\Dead Air Source\Plugins\$(TargetName).pdb"
+
+copy /y "$(TargetPath)" "D:\Dead Air Source\Unity\Assets\Plugins\$(TargetName)$(TargetExt)"
+copy /y "$(TargetDir)/$(TargetName).pdb" "D:\Dead Air Source\Unity\Assets\Plugins\$(TargetName).pdb"</PostBuildEvent>
   </PropertyGroup>
 </Project>
