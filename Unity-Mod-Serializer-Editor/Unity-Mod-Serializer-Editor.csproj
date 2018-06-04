@@ -111,7 +111,7 @@
     <PostBuildEvent>copy /y "$(TargetPath)" "D:\UMS Test Project\Assets\Plugins\Editor\$(TargetName)$(TargetExt)"
 copy /y "$(TargetDir)/$(TargetName).pdb" "D:\UMS Test Project\Assets\Plugins\Editor\$(TargetName).pdb"
 
-copy /y "$(TargetPath)" "D:\Dead Air Source\Dead-Air\Assets\Plugins\Editor\$(TargetName)$(TargetExt)"
-copy /y "$(TargetDir)/$(TargetName).pdb" "D:\Dead Air Source\Dead-Air\Assets\Plugins\Editor\$(TargetName).pdb"</PostBuildEvent>
+copy /y "$(TargetPath)" "D:\Dead Air Source\Plugins\$(TargetName)$(TargetExt)"
+copy /y "$(TargetDir)/$(TargetName).pdb" "D:\Dead Air Source\Plugins\$(TargetName).pdb"</PostBuildEvent>
   </PropertyGroup>
 </Project>
