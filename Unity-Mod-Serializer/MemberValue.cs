@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using ProtoBuf;
+using System.Reflection;
 
 namespace UMS
 {
@@ -26,12 +27,37 @@ namespace UMS
             TypeName = type.FullName;
             Data = data;
         }
-
+        
         [ProtoMember(1)]
         public int MemberID;
         [ProtoMember(2)]
         public string TypeName;
         [ProtoMember(3)]
         public byte[] Data;
+
+#if DEBUG
+        [ProtoMember(4)]
+        internal DebugData DebugInfo;
+        
+        [ProtoContract]
+        internal class DebugData
+        {
+            public DebugData() { }
+            public DebugData(MemberInfo memberInfo)
+            {
+                info.Add("Member Name", memberInfo.Name);
+                info.Add("Declared Member Name", memberInfo.DeclaringType.FullName);
+                info.Add("Declared Member Assembly", memberInfo.DeclaringType.Assembly.FullName);
+            }
+
+            [ProtoMember(1)]
+            private Dictionary<string, string> info = new Dictionary<string, string>();
+
+            public override string ToString()
+            {
+                return string.Join("\n", info.Select(x => $"{x.Key}: {x.Value}"));
+            }
+        }
+#endif
     }
 }

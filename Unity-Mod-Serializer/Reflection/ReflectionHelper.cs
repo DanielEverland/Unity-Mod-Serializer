@@ -43,9 +43,17 @@ namespace UMS.Reflection
                     if(member.MemberType == MemberTypes.Property || member.MemberType == MemberTypes.Field)
                     {
                         _serializableMembers.Add(Member.Create(member.Name));
+
+#if DEBUG
+                        _memberInfoLookup.Add(member.Name, member);
+#endif
                     }
                 }
             }
+
+#if DEBUG
+            private Dictionary<string, MemberInfo> _memberInfoLookup = new Dictionary<string, MemberInfo>();
+#endif
 
             /// <summary>
             /// Contains all the members we want to serialize in a given type
@@ -70,12 +78,22 @@ namespace UMS.Reflection
                         if (value == null)
                             continue;
 
-                        toReturn.Add(new MemberValue(member.Hashcode, value.GetType(), Serializer.Serialize(value)));
+                        MemberValue memberValue = new MemberValue(member.Hashcode, value.GetType(), Serializer.Serialize(value));
+
+#if DEBUG
+                        memberValue.DebugInfo = new MemberValue.DebugData(_memberInfoLookup[member.Name]);
+#endif
+
+                        toReturn.Add(memberValue);
                     }
                     catch (Exception e)
                     {
-                        Debugging.Warning(DebuggingFlags.Serializer, $"Issue serializing {member.Name} on {obj}\n{e}");
-                    }                    
+#if DEBUG
+                        Debugging.Error(DebuggingFlags.Serializer, $"Issue serializing {member.Name} on {obj}\n{new MemberValue.DebugData(_memberInfoLookup[member.Name])}\n{e}");
+#else
+                        Debugging.Error(DebuggingFlags.Serializer, $"Issue serializing {member.Name} on {obj}\n{e}");
+#endif
+                    }
                 }
 
                 return toReturn;
@@ -88,7 +106,12 @@ namespace UMS.Reflection
                     {
                         if (!_nameLookup.ContainsKey(value.MemberID))
                         {
+#if DEBUG
+                            Debug.LogWarning($"Couldn't find lookup for {value.MemberID} - {obj.GetType()}\n{value.DebugInfo}");
+#else
                             Debug.LogWarning($"Couldn't find lookup for {value.MemberID} - {obj.GetType()}");
+#endif
+
                             return;
                         }
 
@@ -96,7 +119,7 @@ namespace UMS.Reflection
                     }
                     catch (Exception e)
                     {
-                        Debugging.Warning(DebuggingFlags.Serializer, $"Issue deserializing {value.MemberID} - {obj.GetType()}\n{e}");
+                        Debugging.Error(DebuggingFlags.Serializer, $"Issue deserializing {value.MemberID} - {obj.GetType()}\n{e}");
                     }
                 }
             }
