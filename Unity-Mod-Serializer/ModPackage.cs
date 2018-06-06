@@ -30,7 +30,7 @@ namespace UMS
         
         public static void Load(string fullPath)
         {
-            ModFile file = ModFile.Load(fullPath);
+            ModFile file = ModFile.LoadFromFile(fullPath);
         }
         public void SaveToDesktop()
         {

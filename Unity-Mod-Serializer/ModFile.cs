@@ -54,25 +54,29 @@ namespace UMS
         [ProtoMember(3)]
         private System.Guid _guid;
         
-        public static ModFile Load(string fullPath)
+        public static ModFile LoadFromFile(string fullPath)
         {
             Debugging.Info(DebuggingFlags.Serializer, $"Deserializing {fullPath}");
             
+            byte[] data = File.ReadAllBytes(fullPath);
+            return LoadFromBinary(data);
+        }
+        public static ModFile LoadFromBinary(byte[] data)
+        {
 #if DEBUG
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
             stopWatch.Start();
 #endif
 
-            byte[] data = File.ReadAllBytes(fullPath);
             ModFile file = Serializer.Deserialize<ModFile>(data);
 
             Debugging.Info(DebuggingFlags.Serializer, $"Deserialized {file}");
 
             file.CreateObjects();
 
-            if(Application.isEditor)
+            if (Application.isEditor)
                 ObjectHandler.InstantiateAllObjects();
-            
+
 #if DEBUG
             Debugging.Info(DebuggingFlags.Serializer, $"Deserialization Elapsed: {stopWatch.Elapsed.Milliseconds}ms");
 #endif
