@@ -119,7 +119,11 @@ namespace UMS.Reflection
                     }
                     catch (Exception e)
                     {
+#if DEBUG
+                        Debugging.Error(DebuggingFlags.Serializer, $"Issue deserializing {value.MemberID} - {obj.GetType()}\n{value.DebugInfo}\n{e}");
+#else
                         Debugging.Error(DebuggingFlags.Serializer, $"Issue deserializing {value.MemberID} - {obj.GetType()}\n{e}");
+#endif
                     }
                 }
             }
