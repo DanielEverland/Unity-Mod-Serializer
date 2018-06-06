@@ -73,12 +73,21 @@ namespace UMS
         }        
         public static void AddObject(Object obj, string key)
         {
+            DisableIfGameObject(obj);
+
             if(key != string.Empty && key != null)
             {
                 _keyLookup.Set(key, obj);
             }
 
             _allObjects.Add(obj);
+        }
+        private static void DisableIfGameObject(Object obj)
+        {
+            if(obj is GameObject gameObject)
+            {
+                gameObject.SetActive(false);                
+            }
         }
     }
 }
