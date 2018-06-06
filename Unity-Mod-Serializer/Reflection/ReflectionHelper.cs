@@ -200,8 +200,15 @@ namespace UMS.Reflection
         public static bool ShouldSerializeProperty(PropertyInfo property)
         {
             MethodInfo getMethod = property.GetGetMethod();
+            MethodInfo setMethod = property.GetSetMethod();
 
             if (getMethod == null)
+                return false;
+
+            if (setMethod == null)
+                return false;
+
+            if(setMethod.IsPrivate)
                 return false;
 
             if (property.SetMethod == null)
