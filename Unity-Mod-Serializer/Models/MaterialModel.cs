@@ -55,6 +55,9 @@ namespace UMS.Models
 
             public Material Deserialize()
             {
+                if (shader == null)
+                    throw new System.NullReferenceException("Shader is null");
+
                 Material material = new Material(shader);
 
                 material.name = name;

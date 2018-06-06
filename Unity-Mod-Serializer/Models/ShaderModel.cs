@@ -28,7 +28,12 @@ namespace UMS.Models
 
             public Shader Deserialize()
             {
-                return Shader.Find(name);
+                Shader shader = Shader.Find(name);
+
+                if (shader == null)
+                    throw new System.NullReferenceException($"Couldn't find shader with name {name}");
+
+                return shader;
             }
 
             public static implicit operator ShaderSurrogate (Shader shader)
