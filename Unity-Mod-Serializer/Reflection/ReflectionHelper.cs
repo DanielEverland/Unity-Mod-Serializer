@@ -107,9 +107,9 @@ namespace UMS.Reflection
                         if (!_nameLookup.ContainsKey(value.MemberID))
                         {
 #if DEBUG
-                            Debug.LogWarning($"Couldn't find lookup for {value.MemberID} - {obj.GetType()}\n{value.DebugInfo}");
+                            Debugging.Error(DebuggingFlags.Serializer, $"Couldn't find lookup for {value.MemberID} - {obj.GetType()}\n{value.DebugInfo}");
 #else
-                            Debug.LogWarning($"Couldn't find lookup for {value.MemberID} - {obj.GetType()}");
+                            Debugging.Error(DebuggingFlags.Serializer, $"Couldn't find lookup for {value.MemberID} - {obj.GetType()}");
 #endif
 
                             return;
