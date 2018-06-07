@@ -12,11 +12,15 @@ namespace UMS
     {
         private static List<Object> _allObjects;
         private static Dictionary<string, Object> _keyLookup;
+        private static GameObject _objectHandler;
 
         public static void Initialize()
         {
             _allObjects = new List<Object>();
             _keyLookup = new Dictionary<string, Object>();
+
+            _objectHandler = new GameObject("Object Handler");
+            _objectHandler.SetActive(false);
         }
         public static void InstantiateAllObjects()
         {
@@ -73,7 +77,7 @@ namespace UMS
         }        
         public static void AddObject(Object obj, string key)
         {
-            DisableIfGameObject(obj);
+            SetAsChild(obj);
 
             if(key != string.Empty && key != null)
             {
@@ -82,11 +86,12 @@ namespace UMS
 
             _allObjects.Add(obj);
         }
-        private static void DisableIfGameObject(Object obj)
+        private static void SetAsChild(Object obj)
         {
             if(obj is GameObject gameObject)
             {
-                gameObject.SetActive(false);                
+                gameObject.hideFlags = HideFlags.None;
+                gameObject.transform.SetParent(_objectHandler.transform);
             }
         }
     }
