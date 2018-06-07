@@ -74,9 +74,6 @@ namespace UMS
 
             file.CreateObjects();
 
-            if (Application.isEditor)
-                ObjectHandler.InstantiateAllObjects();
-
 #if DEBUG
             Debugging.Info(DebuggingFlags.Serializer, $"Deserialization Elapsed: {stopWatch.Elapsed.Milliseconds}ms");
 #endif

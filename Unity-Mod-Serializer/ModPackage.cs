@@ -31,6 +31,7 @@ namespace UMS
         public static void Load(string fullPath)
         {
             ModFile file = ModFile.LoadFromFile(fullPath);
+            ObjectHandler.InstantiateAllObjects();
         }
         public void SaveToDesktop()
         {
