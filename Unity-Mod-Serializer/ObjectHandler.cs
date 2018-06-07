@@ -10,6 +10,22 @@ namespace UMS
     /// </summary>
     public static class ObjectHandler
     {
+        public static bool UseObjectHandler
+        {
+            get
+            {
+                if (!Application.isPlaying)
+                    return false;
+
+                return _useObjectHandler;
+            }
+            set
+            {
+                _useObjectHandler = value;
+            }
+        }
+        private static bool _useObjectHandler = true;
+
         private static List<Object> _allObjects;
         private static Dictionary<string, Object> _keyLookup;
         private static GameObject _objectHandler;
@@ -19,8 +35,11 @@ namespace UMS
             _allObjects = new List<Object>();
             _keyLookup = new Dictionary<string, Object>();
 
-            _objectHandler = new GameObject("Object Handler");
-            _objectHandler.SetActive(false);
+            if (UseObjectHandler)
+            {
+                _objectHandler = new GameObject("Object Handler");
+                _objectHandler.SetActive(false);
+            }            
         }
         public static void InstantiateAllObjects()
         {
@@ -88,6 +107,9 @@ namespace UMS
         }
         private static void SetAsChild(Object obj)
         {
+            if (!UseObjectHandler)
+                return;
+
             if(obj is GameObject gameObject)
             {
                 gameObject.hideFlags = HideFlags.None;
